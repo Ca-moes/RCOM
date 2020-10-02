@@ -1,0 +1,17 @@
+./.git/hooks/pre-commit.sample
+./.git/hooks/pre-applypatch.sample
+./.git/hooks/pre-push.sample
+./.git/hooks/update.sample
+./.git/hooks/commit-msg.sample
+./.git/hooks/applypatch-msg.sample
+./.git/hooks/pre-rebase.sample
+./.git/hooks/pre-merge-commit.sample
+./.git/hooks/prepare-commit-msg.sample
+./.git/hooks/fsmonitor-watchman.sample
+./.git/hooks/post-update.sample
+./.git/hooks/pre-receive.sample
+./Lab_1/Aula_1/run_read.bash
+./Lab_1/Aula_1/write
+./Lab_1/Aula_1/read_
+./Lab_1/Aula_1/run_write.bash
+./Lab_1/Aula_1/run.bash

@@ -55,7 +55,7 @@ int main(int argc, char** argv)
     newtio.c_lflag = 0;
 
     newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused */
-    newtio.c_cc[VMIN]     = 5;   /* blocking read until 5 chars received */
+    newtio.c_cc[VMIN]     = 1;   /* blocking read until 5 chars received */
 
 
 
@@ -75,23 +75,14 @@ int main(int argc, char** argv)
 
     printf("New termios structure set\n");
 
-
+    printf("Message: ");
     fgets(buf,255,stdin);
-
-    size_t size = strlen(buf);
-    
-    /*testing*/
-    //buf[25] = '\n';
-    
-    res = write(fd,buf,size+1);   
+    res = write(fd,buf,strlen(buf));   
     printf("%d bytes written\n", res);
  
-
-  /* 
-    O ciclo FOR e as instru��es seguintes devem ser alterados de modo a respeitar 
-    o indicado no gui�o 
-  */
-
+    char replybuffer[255];
+    res = read(fd, replybuffer, 255);
+    printf("Message received: %s\n ",replybuffer);
 
 
    

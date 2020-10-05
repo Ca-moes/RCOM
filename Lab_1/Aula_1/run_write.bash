@@ -8,3 +8,4 @@ else
 echo "COMPILATION ERROR";
 fi 
 
+rm write

@@ -77,22 +77,17 @@ int main(int argc, char** argv)
 
     printf("Message: ");
     fgets(buf,255,stdin);
-    res = write(fd,buf,strlen(buf));   
-    printf("%d bytes written\n", res);
+    res = write(fd,buf,strlen(buf));   //nao envia o \0
+    printf("%d bytes written\n", res);  
  
     char replybuffer[255];
     res = read(fd, replybuffer, 255);
-    printf("Message received: %s\n ",replybuffer);
+    printf("Message received: %s\n",replybuffer);
 
-
-   
     if ( tcsetattr(fd,TCSANOW,&oldtio) == -1) {
       perror("tcsetattr");
       exit(-1);
     }
-
-
-
 
     close(fd);
     return 0;

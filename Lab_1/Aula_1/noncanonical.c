@@ -83,9 +83,11 @@ int main(int argc, char** argv)
       if (buf[res-1]=='\n') STOP=TRUE;
     }
 
+    char buf1[255];
+    strcpy(buf1,buf);
 		printf("content of buf %s", buf);
-    res = write(fd,buf,strlen(buf));   
-    printf("%d bytes written\n", res);
+    res = write(fd,buf1,strlen(buf1)+1); //+1 para enviar o \0 
+    printf("%d bytes written\n", res); //res a contar com o \n e com o \0
 
 
   /* 

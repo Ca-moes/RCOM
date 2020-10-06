@@ -24,12 +24,12 @@ int main(int argc, char** argv)
     char buf[255];
     int i, sum = 0, speed = 0;
     
-    if ( (argc < 2) || 
+    /* if ( (argc < 2) || 
   	     ((strcmp("/dev/ttyS10", argv[1])!=0) && 
   	      (strcmp("/dev/ttyS11", argv[1])!=0) )) {
       printf("Usage:\tnserial SerialPort\n\tex: nserial /dev/ttyS1\n");
       exit(1);
-    }
+    } */
 
 
   /*
@@ -76,10 +76,12 @@ int main(int argc, char** argv)
     printf("New termios structure set\n");
 
     printf("Message: ");
-    fgets(buf,255,stdin);
+    fgets(buf,255,stdin); 
     res = write(fd,buf,strlen(buf)+1);   //envia o \0
     printf("%d bytes written\n", res);  
- 
+
+
+
     char replybuffer[255];
     res = read(fd, replybuffer, 255);
     printf("Message received: %s\n",replybuffer);

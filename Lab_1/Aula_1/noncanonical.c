@@ -22,12 +22,12 @@ int main(int argc, char** argv)
     struct termios oldtio,newtio;
     char buf[255];
 
-    if ( (argc < 2) || 
+    /* if ( (argc < 2) || 
   	    ((strcmp("/dev/ttyS10", argv[1])!=0) && 
   	      (strcmp("/dev/ttyS11", argv[1])!=0) )) {
       printf("Usage:\tnserial SerialPort\n\tex: nserial /dev/ttyS1\n");
       exit(1);
-    }
+    } */
 
 
   /*
@@ -74,19 +74,25 @@ int main(int argc, char** argv)
     printf("New termios structure set\n");
 
 
+    char toSend[255];
+    int i=0;
 
     while (STOP==FALSE) {       /* loop for input */
-      res = read(fd,buf,255);   /* returns after 1 char has been input */
+      res = read(fd,buf,1);   /* returns after 1 char has been input */
       buf[res]=0;               /* so we can printf... */
 
-      printf(":%s:%d\n", buf, res);
+      printf("nº bytes lido: %d - ", res);
+      printf("content: %s\n", buf);
+
+      toSend[i] = buf[0];
+      i++;
+
       if (buf[res-1]=='\0') STOP=TRUE;
     }
 
-    char buf1[255];
-    strcpy(buf1,buf);
-		printf("content of buf %s", buf);
-    res = write(fd,buf1,strlen(buf1)+1); //+1 para enviar o \0 
+
+		printf("\ncontent of toSend %s", toSend);
+    res = write(fd,toSend,strlen(toSend)+1); //+1 para enviar o \0 
     printf("%d bytes written\n", res); //res a contar com o \n e com o \0
 
 

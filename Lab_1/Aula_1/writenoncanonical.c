@@ -77,7 +77,7 @@ int main(int argc, char** argv)
 
     printf("Message: ");
     fgets(buf,255,stdin);
-    res = write(fd,buf,strlen(buf));   //nao envia o \0
+    res = write(fd,buf,strlen(buf)+1);   //envia o \0
     printf("%d bytes written\n", res);  
  
     char replybuffer[255];

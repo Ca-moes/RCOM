@@ -80,7 +80,7 @@ int main(int argc, char** argv)
       buf[res]=0;               /* so we can printf... */
 
       printf(":%s:%d\n", buf, res);
-      if (buf[res-1]=='\n') STOP=TRUE;
+      if (buf[res-1]=='\0') STOP=TRUE;
     }
 
     char buf1[255];

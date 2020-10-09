@@ -82,7 +82,7 @@ int main(int argc, char** argv)
       buf[res]=0;               /* so we can printf... */
 
       printf("nº bytes lido: %d - ", res);
-      printf("content: %s\n", buf);
+      printf("content: %hhx\n", buf);
 
       toSend[i] = buf[0];
       i++;

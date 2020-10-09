@@ -23,6 +23,13 @@ int main(int argc, char** argv)
     struct termios oldtio,newtio;
     char buf[255];
     int i, sum = 0, speed = 0;
+    
+    /* if ( (argc < 2) || 
+  	     ((strcmp("/dev/ttyS10", argv[1])!=0) && 
+  	      (strcmp("/dev/ttyS11", argv[1])!=0) )) {
+      printf("Usage:\tnserial SerialPort\n\tex: nserial /dev/ttyS1\n");
+      exit(1);
+    } */
 
 
   /*
@@ -68,8 +75,12 @@ int main(int argc, char** argv)
 
     printf("New termios structure set\n");
 
-    printf("Message: ");
-    fgets(buf,255,stdin); 
+    buf[0]=0x7e; // F
+    buf[1]=0x03; // A
+    buf[2]=0x03; // C
+    buf[3]=0x01; // BCC
+    buf[4]=0x7e; // F
+    buf[4]='\0';
     res = write(fd,buf,strlen(buf)+1);   //envia o \0
     printf("%d bytes written\n", res);  
 

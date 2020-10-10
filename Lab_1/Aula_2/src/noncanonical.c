@@ -87,7 +87,8 @@ int main(int argc, char** argv)
       toSend[i] = buf[0];
       i++;
 
-      if (buf[res-1]=='\0') STOP=TRUE;
+      printf("%d\n", i);
+      if (i == SET_SIZE) STOP=TRUE;
     }
 
 

@@ -76,19 +76,19 @@ int main(int argc, char** argv)
 
     printf("New termios structure set\n");
 
-    buf[0]= 0x7e; // F
-    buf[1]= 0x03; // A
-    buf[2]= 0x03; // C
-    buf[3]= 0x03 ^ 0x03; // BCC
-    buf[4]= 0x7e; // F
-    buf[5]='\0';
+    buf[0]= FLAG; // F
+    buf[1]= A_ER; // A
+    buf[2]= C_SET; // C
+    buf[3]= BCC(A_ER, C_SET); // BCC
+    buf[4]= FLAG; // F
 
     /* printf("conteudo de buf[0] : %c\n", buf[0]);
     printf("conteudo de buf[0] : %x\n", buf[0]);
     printf("conteudo de buf[0] : %#x\n", buf[0]);
     printf("conteudo de buf : %s\n", buf); */
 
-    res = write(fd,buf,strlen(buf)+1);   //envia o \0
+
+    res = write(fd,buf,SET_SIZE);   //envia o \0
     printf("%d bytes written\n", res);  
 
 

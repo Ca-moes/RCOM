@@ -1,3 +1,5 @@
+#define SET_SIZE 5  // tamanho em bytes da trama SET
+
 #define FLAG 0b01111110  // (0x7E) flag de inicio e fim
 
 #define A_ER 0b00000011  // (0x03) Campo de Endereço (A) de commandos do Emissor, resposta do Receptor

@@ -2,7 +2,7 @@
 
 # sudo socat -d  -d  PTY,link=/dev/ttyS10,mode=777   PTY,link=/dev/ttyS11,mode=777
 
-if gcc -o write writenoncanonical.c; then 
+if gcc -o write writenoncanonical.c macros.h; then 
 ./write /dev/ttyS11;
 else 
 echo "COMPILATION ERROR";

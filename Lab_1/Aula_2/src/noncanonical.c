@@ -1,4 +1,5 @@
 /*Non-Canonical Input Processing*/
+#include "macros.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -10,7 +11,6 @@
 #include <unistd.h>
 
 #define BAUDRATE B38400
-#define MODEMDEVICE "/dev/ttyS1"
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define FALSE 0
 #define TRUE 1
@@ -19,13 +19,12 @@ volatile int STOP=FALSE;
 
 int main(int argc, char** argv)
 {
-    int fd,c, res;
+    int fd, res;
     struct termios oldtio,newtio;
-    unsigned char buf[255];
-    int i, sum = 0, speed = 0;
-    
+    char buf[255];
+
     /* if ( (argc < 2) || 
-  	     ((strcmp("/dev/ttyS10", argv[1])!=0) && 
+  	    ((strcmp("/dev/ttyS10", argv[1])!=0) && 
   	      (strcmp("/dev/ttyS11", argv[1])!=0) )) {
       printf("Usage:\tnserial SerialPort\n\tex: nserial /dev/ttyS1\n");
       exit(1);
@@ -36,8 +35,8 @@ int main(int argc, char** argv)
     Open serial port device for reading and writing and not as controlling tty
     because we don't want to get killed if linenoise sends CTRL-C.
   */
-
-
+  
+    
     fd = open(argv[1], O_RDWR | O_NOCTTY );
     if (fd <0) {perror(argv[1]); exit(-1); }
 
@@ -55,7 +54,7 @@ int main(int argc, char** argv)
     newtio.c_lflag = 0;
 
     newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused */
-    newtio.c_cc[VMIN]     = 1;   /* blocking read until 5 chars received */
+    newtio.c_cc[VMIN]     = 1;   /* blocking read until 1 chars received */
 
 
 
@@ -75,50 +74,35 @@ int main(int argc, char** argv)
 
     printf("New termios structure set\n");
 
-    buf[0]= 0x7e; // F
-    buf[1]= 0x03; // A
-    buf[2]= 0x03; // C
-    buf[3]= 0x01; // BCC
-    buf[4]= 0x7e; // F
-    buf[5]='\0';
 
-    /* printf("conteudo de buf[0] : %c\n", buf[0]);
-    printf("conteudo de buf[0] : %x\n", buf[0]);
-    printf("conteudo de buf[0] : %#x\n", buf[0]);
-    printf("conteudo de buf : %s\n", buf); */
-    
-    res = write(fd,buf,strlen(buf)+1);   //envia o \0
-    printf("%d bytes written\n", res);  
-
-
-
-    unsigned char replybuffer[255];
-    i=0;
+    char toSend[255];
+    int i=0;
 
     while (STOP==FALSE) {       /* loop for input */
       res = read(fd,buf,1);   /* returns after 1 char has been input */
-      buf[res]=0;               /* so we can printf... */
 
       printf("nº bytes lido: %d - ", res);
-      printf("content: %s\n", buf);
+      printf("content: %#4.2x\n", buf[0]);
 
-      replybuffer[i] = buf[0];
+      toSend[i] = buf[0];
       i++;
 
       if (buf[res-1]=='\0') STOP=TRUE;
     }
 
-    printf("Message received: %s\n",replybuffer);
+
+		printf("\ncontent of toSend %s", toSend);
+    res = write(fd,toSend,strlen(toSend)+1); //+1 para enviar o \0 
+    printf("%d bytes written\n", res); //res a contar com o \n e com o \0
+
+
+  /* 
+    O ciclo WHILE deve ser alterado de modo a respeitar o indicado no gui�o 
+  */
 
 
 
-
-
-    if ( tcsetattr(fd,TCSANOW,&oldtio) == -1) {
-      perror("tcsetattr");
-      exit(-1);
-    }
-
+    tcsetattr(fd,TCSANOW,&oldtio);
     close(fd);
     return 0;
 }

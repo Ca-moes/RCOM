@@ -17,26 +17,47 @@
 
 volatile int STOP=FALSE;
 
+void determineState(enum stateMachine *state, char *checkBuffer, char byte){
+  // TO-DO máquina de estados
+  printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
+  switch (*state)
+  {
+  case Start:
+    if (byte == FLAG) *state = FLAG_RCV;    
+    break;
+  case FLAG_RCV:
+    if (byte == A_ER) {
+      *state = A_RCV;
+      checkBuffer[0] = byte;
+    }
+    break;
+  case A_RCV:
+    if (byte == C_SET) {
+      *state = C_RCV;
+      checkBuffer[1] = byte;
+    }
+    break;
+  case C_RCV:
+    break;
+  case BCC_OK:
+    // precisa de valores de A & C
+    break;
+  case DONE:
+    break;
+  }
+}
+
 int main(int argc, char** argv)
 {
     int fd, res;
     struct termios oldtio,newtio;
     char buf[255];
 
-    /* if ( (argc < 2) || 
-  	    ((strcmp("/dev/ttyS10", argv[1])!=0) && 
-  	      (strcmp("/dev/ttyS11", argv[1])!=0) )) {
-      printf("Usage:\tnserial SerialPort\n\tex: nserial /dev/ttyS1\n");
-      exit(1);
-    } */
-
-
   /*
     Open serial port device for reading and writing and not as controlling tty
     because we don't want to get killed if linenoise sends CTRL-C.
   */
   
-    
     fd = open(argv[1], O_RDWR | O_NOCTTY );
     if (fd <0) {perror(argv[1]); exit(-1); }
 
@@ -58,12 +79,6 @@ int main(int argc, char** argv)
 
 
 
-  /* 
-    VTIME e VMIN devem ser alterados de forma a proteger com um temporizador a 
-    leitura do(s) pr�ximo(s) caracter(es)
-  */
-
-
 
     tcflush(fd, TCIOFLUSH);
 
@@ -75,8 +90,10 @@ int main(int argc, char** argv)
     printf("New termios structure set\n");
 
 
-    char toSend[255];
+    char replyBuf[255], checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
     int i=0;
+    enum stateMachine state = Start;
+
 
     while (STOP==FALSE) {       /* loop for input */
       res = read(fd,buf,1);   /* returns after 1 char has been input */
@@ -84,26 +101,26 @@ int main(int argc, char** argv)
       printf("nº bytes lido: %d - ", res);
       printf("content: %#4.2x\n", buf[0]);
 
-      toSend[i] = buf[0];
+      determineState(&state, checkBuf, buf[0]);
       i++;
 
-      printf("%d\n", i);
       if (i == SET_SIZE) STOP=TRUE;
     }
 
 
-		printf("\ncontent of toSend %s", toSend);
-    res = write(fd,toSend,strlen(toSend)+1); //+1 para enviar o \0 
+
+    replyBuf[0]= FLAG; // F
+    replyBuf[1]= A_ER; // A
+    replyBuf[2]= C_UA; // C
+    replyBuf[3]= BCC(A_ER, C_UA); // BCC
+    replyBuf[4]= FLAG; // F
+
+    res = write(fd,replyBuf,UA_SIZE); //+1 para enviar o \0 
     printf("%d bytes written\n", res); //res a contar com o \n e com o \0
-
-
-  /* 
-    O ciclo WHILE deve ser alterado de modo a respeitar o indicado no gui�o 
-  */
-
 
 
     tcsetattr(fd,TCSANOW,&oldtio);
     close(fd);
     return 0;
 }
+

@@ -54,4 +54,4 @@ Executar `./run_1time.sh` numa consola, escrever password de administrador para 
 Executar `./run_test.sh`, escrever password e esperar. No final da execução de `writenoncanonical` e `noncanonical` é só premir **Relauch** para recompilar e iniciar o programa na mesma janela
 
 
-
+![yes](https://i.imgur.com/OBj6Kvc.png)

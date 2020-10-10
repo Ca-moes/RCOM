@@ -1,4 +1,9 @@
+enum stateMachine {Start, FLAG_RCV, A_RCV, C_RCV, BCC_OK, DONE};
+
+// Tramas I (informação)
 #define SET_SIZE 5  // tamanho em bytes da trama SET
+#define UA_SIZE 5  // tamanho em bytes da trama UA
+
 
 #define FLAG 0b01111110  // (0x7E) flag de inicio e fim
 

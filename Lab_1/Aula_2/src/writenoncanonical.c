@@ -93,32 +93,26 @@ int main(int argc, char** argv)
 
 
 
-    unsigned char replybuffer[255];
     i=0;
 
     while (STOP==FALSE) {       /* loop for input */
       res = read(fd,buf,1);   /* returns after 1 char has been input */
-      buf[res]=0;               /* so we can printf... */
 
       printf("nº bytes lido: %d - ", res);
-      printf("content: %s\n", buf);
+      printf("content: %#4.2x\n", buf[0]);
 
-      replybuffer[i] = buf[0];
       i++;
 
-      if (buf[res-1]=='\0') STOP=TRUE;
+      if (i == UA_SIZE) STOP=TRUE;
     }
-
-    printf("Message received: %s\n",replybuffer);
-
-
-
 
 
     if ( tcsetattr(fd,TCSANOW,&oldtio) == -1) {
       perror("tcsetattr");
       exit(-1);
     }
+
+
 
     close(fd);
     return 0;

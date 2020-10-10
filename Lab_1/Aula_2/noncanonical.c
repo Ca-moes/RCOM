@@ -81,7 +81,7 @@ int main(int argc, char** argv)
       res = read(fd,buf,1);   /* returns after 1 char has been input */
 
       printf("nº bytes lido: %d - ", res);
-      printf("content: %#x\n", buf[0]);
+      printf("content: %#4.2x\n", buf[0]);
 
       toSend[i] = buf[0];
       i++;

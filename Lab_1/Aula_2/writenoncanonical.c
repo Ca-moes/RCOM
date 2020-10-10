@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 {
     int fd,c, res;
     struct termios oldtio,newtio;
-    char buf[255];
+    unsigned char buf[255];
     int i, sum = 0, speed = 0;
     
     /* if ( (argc < 2) || 
@@ -75,18 +75,24 @@ int main(int argc, char** argv)
 
     printf("New termios structure set\n");
 
-    buf[0]=0x7e; // F
-    buf[1]=0x03; // A
-    buf[2]=0x03; // C
-    buf[3]=0x01; // BCC
-    buf[4]=0x7e; // F
-    buf[4]='\0';
+    buf[0]= 0x7e; // F
+    buf[1]= 0x03; // A
+    buf[2]= 0x03; // C
+    buf[3]= 0x01; // BCC
+    buf[4]= 0x7e; // F
+    buf[5]='\0';
+
+    /* printf("conteudo de buf[0] : %c\n", buf[0]);
+    printf("conteudo de buf[0] : %x\n", buf[0]);
+    printf("conteudo de buf[0] : %#x\n", buf[0]);
+    printf("conteudo de buf : %s\n", buf); */
+    
     res = write(fd,buf,strlen(buf)+1);   //envia o \0
     printf("%d bytes written\n", res);  
 
 
 
-    char replybuffer[255];
+    unsigned char replybuffer[255];
     i=0;
 
     while (STOP==FALSE) {       /* loop for input */
@@ -100,7 +106,6 @@ int main(int argc, char** argv)
       i++;
 
       if (buf[res-1]=='\0') STOP=TRUE;
-      printf("here\n");
     }
 
     printf("Message received: %s\n",replybuffer);

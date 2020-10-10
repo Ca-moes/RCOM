@@ -79,10 +79,9 @@ int main(int argc, char** argv)
 
     while (STOP==FALSE) {       /* loop for input */
       res = read(fd,buf,1);   /* returns after 1 char has been input */
-      buf[res]=0;               /* so we can printf... */
 
       printf("nº bytes lido: %d - ", res);
-      printf("content: %s\n", buf);
+      printf("content: %#x\n", buf[0]);
 
       toSend[i] = buf[0];
       i++;

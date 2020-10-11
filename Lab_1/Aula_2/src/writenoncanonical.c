@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 
 #define BAUDRATE B38400
 #define MODEMDEVICE "/dev/ttyS1"
@@ -17,13 +18,77 @@
 #define TRUE 1
 
 volatile int STOP=FALSE;
+enum stateMachine state;
+
+int failed = FALSE;
+
+void atende() // atende alarme
+{
+  if (state != DONE)  failed = TRUE;
+}
+
+void determineState(enum stateMachine *state, char *checkBuffer, char byte){
+  // TO-DO máquina de estados
+  printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
+  switch (*state)
+  {
+  case Start:
+    if (byte == FLAG) *state = FLAG_RCV;    
+    break;
+  case FLAG_RCV:
+    if (byte == A_ER) {
+      *state = A_RCV;
+      checkBuffer[0] = byte;
+    }
+    else if (byte!= FLAG){
+      *state = Start;
+    }
+    break;
+  case A_RCV:
+    if (byte == C_UA) {
+      *state = C_RCV;
+      checkBuffer[1] = byte;
+    }
+    else if (byte == FLAG){
+      *state = FLAG_RCV;
+    }
+    else{
+      *state = Start;
+    }
+    break;
+  case C_RCV:
+    if (byte == BCC(checkBuffer[0],checkBuffer[1])){
+      *state = BCC_OK;
+    }
+    else if (byte == FLAG){
+      *state = FLAG_RCV;
+    }
+    else{
+      *state = Start;
+    }
+    // precisa de valores de A & C
+    break;
+  case BCC_OK:
+    if (byte == FLAG){
+      *state = DONE;
+    }
+    else{
+      *state = Start;
+    }
+    break;
+  case DONE:
+    break;
+  }
+}
 
 int main(int argc, char** argv)
 {
     int fd, res;
     struct termios oldtio,newtio;
     char buf[255];
-    int i;
+
+    
+    (void)signal(SIGALRM, atende);
     
     /* if ( (argc < 2) || 
   	     ((strcmp("/dev/ttyS10", argv[1])!=0) && 
@@ -87,24 +152,32 @@ int main(int argc, char** argv)
     printf("conteudo de buf[0] : %#x\n", buf[0]);
     printf("conteudo de buf : %s\n", buf); */
 
+    int attempt = 0;
 
-    res = write(fd,buf,SET_SIZE);   //envia o \0
-    printf("%d bytes written\n", res);  
+    do{
+      
+      attempt++;
+      res = write(fd,buf,SET_SIZE);   //envia o \0
+      printf("%d bytes written\n", res);  
 
+      alarm(3);
+      failed = FALSE;
 
+      state = Start;
+      char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
 
-    i=0;
+      while (STOP==FALSE) {       /* loop for input */
+        res = read(fd,buf,1);   /* returns after 1 char has been input */
 
-    while (STOP==FALSE) {       /* loop for input */
-      res = read(fd,buf,1);   /* returns after 1 char has been input */
+        printf("nº bytes lido: %d - ", res);
+        printf("content: %#4.2x\n", buf[0]);
 
-      printf("nº bytes lido: %d - ", res);
-      printf("content: %#4.2x\n", buf[0]);
+        determineState(&state, checkBuf, buf[0]);
 
-      i++;
+        if (state == DONE || failed) STOP=TRUE;
+      }
 
-      if (i == UA_SIZE) STOP=TRUE;
-    }
+    }while (attempt < ATTEMPT_NUM && failed);
 
 
     if ( tcsetattr(fd,TCSANOW,&oldtio) == -1) {

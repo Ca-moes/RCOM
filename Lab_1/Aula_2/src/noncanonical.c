@@ -30,17 +30,41 @@ void determineState(enum stateMachine *state, char *checkBuffer, char byte){
       *state = A_RCV;
       checkBuffer[0] = byte;
     }
+    else if (byte!= FLAG){
+      *state = Start;
+    }
     break;
   case A_RCV:
     if (byte == C_SET) {
       *state = C_RCV;
       checkBuffer[1] = byte;
     }
+    else if (byte == FLAG){
+      *state = FLAG_RCV;
+    }
+    else{
+      *state = Start;
+    }
     break;
   case C_RCV:
+    if (byte == BCC(checkBuffer[0],checkBuffer[1])){
+      *state = BCC_OK;
+    }
+    else if (byte == FLAG){
+      *state = FLAG_RCV;
+    }
+    else{
+      *state = Start;
+    }
+    // precisa de valores de A & C
     break;
   case BCC_OK:
-    // precisa de valores de A & C
+    if (byte == FLAG){
+      *state = DONE;
+    }
+    else{
+      *state = Start;
+    }
     break;
   case DONE:
     break;
@@ -91,7 +115,6 @@ int main(int argc, char** argv)
 
 
     char replyBuf[255], checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
-    int i=0;
     enum stateMachine state = Start;
 
 
@@ -102,9 +125,8 @@ int main(int argc, char** argv)
       printf("content: %#4.2x\n", buf[0]);
 
       determineState(&state, checkBuf, buf[0]);
-      i++;
 
-      if (i == SET_SIZE) STOP=TRUE;
+      if (state == DONE) STOP=TRUE;
     }
 
 

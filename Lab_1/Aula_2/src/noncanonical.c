@@ -17,7 +17,7 @@
 
 volatile int STOP=FALSE;
 
-void determineState(enum stateMachine *state, char *checkBuffer, char byte){
+void determineState(enum stateMachine *state, unsigned char *checkBuffer, char byte){
   // TO-DO máquina de estados
   printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
   switch (*state)
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
 {
     int fd, res;
     struct termios oldtio,newtio;
-    char buf[255];
+    unsigned char buf[255];
 
   /*
     Open serial port device for reading and writing and not as controlling tty
@@ -114,7 +114,7 @@ int main(int argc, char** argv)
     printf("New termios structure set\n");
 
 
-    char replyBuf[255], checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
+    unsigned char replyBuf[255], checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
     enum stateMachine state = Start;
 
 

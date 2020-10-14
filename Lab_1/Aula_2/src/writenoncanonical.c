@@ -27,7 +27,7 @@ void atende() // atende alarme
   if (state != DONE)  failed = TRUE;
 }
 
-void determineState(enum stateMachine *state, char *checkBuffer, char byte){
+void determineState(enum stateMachine *state, unsigned char *checkBuffer, char byte){
   // TO-DO máquina de estados
   printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
   switch (*state)
@@ -85,7 +85,7 @@ int main(int argc, char** argv)
 {
     int fd, res;
     struct termios oldtio,newtio;
-    char buf[255];
+    unsigned char buf[255];
 
     
     (void)signal(SIGALRM, atende);
@@ -164,7 +164,7 @@ int main(int argc, char** argv)
       failed = FALSE;
 
       state = Start;
-      char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
+      unsigned char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
 
       while (STOP==FALSE) {       /* loop for input */
         res = read(fd,buf,1);   /* returns after 1 char has been input */

@@ -24,7 +24,11 @@ int failed = FALSE;
 
 void atende() // atende alarme
 {
-  if (state != DONE)  failed = TRUE;
+  if (state != DONE){ 
+    printf("receiver didn't answer\n");
+    failed = TRUE;
+    return;
+  }
 }
 
 void determineState(enum stateMachine *state, unsigned char *checkBuffer, char byte){
@@ -87,8 +91,13 @@ int main(int argc, char** argv)
     struct termios oldtio,newtio;
     unsigned char buf[255];
 
-    
-    (void)signal(SIGALRM, atende);
+    struct sigaction sa;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_handler = atende;
+    sa.sa_flags = 0;
+
+    sigaction(SIGALRM, &sa, NULL);
+
     
     /* if ( (argc < 2) || 
   	     ((strcmp("/dev/ttyS10", argv[1])!=0) && 
@@ -131,7 +140,6 @@ int main(int argc, char** argv)
   */
 
 
-
     tcflush(fd, TCIOFLUSH);
 
     if ( tcsetattr(fd,TCSANOW,&newtio) == -1) {
@@ -155,22 +163,24 @@ int main(int argc, char** argv)
     int attempt = 0;
 
     do{
-      
       attempt++;
       res = write(fd,buf,SET_SIZE);   //envia o \0
       printf("%d bytes written\n", res);  
-
+      
       alarm(3);
       failed = FALSE;
 
       state = Start;
       unsigned char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
-
+        
       while (STOP==FALSE) {       /* loop for input */
         res = read(fd,buf,1);   /* returns after 1 char has been input */
-
+        if (res == -1)
+          break;
+        
         printf("nº bytes lido: %d - ", res);
         printf("content: %#4.2x\n", buf[0]);
+        
 
         determineState(&state, checkBuf, buf[0]);
 

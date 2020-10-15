@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # corre num novo terminal o socat
-gnome-terminal --window-with-profile=RCOM_soc -- sudo socat -d  -d  PTY,link=/dev/ttyS10,mode=777   PTY,link=/dev/ttyS11,mode=777
+gnome-terminal --window-with-profile=RCOM_soc -- sudo ./cable
 # tempo para dar input
 sleep 5
 

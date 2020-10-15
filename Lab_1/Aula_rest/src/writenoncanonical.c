@@ -70,7 +70,6 @@ void determineState(enum stateMachine *state, unsigned char *checkBuffer, char b
     else{
       *state = Start;
     }
-    // precisa de valores de A & C
     break;
   case BCC_OK:
     if (byte == FLAG){

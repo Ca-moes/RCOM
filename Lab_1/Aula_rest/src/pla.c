@@ -29,22 +29,86 @@ void initConnection(int *fd){
   printf("New termios structure set\n");
 }
 
-int llopen(int porta, int flag){
+void stateMachine_SET_UA(enum stateMachine *state, unsigned char *checkBuffer, char byte, int type){
+  // TO-DO máquina de estados
+  printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
+  switch (*state)
+  {
+  case Start:
+    if (byte == FLAG) *state = FLAG_RCV;    
+    break;
+  case FLAG_RCV:
+    if (byte == A_ER) {
+      *state = A_RCV;
+      checkBuffer[0] = byte;
+    }
+    else if (byte!= FLAG){
+      *state = Start;
+    }
+    break;
+  case A_RCV:;
+    // ; de cima aqui explicado -> https://stackoverflow.com/a/19830820
+    int C_byte;
+    if (type == TRANSMITTER) C_byte = C_UA;
+    else if (type == RECEIVER) C_byte = C_SET;
+
+    if (byte == C_byte) {
+      *state = C_RCV;
+      checkBuffer[1] = byte;
+      } else if (byte == FLAG){
+        *state = FLAG_RCV;
+      } else{
+        *state = Start;
+      }
+    
+    break;
+  case C_RCV:
+    if (byte == BCC(checkBuffer[0],checkBuffer[1])){
+      *state = BCC_OK;
+    }
+    else if (byte == FLAG){
+      *state = FLAG_RCV;
+    }
+    else{
+      *state = Start;
+    }
+    // precisa de valores de A & C
+    break;
+  case BCC_OK:
+    if (byte == FLAG){
+      *state = DONE;
+    }
+    else{
+      *state = Start;
+    }
+    break;
+  case DONE:
+    break;
+  }
+}
+
+int llopen(int porta, int type){
   int fd;
   char port[12]; // "/dev/ttyS11\0" <- 12 chars
 
-  printf(" porta : %d\n", porta);
   snprintf(port, 12, "/dev/ttyS%d", porta);
-  printf(" port : %s\n", port);
-
   fd = open(port, O_RDWR | O_NOCTTY );
   if (fd <0) {perror(port); exit(-1); }
 
   initConnection(&fd);
   
-
-
-
+  switch (type)
+  {
+  case TRANSMITTER:
+    /* code */
+    break;
+  case RECEIVER:
+    /* code */
+    break;
+  default:
+    return -1;
+    break;
+  }
 
   return fd;
 }

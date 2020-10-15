@@ -15,6 +15,7 @@
 
 #define BAUDRATE B38400
 
+// valores de type
 #define TRANSMITTER 1
 #define RECEIVER 0
 
@@ -22,13 +23,11 @@
 #define TRUE 1
 
 void initConnection(int *fd);
+void stateMachine_SET_UA(enum stateMachine *state, unsigned char *checkBuffer, char byte, int type);
 
-int llopen(int porta, int flag);
-
+int llopen(int porta, int type);
 int llwrite(int fd, char *buffer, int lenght);
-
 int llread(int fd, char *buffer);
-
 int llclose(int fd);
 
 

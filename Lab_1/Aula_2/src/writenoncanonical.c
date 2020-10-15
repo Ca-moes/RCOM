@@ -90,6 +90,7 @@ int main(int argc, char** argv)
     int fd, res;
     struct termios oldtio,newtio;
     unsigned char buf[255];
+    unsigned char buf1[1];
 
     struct sigaction sa;
     sigemptyset(&sa.sa_mask);
@@ -174,15 +175,14 @@ int main(int argc, char** argv)
       unsigned char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
         
       while (STOP==FALSE) {       /* loop for input */
-        res = read(fd,buf,1);   /* returns after 1 char has been input */
+        res = read(fd,buf1,1);   /* returns after 1 char has been input */
         if (res == -1)
           break;
         
         printf("nº bytes lido: %d - ", res);
-        printf("content: %#4.2x\n", buf[0]);
-        
+        printf("content: %#4.2x\n", buf1[0]);
 
-        determineState(&state, checkBuf, buf[0]);
+        determineState(&state, checkBuf, buf1[0]);
 
         if (state == DONE || failed) STOP=TRUE;
       }

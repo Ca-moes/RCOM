@@ -123,7 +123,7 @@ void transmitter_SET(int fd){
       log_message_number("Bytes read ", res);
       log_hexa(buf_read[0]);
       
-      stateMachine_SET_UA(&state, checkBuf, buf[0], TRANSMITTER);
+      stateMachine_SET_UA(&state, checkBuf, buf_read[0], TRANSMITTER);
       if (state == DONE || failed) STOP=TRUE;
     }
   }while (attempt < ATTEMPT_NUM && failed);

@@ -31,12 +31,11 @@ void initConnection(int *fd, char *port){
     perror("tcsetattr");
     exit(-1);
   }
-  printf("New termios structure set\n");
+  log_success("New termios structure set");
 }
 
 void atende(){ 
-  if (state != DONE){ 
-    printf("receiver didn't answer\n");
+  if (state != DONE){
     failed = TRUE;
     return;
   }
@@ -100,7 +99,7 @@ void stateMachine_SET_UA(enum stateMachine *state, unsigned char *checkBuffer, c
   }
 }
 
-void transmitter_SET(int fd){
+int transmitter_SET(int fd){
   unsigned char buf[SET_SIZE] = {FLAG, A_ER, C_SET, BCC(A_ER, C_SET), FLAG};
   unsigned char buf_read[UA_SIZE]; // read buffer
   unsigned char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
@@ -110,6 +109,12 @@ void transmitter_SET(int fd){
   do{
     attempt++;
     res = write(fd,buf,SET_SIZE);
+    if (res == -1) {
+      log_error("transmitter: failed writing SET to buffer.");
+      return -1;
+      }
+    
+    
     log_message_number("Bytes written ", res);
     
     alarm(3);
@@ -118,7 +123,16 @@ void transmitter_SET(int fd){
     state = Start;      
     while (STOP==FALSE) {       /* loop for input */
       res = read(fd,buf_read,1);   /* returns after 1 char has been input */
-      if (res == -1) break;
+      
+      if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
+        log_caution("transmitter: failed reading UA from receiver.");
+        if (attempt < ATTEMPT_NUM) log_caution("Trying again...");
+        break;
+      }
+      else if (res == -1){
+        log_error("transmitter: failed reading UA from buffer.");
+        return -1;
+      }
       
       log_message_number("Bytes read ", res);
       log_hexa(buf_read[0]);
@@ -127,9 +141,12 @@ void transmitter_SET(int fd){
       if (state == DONE || failed) STOP=TRUE;
     }
   }while (attempt < ATTEMPT_NUM && failed);
+
+  if(failed) return -1;
+  return fd;
 }
 
-void receiver_UA(int fd){
+int receiver_UA(int fd){
   unsigned char buf[SET_SIZE];
   unsigned char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
   int res;
@@ -138,9 +155,13 @@ void receiver_UA(int fd){
 
   while (STOP==FALSE) {       /* loop for input */
       res = read(fd,buf,1);   /* returns after 1 char has been input */
+      if (res == -1) {
+        log_error("receiver: failed reading SET from buffer.");
+        return -1;
+      }
 
-      printf("nº bytes lido: %d - ", res);
-      printf("content: %#4.2x\n", buf[0]);
+      log_message_number("Bytes read ", res);
+      log_hexa(buf[0]);
 
       stateMachine_SET_UA(&state, checkBuf, buf[0], RECEIVER);
       if (state == DONE) STOP=TRUE;
@@ -149,7 +170,14 @@ void receiver_UA(int fd){
     unsigned char replyBuf[UA_SIZE] = {FLAG, A_ER, C_UA, BCC(A_ER, C_UA), FLAG};
 
     res = write(fd,replyBuf,UA_SIZE); //+1 para enviar o \0 
-    printf("%d bytes written\n", res); //res a contar com o \n e com o \0
+    if (res == -1) {
+      log_error("receiver: failed writing UA to buffer.");
+      return -1;
+      }
+
+    log_message_number("Bytes written ", res); //res a contar com o \n e com o \0
+  
+  return fd;
 }
 
 
@@ -170,17 +198,15 @@ int llopen(int porta, int type){
   switch (type)
   {
   case TRANSMITTER:
-    transmitter_SET(fd);
+    return transmitter_SET(fd);
     break;
   case RECEIVER:
-    receiver_UA(fd);
+    return receiver_UA(fd);
     break;
   default:
     return -1;
     break;
   }
-
-  return fd;
 }
 
 int llwrite(int fd, char *buffer, int lenght){

@@ -39,15 +39,16 @@ void parseArgs(int argc, char** argv, int* x, int* type){
  * @return int 
  */
 int main(int argc, char** argv) {
-  // argv[1] = receiver/sender
-  // argv[2] = valor do x - "/dev/ttySx"
   printf("Started App\n");
 
   int fd, x, type;
   parseArgs(argc, argv, &x, &type);
-  fd = llopen(x, type);
-
   
+  fd = llopen(x, type);
+  
+  if (fd < 0) log_error("Unable to establish connection.");
+  else log_success("Connection established.");
+
   printf("Closing..\n");
   llclose(fd);
   return 0;

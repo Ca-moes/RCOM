@@ -12,6 +12,7 @@
 #include <strings.h>
 #include <unistd.h>
 #include <signal.h>
+#include <errno.h>
 
 #include "macros.h"
 #include "logs.h"
@@ -50,14 +51,16 @@ void stateMachine_SET_UA(enum stateMachine *state, unsigned char *checkBuffer, c
  * @brief Função que envia Trama SET e recebe trama UA
  * 
  * @param fd identificador da ligação de dados
+ * @return int identificador da ligação de dados OU -1 em caso de erro 
  */
-void transmitter_SET(int fd);
+int transmitter_SET(int fd);
 /**
  * @brief Função que recebe trama SET e envia trama UA
  * 
  * @param fd identificador da ligação de dados
+ * @return int identificador da ligação de dados OU -1 em caso de erro 
  */
-void receiver_UA(int fd);
+int receiver_UA(int fd);
 
 /**
  * @brief Abre uma ligação de dados com a porta série

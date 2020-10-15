@@ -6,10 +6,9 @@ enum stateMachine {Start, FLAG_RCV, A_RCV, C_RCV, BCC_OK, DONE};
 
 #define ATTEMPT_NUM 3
 
-// Tramas I (informação)
+
 #define SET_SIZE 5  // tamanho em bytes da trama SET
 #define UA_SIZE 5  // tamanho em bytes da trama UA
-
 
 #define FLAG 0b01111110  // (0x7E) flag de inicio e fim
 
@@ -21,8 +20,9 @@ enum stateMachine {Start, FLAG_RCV, A_RCV, C_RCV, BCC_OK, DONE};
 #define C_UA 0b00000111 // (0x07) Campo de Controlo - UA (Unnumbered Acknowledgement)
 #define C_RR(r) ((0b10000101) &= (r) << (7)) // (0x05 OU 0x85) Campo de Controlo - RR (receiver ready / positive ACK))
 #define C_REJ(r) ((0b10000001) &= (r) << (7)) // (0x01 OU 0x81) Campo de Controlo - REJ (reject / negative ACK))
+#define C_I(r) ((0b01000000) &= (r) << (6)) // (0x00 0x40) Campo de Controlo - Tramas I 
 
-#define BCC(a,c) (a ^ c)
+#define BCC(a,c) (a ^ c) // XOR entre a e c
 
 
 #endif // MACROS_HEADER

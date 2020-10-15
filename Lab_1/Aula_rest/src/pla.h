@@ -10,8 +10,10 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include "macros.h"
+#include "logs.h"
 
 #define BAUDRATE B38400
 
@@ -22,8 +24,17 @@
 #define FALSE 0
 #define TRUE 1
 
-void initConnection(int *fd);
+/**
+ * @brief Estabelece ligação ao cabo e cria fd
+ * 
+ * @param fd file descriptor da ligação
+ * @param port "/dev/ttySx"
+ */
+void initConnection(int *fd, char *port);
+void atende();
 void stateMachine_SET_UA(enum stateMachine *state, unsigned char *checkBuffer, char byte, int type);
+void transmitter_SET(int fd);
+void receiver_UA(int fd);
 
 int llopen(int porta, int type);
 int llwrite(int fd, char *buffer, int lenght);

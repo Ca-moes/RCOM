@@ -2,9 +2,14 @@
 #include "pla.h"
 
 struct termios oldtio; // utilizado para fechar a ligação
+enum stateMachine state;
+int failed = FALSE;
 
-void initConnection(int *fd){
+void initConnection(int *fd, char *port){
   struct termios newtio;
+
+  *fd = open(port, O_RDWR | O_NOCTTY );
+  if (fd < 0) {perror(port); exit(-1); }
 
   if ( tcgetattr(*fd,&oldtio) == -1) { /* save current port settings */
     perror("tcgetattr");
@@ -27,6 +32,14 @@ void initConnection(int *fd){
     exit(-1);
   }
   printf("New termios structure set\n");
+}
+
+void atende(){ 
+  if (state != DONE){ 
+    printf("receiver didn't answer\n");
+    failed = TRUE;
+    return;
+  }
 }
 
 void stateMachine_SET_UA(enum stateMachine *state, unsigned char *checkBuffer, char byte, int type){
@@ -87,23 +100,79 @@ void stateMachine_SET_UA(enum stateMachine *state, unsigned char *checkBuffer, c
   }
 }
 
+void transmitter_SET(int fd){
+  unsigned char buf[SET_SIZE] = {FLAG, A_ER, C_SET, BCC(A_ER, C_SET), FLAG};
+  unsigned char buf_read[UA_SIZE]; // read buffer
+  unsigned char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
+  int attempt = 0, res;
+  volatile int STOP=FALSE;
+
+  do{
+    attempt++;
+    res = write(fd,buf,SET_SIZE);
+    log_message_number("Bytes written ", res);
+    
+    alarm(3);
+    failed = FALSE;
+
+    state = Start;      
+    while (STOP==FALSE) {       /* loop for input */
+      res = read(fd,buf_read,1);   /* returns after 1 char has been input */
+      if (res == -1) break;
+      
+      log_message_number("Bytes read ", res);
+      log_hexa(buf_read[0]);
+      
+      stateMachine_SET_UA(&state, checkBuf, buf[0], TRANSMITTER);
+      if (state == DONE || failed) STOP=TRUE;
+    }
+  }while (attempt < ATTEMPT_NUM && failed);
+}
+
+void receiver_UA(int fd){
+  unsigned char buf[SET_SIZE];
+  unsigned char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
+  int res;
+  volatile int STOP=FALSE;
+  state = Start;
+
+  while (STOP==FALSE) {       /* loop for input */
+      res = read(fd,buf,1);   /* returns after 1 char has been input */
+
+      printf("nº bytes lido: %d - ", res);
+      printf("content: %#4.2x\n", buf[0]);
+
+      stateMachine_SET_UA(&state, checkBuf, buf[0], RECEIVER);
+      if (state == DONE) STOP=TRUE;
+    }
+
+    unsigned char replyBuf[UA_SIZE] = {FLAG, A_ER, C_UA, BCC(A_ER, C_UA), FLAG};
+
+    res = write(fd,replyBuf,UA_SIZE); //+1 para enviar o \0 
+    printf("%d bytes written\n", res); //res a contar com o \n e com o \0
+}
+
 int llopen(int porta, int type){
   int fd;
   char port[12]; // "/dev/ttyS11\0" <- 12 chars
-
   snprintf(port, 12, "/dev/ttyS%d", porta);
-  fd = open(port, O_RDWR | O_NOCTTY );
-  if (fd <0) {perror(port); exit(-1); }
-
-  initConnection(&fd);
   
+  initConnection(&fd, port);
+  
+  // Set Handler for Alarm
+  struct sigaction sa;
+  sigemptyset(&sa.sa_mask);
+  sa.sa_handler = atende;
+  sa.sa_flags = 0;
+  sigaction(SIGALRM, &sa, NULL);
+
   switch (type)
   {
   case TRANSMITTER:
-    /* code */
+    transmitter_SET(fd);
     break;
   case RECEIVER:
-    /* code */
+    receiver_UA(fd);
     break;
   default:
     return -1;

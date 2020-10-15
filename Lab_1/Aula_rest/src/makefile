@@ -10,10 +10,10 @@ all: writenoncanonical noncanonical
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 writenoncanonical: $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $@.c $(OBJ) -lm
+	$(CC) $(CFLAGS) -o $@ $@.c $(OBJ)
 
 noncanonical: $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $@.c $(OBJ) -lm
+	$(CC) $(CFLAGS) -o $@ $@.c $(OBJ)
 
 clean:
 	@rm $(TARGETS)

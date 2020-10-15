@@ -21,22 +21,47 @@
 #define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
 #define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
 
-// prints "message" in red!
+/**
+ * @brief Apresenta uma mensagem a vermelho
+ * 
+ * @param arr texto a apresentar
+ */
 void log_error(char *arr);
 
-// prints "message" in yellow!
+/**
+ * @brief Apresenta uma mensagem a amarelo
+ * 
+ * @param arr texto a apresentar
+ */
 void log_caution(char *arr);
 
-// prints "message" in green!
+/**
+ * @brief Apresenta uma mensagem a verde
+ * 
+ * @param arr texto a apresentar
+ */
 void log_success(char *arr);
 
-// prints "message" in normal white
+/**
+ * @brief Apresenta uma mensagem a branco
+ * 
+ * @param arr texto a apresentar
+ */
 void log_message(char *arr);
 
-// prints "message - numb"
+/**
+ * @brief Apresenta uma mensagem na forma "mensagem - numero"
+ * 
+ * @param arr string de mensagem
+ * @param numb numero 
+ */
 void log_message_number(char *arr, int numb);
 
-// prints "Content: 0xHH"
+/**
+ * @brief Apresenta uma mensagem na forma "Content: 0xHH"
+ * 
+ * @param a byte a apresentar
+ */
 void log_hexa(unsigned char a);
 
 #endif // LOGS_HEADER

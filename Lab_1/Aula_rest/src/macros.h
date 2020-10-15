@@ -1,10 +1,13 @@
 #ifndef MACROS_HEADER
 #define MACROS_HEADER
 
-
+/**
+ * @brief Enum com Valores para a Máquina de Estados de SET-UA
+ * 
+ */
 enum stateMachine {Start, FLAG_RCV, A_RCV, C_RCV, BCC_OK, DONE};
 
-#define ATTEMPT_NUM 3
+#define ATTEMPT_NUM 3 // Numero de tentativas para mandar trama
 
 
 #define SET_SIZE 5  // tamanho em bytes da trama SET

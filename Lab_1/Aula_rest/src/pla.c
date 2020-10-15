@@ -1,7 +1,7 @@
 // Protocolo de Ligação de Dados
 #include "pla.h"
 
-struct termios oldtio; // utilizado para fechar a ligação
+struct termios oldtio; // utilizado para fechar a ligação em llclose
 enum stateMachine state;
 int failed = FALSE;
 
@@ -151,6 +151,7 @@ void receiver_UA(int fd){
     res = write(fd,replyBuf,UA_SIZE); //+1 para enviar o \0 
     printf("%d bytes written\n", res); //res a contar com o \n e com o \0
 }
+
 
 int llopen(int porta, int type){
   int fd;

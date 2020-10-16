@@ -123,7 +123,7 @@ int transmitter_SET(int fd){
     state = Start;      
     while (STOP==FALSE) {       /* loop for input */
       res = read(fd,buf_read,1);   /* returns after 1 char has been input */
-      
+
       if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
         log_caution("transmitter: failed reading UA from receiver.");
         if (attempt < ATTEMPT_NUM) log_caution("Trying again...");
@@ -180,7 +180,6 @@ int receiver_UA(int fd){
   return fd;
 }
 
-
 int llopen(int porta, int type){
   int fd;
   char port[12]; // "/dev/ttyS11\0" <- 12 chars
@@ -210,6 +209,53 @@ int llopen(int porta, int type){
 }
 
 int llwrite(int fd, char *buffer, int lenght){
+  int res;
+  int currentLenght = lenght;
+  unsigned char buf1[4] = {FLAG, A_ER, C_I(1), BCC(A_ER, C_I(1))}; /*trama I*/
+  unsigned char *dataBuffer = (unsigned char *)malloc(lenght * sizeof(char));
+
+  unsigned char BCC2 = buffer[0];
+  for (int i = 1; i<lenght; i++){
+    BCC2 = BCC2 ^ buffer[i];
+  }
+
+  unsigned char buf2[2] = {BCC2, FLAG};
+  
+  for (int i = 0; i<lenght; i++){
+    if (buffer[i] == 0x7E){
+      currentLenght++;
+      dataBuffer = (unsigned char *) realloc(dataBuffer, currentLenght * sizeof(char)); 
+
+      dataBuffer[i] = 0x7D;
+      dataBuffer[i+1] = 0x5e;
+      
+    }
+    else if (buffer[i] == 0x7D){
+      currentLenght++;
+      dataBuffer = (unsigned char *) realloc(dataBuffer, currentLenght * sizeof(char));
+
+      dataBuffer[i] = 0x7D;
+      dataBuffer[i+1] = 0x5D;
+      
+    }
+    else{
+      dataBuffer[i] = buffer[i];
+    }
+
+    unsigned char finalBuffer[currentLenght + 6];
+
+
+    strcpy((char *) finalBuffer,(char *) buf1);
+    strcat((char *) finalBuffer,(char *) dataBuffer);
+    strcat((char *) finalBuffer, (char *) buf2);
+
+    res = write(fd,finalBuffer,sizeof(finalBuffer));
+    if (res < 0) return -1;
+
+  }
+
+
+
   return 0;
 }
 

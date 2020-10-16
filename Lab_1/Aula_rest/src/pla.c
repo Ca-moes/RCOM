@@ -221,41 +221,32 @@ int llwrite(int fd, char *buffer, int lenght){
 
   unsigned char buf2[2] = {BCC2, FLAG};
   
-  for (int i = 0; i<lenght; i++){
-    if (buffer[i] == 0x7E){
+  for (int i = 0, k=0; i<lenght; i++, k++){
+    if (buffer[i] == 0x7E || buffer[i] == 0x7D){
       currentLenght++;
       dataBuffer = (unsigned char *) realloc(dataBuffer, currentLenght * sizeof(char)); 
 
-      dataBuffer[i] = 0x7D;
-      dataBuffer[i+1] = 0x5e;
-      
-    }
-    else if (buffer[i] == 0x7D){
-      currentLenght++;
-      dataBuffer = (unsigned char *) realloc(dataBuffer, currentLenght * sizeof(char));
-
-      dataBuffer[i] = 0x7D;
-      dataBuffer[i+1] = 0x5D;
+      dataBuffer[k+1] = buffer[i] ^ 0x20;
+      dataBuffer[k] = 0x7D;
+      k++;
       
     }
     else{
-      dataBuffer[i] = buffer[i];
+      dataBuffer[k] = buffer[i];
     }
-
-    unsigned char finalBuffer[currentLenght + 6];
-
-
-    strcpy((char *) finalBuffer,(char *) buf1);
-    strcat((char *) finalBuffer,(char *) dataBuffer);
-    strcat((char *) finalBuffer, (char *) buf2);
-
-    res = write(fd,finalBuffer,sizeof(finalBuffer));
-    if (res < 0) return -1;
-
   }
 
+  unsigned char finalBuffer[currentLenght + 6];
 
 
+  strcpy((char *) finalBuffer,(char *) buf1);
+  strcat((char *) finalBuffer,(char *) dataBuffer);
+  strcat((char *) finalBuffer, (char *) buf2);
+
+  res = write(fd,finalBuffer,sizeof(finalBuffer));
+  
+  if (res < 0) return -1;
+  
   return 0;
 }
 

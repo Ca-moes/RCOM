@@ -122,7 +122,7 @@ int transmitter_SET(int fd){
     state = Start;      
     while (STOP==FALSE) {       /* loop for input */
       res = read(fd,buf_read,1);   /* returns after 1 char has been input */
-      
+
       if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
         log_caution("transmitter: failed reading UA from receiver.");
         if (attempt < ATTEMPT_NUM) log_caution("Trying again...");
@@ -136,6 +136,8 @@ int transmitter_SET(int fd){
       log_hexa(buf_read[0]);
       
       stateMachine_SET_UA(&state, checkBuf, buf_read[0], TRANSMITTER);
+      alarm(0);
+
       if (state == DONE || failed) STOP=TRUE;
     }
   }while (attempt < ATTEMPT_NUM && failed);
@@ -180,7 +182,6 @@ int receiver_UA(int fd){
   return fd;
 }
 
-
 int llopen(int porta, int type){
   int fd;
   char port[12]; // "/dev/ttyS11\0" <- 12 chars
@@ -213,6 +214,87 @@ int llopen(int porta, int type){
 }
 
 int llwrite(int fd, char *buffer, int lenght){
+  int res;
+  int currentLenght = lenght;
+  unsigned char buf1[4] = {FLAG, A_ER, C_I(1), BCC(A_ER, C_I(1))}; /*trama I*/
+  unsigned char *dataBuffer = (unsigned char *)malloc(lenght * sizeof(char));
+  unsigned char buf_read[255];
+  volatile int STOP=FALSE;
+  int attempt = 0;
+
+  /*building trama I*/
+  unsigned char BCC2 = buffer[0];
+  for (int i = 1; i<lenght; i++){
+    BCC2 = BCC2 ^ buffer[i];
+  }
+
+  unsigned char buf2[2] = {BCC2, FLAG};
+  
+  for (int i = 0, k=0; i<lenght; i++, k++){
+    if (buffer[i] == 0x7E || buffer[i] == 0x7D){
+      currentLenght++;
+      dataBuffer = (unsigned char *) realloc(dataBuffer, currentLenght * sizeof(char)); 
+
+      dataBuffer[k+1] = buffer[i] ^ 0x20;
+      dataBuffer[k] = 0x7D;
+      k++;
+      
+    }
+    else{
+      dataBuffer[k] = buffer[i];
+    }
+  }
+
+  unsigned char finalBuffer[currentLenght + 6]; /*trama I*/
+
+
+  strcpy((char *) finalBuffer,(char *) buf1);
+  strcat((char *) finalBuffer,(char *) dataBuffer);
+  strcat((char *) finalBuffer, (char *) buf2);
+
+  
+  for (int i = 0; i<currentLenght; i++){
+    log_hexa(finalBuffer[i]);
+  }
+
+  /*sending trama I*/
+  do{
+    attempt++;
+    res = write(fd,finalBuffer,sizeof(finalBuffer));
+    if (res == -1) {
+      log_error("writter: failed writing data to buffer.");
+      return -1;
+    }
+    
+    log_message_number("Bytes written ", res);
+    
+    alarm(3);
+    failed = FALSE;
+    
+    while (STOP==FALSE) {       /* loop for input */
+      res = read(fd,buf_read,1);   /* returns after 1 char has been input */
+
+      if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
+        log_caution("llwrite: failed reading RR from receiver.");
+        if (attempt < ATTEMPT_NUM) log_caution("Trying again...");
+        break;
+      }
+      else if (res == -1){
+        log_error("llwrite: failed reading RR from buffer.");
+        return -1;
+      }
+      
+      log_message_number("Bytes read ", res);
+      log_hexa(buf_read[0]);
+
+      /*TO DO: Maquina de estados para verificar trama RR (buf_read)*/
+      /* para alem de enviar a trama I temos de enviar o numero de sequencia (Ns)
+        não sei se é suposto usar a struct que ele tem no slide 17 com aquilo tudo (?)*/
+
+      if (failed) STOP=TRUE;
+    }
+  }while (attempt < ATTEMPT_NUM && failed);
+  
   return 0;
 }
 

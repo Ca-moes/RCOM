@@ -32,7 +32,7 @@
  * @param fd file descriptor da ligação
  * @param port "/dev/ttySx"
  */
-void initConnection(int *fd, char *port);
+int initConnection(int *fd, char *port);
 /**
  * @brief Função handler do sinal de alarme
  * 

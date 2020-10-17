@@ -5,15 +5,15 @@ struct termios oldtio; // utilizado para fechar a ligação em llclose
 enum stateMachine state;
 int failed = FALSE;
 
-void initConnection(int *fd, char *port){
+int initConnection(int *fd, char *port){
   struct termios newtio;
 
   *fd = open(port, O_RDWR | O_NOCTTY );
   if (fd < 0) {perror(port); exit(-1); }
 
   if ( tcgetattr(*fd,&oldtio) == -1) { /* save current port settings */
-    perror("tcgetattr");
-    exit(-1);
+    log_error("Error on tcgetattr - check cable connection");
+    return -1;
   }
 
   bzero(&newtio, sizeof(newtio));
@@ -32,6 +32,7 @@ void initConnection(int *fd, char *port){
     exit(-1);
   }
   log_success("New termios structure set");
+  return 0;
 }
 
 void atende(){ 
@@ -185,7 +186,10 @@ int llopen(int porta, int type){
   char port[12]; // "/dev/ttyS11\0" <- 12 chars
   snprintf(port, 12, "/dev/ttyS%d", porta);
   
-  initConnection(&fd, port);
+  if (initConnection(&fd, port) < 0){
+    log_error("Error on initConnection");
+    return -1;
+  }
   
   // Set Handler for Alarm
   struct sigaction sa;

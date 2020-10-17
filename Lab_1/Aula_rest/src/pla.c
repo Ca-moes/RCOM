@@ -246,12 +246,11 @@ int llwrite(int fd, char *buffer, int lenght){
 
   unsigned char finalBuffer[currentLenght + 6]; /*trama I*/
 
-
   strcpy((char *) finalBuffer,(char *) buf1);
   strcat((char *) finalBuffer,(char *) dataBuffer);
   strcat((char *) finalBuffer, (char *) buf2);
 
-  
+  // 0x04 está a mais
   for (int i = 0; i<currentLenght; i++){
     log_hexa(finalBuffer[i]);
   }

@@ -2,7 +2,7 @@
 
 
 if gcc -o progread -Wall application.c pla.c logs.c; then 
-./progread receiver 10;
+./progread receiver 11;
 else 
 echo "COMPILATION ERROR";
 fi 

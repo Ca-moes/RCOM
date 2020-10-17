@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 
   int fd, x, type;
   parseArgs(argc, argv, &x, &type);
-  
+
   fd = llopen(x, type);
   
   if (fd < 0) log_error("Unable to establish connection.");
@@ -51,5 +51,6 @@ int main(int argc, char** argv) {
 
   printf("Closing..\n");
   llclose(fd);
+
   return 0;
 }

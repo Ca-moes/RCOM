@@ -142,6 +142,8 @@ int transmitter_SET(int fd){
     }
   }while (attempt < ATTEMPT_NUM && failed);
 
+  alarm(0); // cancel pending alarms
+
   if(failed) return -1;
   return fd;
 }

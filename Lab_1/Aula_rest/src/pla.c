@@ -249,6 +249,11 @@ int llwrite(int fd, char *buffer, int lenght){
   strcat((char *) finalBuffer,(char *) dataBuffer);
   strcat((char *) finalBuffer, (char *) buf2);
 
+  
+  for (int i = 0; i<currentLenght; i++){
+    log_hexa(finalBuffer[i]);
+  }
+
   /*sending trama I*/
   do{
     attempt++;

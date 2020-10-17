@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
   if (fd < 0) log_error("Unable to establish connection.");
   else log_success("Connection established.");
 
-  llwrite(fd,"hel~o",5);
+  //llwrite(fd,"hel~o",5);
 
   printf("Closing..\n");
   llclose(fd);

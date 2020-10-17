@@ -9,27 +9,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <signal.h>
 
 #define BAUDRATE B38400
-#define MODEMDEVICE "/dev/ttyS1"
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define FALSE 0
 #define TRUE 1
 
 volatile int STOP=FALSE;
-enum stateMachine state;
-
-int failed = FALSE;
-
-void atende() // atende alarme
-{
-  if (state != DONE){ 
-    printf("receiver didn't answer\n");
-    failed = TRUE;
-    return;
-  }
-}
 
 void determineState(enum stateMachine *state, unsigned char *checkBuffer, char byte){
   // TO-DO máquina de estados
@@ -49,7 +35,7 @@ void determineState(enum stateMachine *state, unsigned char *checkBuffer, char b
     }
     break;
   case A_RCV:
-    if (byte == C_UA) {
+    if (byte == C_SET) {
       *state = C_RCV;
       checkBuffer[1] = byte;
     }
@@ -70,7 +56,6 @@ void determineState(enum stateMachine *state, unsigned char *checkBuffer, char b
     else{
       *state = Start;
     }
-    // precisa de valores de A & C
     break;
   case BCC_OK:
     if (byte == FLAG){
@@ -90,30 +75,12 @@ int main(int argc, char** argv)
     int fd, res;
     struct termios oldtio,newtio;
     unsigned char buf[255];
-    unsigned char buf1[1];
-
-    struct sigaction sa;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_handler = atende;
-    sa.sa_flags = 0;
-
-    sigaction(SIGALRM, &sa, NULL);
-
-    
-    /* if ( (argc < 2) || 
-  	     ((strcmp("/dev/ttyS10", argv[1])!=0) && 
-  	      (strcmp("/dev/ttyS11", argv[1])!=0) )) {
-      printf("Usage:\tnserial SerialPort\n\tex: nserial /dev/ttyS1\n");
-      exit(1);
-    } */
-
 
   /*
     Open serial port device for reading and writing and not as controlling tty
     because we don't want to get killed if linenoise sends CTRL-C.
   */
-
-
+  
     fd = open(argv[1], O_RDWR | O_NOCTTY );
     if (fd <0) {perror(argv[1]); exit(-1); }
 
@@ -131,14 +98,9 @@ int main(int argc, char** argv)
     newtio.c_lflag = 0;
 
     newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused */
-    newtio.c_cc[VMIN]     = 1;   /* blocking read until 5 chars received */
+    newtio.c_cc[VMIN]     = 1;   /* blocking read until 1 chars received */
 
 
-
-  /* 
-    VTIME e VMIN devem ser alterados de forma a proteger com um temporizador a 
-    leitura do(s) pr�ximo(s) caracter(es)
-  */
 
 
     tcflush(fd, TCIOFLUSH);
@@ -150,53 +112,36 @@ int main(int argc, char** argv)
 
     printf("New termios structure set\n");
 
-    buf[0]= FLAG; // F
-    buf[1]= A_ER; // A
-    buf[2]= C_SET; // C
-    buf[3]= BCC(A_ER, C_SET); // BCC
-    buf[4]= FLAG; // F
 
-    /* printf("conteudo de buf[0] : %c\n", buf[0]);
-    printf("conteudo de buf[0] : %x\n", buf[0]);
-    printf("conteudo de buf[0] : %#x\n", buf[0]);
-    printf("conteudo de buf : %s\n", buf); */
-
-    int attempt = 0;
-
-    do{
-      attempt++;
-      res = write(fd,buf,SET_SIZE);   //envia o \0
-      printf("%d bytes written\n", res);  
-      
-      alarm(3);
-      failed = FALSE;
-
-      state = Start;
-      unsigned char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
-        
-      while (STOP==FALSE) {       /* loop for input */
-        res = read(fd,buf1,1);   /* returns after 1 char has been input */
-        if (res == -1)
-          break;
-        
-        printf("nº bytes lido: %d - ", res);
-        printf("content: %#4.2x\n", buf1[0]);
-
-        determineState(&state, checkBuf, buf1[0]);
-
-        if (state == DONE || failed) STOP=TRUE;
-      }
-
-    }while (attempt < ATTEMPT_NUM && failed);
+    unsigned char replyBuf[255], checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
+    enum stateMachine state = Start;
 
 
-    if ( tcsetattr(fd,TCSANOW,&oldtio) == -1) {
-      perror("tcsetattr");
-      exit(-1);
+    while (STOP==FALSE) {       /* loop for input */
+      res = read(fd,buf,1);   /* returns after 1 char has been input */
+
+      printf("nº bytes lido: %d - ", res);
+      printf("content: %#4.2x\n", buf[0]);
+
+      determineState(&state, checkBuf, buf[0]);
+
+      if (state == DONE) STOP=TRUE;
     }
 
 
 
+    replyBuf[0]= FLAG; // F
+    replyBuf[1]= A_ER; // A
+    replyBuf[2]= C_UA; // C
+    replyBuf[3]= BCC(A_ER, C_UA); // BCC
+    replyBuf[4]= FLAG; // F
+
+    res = write(fd,replyBuf,UA_SIZE); //+1 para enviar o \0 
+    printf("%d bytes written\n", res); //res a contar com o \n e com o \0
+
+
+    tcsetattr(fd,TCSANOW,&oldtio);
     close(fd);
     return 0;
 }
+

@@ -1,6 +1,6 @@
 #ifndef PLA_HEADER
 #define PLA_HEADER
-
+#define _GNU_SOURCE
 
 #include <sys/types.h>
 #include <sys/stat.h>

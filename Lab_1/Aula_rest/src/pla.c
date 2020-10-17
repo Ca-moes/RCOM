@@ -136,7 +136,6 @@ int transmitter_SET(int fd){
       log_hexa(buf_read[0]);
       
       stateMachine_SET_UA(&state, checkBuf, buf_read[0], TRANSMITTER);
-      alarm(0);
 
       if (state == DONE || failed) STOP=TRUE;
     }

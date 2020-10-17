@@ -46,11 +46,16 @@ int main(int argc, char** argv) {
 
   fd = llopen(x, type);
   
-  if (fd < 0) log_error("Unable to establish connection.");
-  else log_success("Connection established.");
+  if (fd < 0) {
+    log_error("Unable to establish connection. Exiting..  ");
+    return -1;
+  } else log_success("Connection established.");
 
-  printf("Closing..\n");
-  llclose(fd);
 
+  printf("Closing Connection..\n");
+  if (llclose(fd) < 0){
+    log_error("Error on llclose()");
+    return -1;
+  }
   return 0;
 }

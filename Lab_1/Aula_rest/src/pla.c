@@ -42,8 +42,7 @@ void atende(){
 }
 
 void stateMachine_SET_UA(enum stateMachine *state, unsigned char *checkBuffer, char byte, int type){
-  // TO-DO máquina de estados
-  printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
+  //printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
   switch (*state)
   {
   case Start:
@@ -112,10 +111,9 @@ int transmitter_SET(int fd){
     if (res == -1) {
       log_error("transmitter: failed writing SET to buffer.");
       return -1;
-      }
+    }
     
-    
-    log_message_number("Bytes written ", res);
+    log_message_number("Bytes sent to Receiver\n", res);
     
     alarm(3);
     failed = FALSE;
@@ -128,13 +126,12 @@ int transmitter_SET(int fd){
         log_caution("transmitter: failed reading UA from receiver.");
         if (attempt < ATTEMPT_NUM) log_caution("Trying again...");
         break;
-      }
-      else if (res == -1){
+      } else if (res == -1){
         log_error("transmitter: failed reading UA from buffer.");
         return -1;
       }
       
-      log_message_number("Bytes read ", res);
+      log_message_number("Bytes read - ", res);
       log_hexa(buf_read[0]);
       
       stateMachine_SET_UA(&state, checkBuf, buf_read[0], TRANSMITTER);
@@ -162,7 +159,7 @@ int receiver_UA(int fd){
         return -1;
       }
 
-      log_message_number("Bytes read ", res);
+      log_message_number("Bytes read - ", res);
       log_hexa(buf[0]);
 
       stateMachine_SET_UA(&state, checkBuf, buf[0], RECEIVER);
@@ -177,7 +174,7 @@ int receiver_UA(int fd){
       return -1;
       }
 
-    log_message_number("Bytes written ", res); //res a contar com o \n e com o \0
+    log_message_number("Bytes written\n", res); //res a contar com o \n e com o \0
   
   return fd;
 }
@@ -222,7 +219,14 @@ int llread(int fd, char *buffer){
 int llclose(int fd){
   // Falta Mandar Disc -> Disc -> UA
 
-  tcsetattr(fd,TCSANOW,&oldtio);
-  close(fd);
+  if (tcsetattr(fd,TCSANOW,&oldtio) != 0){
+    log_error("Error on tcsetattr");
+    return -1;
+  }
+  if (close(fd) != 0){
+    log_error("Error on tcsetattr");
+    return -1;
+  }
+  log_success("Closing Successful");
   return 0;
 }

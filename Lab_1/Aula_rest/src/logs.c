@@ -26,7 +26,7 @@ void log_message(char *arr){
 
 void log_message_number(char *arr, int numb){
   char msg[255];
-  sprintf(msg, "%d - %s\n" , numb,  arr);
+  sprintf(msg, "%d - %s" , numb,  arr);
   write(STDOUT_FILENO, msg, strlen(msg));
 }
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # corre num novo terminal o socat
-gnome-terminal --window-with-profile=RCOM_soc -- sudo ./cable
+./run_cable.sh
 # tempo para dar input
 sleep 5
 

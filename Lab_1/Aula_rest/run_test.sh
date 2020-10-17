@@ -1,6 +1,6 @@
 #!/bin/sh
 
-gnome-terminal --window-with-profile=RCOM_soc -- sudo ./cable
+./run_cable.sh
 cd src
 sleep 5
 ./run_rw.sh

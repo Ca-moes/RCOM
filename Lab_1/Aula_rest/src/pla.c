@@ -215,7 +215,7 @@ int llopen(int porta, int type){
 int llwrite(int fd, char *buffer, int lenght){
   int res;
   int currentLenght = lenght;
-  unsigned char buf1[4] = {FLAG, A_ER, C_I(1), BCC(A_ER, C_I(1))}; /*trama I*/
+  unsigned char buf1[5] = {FLAG, A_ER, C_I(1), BCC(A_ER, C_I(1)), '\0'}; /*trama I*/
   unsigned char *dataBuffer = (unsigned char *)malloc(lenght * sizeof(char));
   unsigned char buf_read[255];
   volatile int STOP=FALSE;
@@ -227,7 +227,7 @@ int llwrite(int fd, char *buffer, int lenght){
     BCC2 = BCC2 ^ buffer[i];
   }
 
-  unsigned char buf2[2] = {BCC2, FLAG};
+  unsigned char buf2[3] = {BCC2, FLAG, '\0'};
   
   for (int i = 0, k=0; i<lenght; i++, k++){
     if (buffer[i] == 0x7E || buffer[i] == 0x7D){
@@ -251,7 +251,7 @@ int llwrite(int fd, char *buffer, int lenght){
   strcat((char *) finalBuffer, (char *) buf2);
 
   // 0x04 está a mais
-  for (int i = 0; i<currentLenght; i++){
+  for (int i = 0; i<currentLenght + 6; i++){
     log_hexa(finalBuffer[i]);
   }
 

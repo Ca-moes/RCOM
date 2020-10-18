@@ -26,6 +26,17 @@
 #define FALSE 0
 #define TRUE 1
 
+#define MAX_SIZE 512
+
+struct linkLayer {
+  char port[20]; /*Dispositivo /dev/ttySx, x = 0, 1*/
+  int baudRate; /*Velocidade de transmissão*/
+  unsigned int sequenceNumber;   /*Número de sequência da trama: 0, 1*/
+  unsigned int timeout; /*Valor do temporizador: 1 s*/
+  unsigned int numTransmissions; /*Número de tentativas em caso defalha*/
+  unsigned char frame[MAX_SIZE]; /*Trama*/
+};
+
 /**
  * @brief Estabelece ligação ao cabo e cria fd
  * 
@@ -107,6 +118,16 @@ int llread(int fd, char *buffer);
  * @return int valor positivo em caso de sucesso ou -1 em caso de erro
  */
 int llclose(int fd);
+
+/**
+ * @brief Função para processar o estado da leitura das tramas SET-UA
+ * 
+ * @param state estado atual da máquina de estados SET-UA
+ * @param checkBuffer Buffer que guarda os valores dos bytes A e C
+ * @param byte Byte a ser processado pela máquina de estados
+ */
+int stateMachine_Read(enum stateMachine *state, unsigned char *checkBuffer, char byte);
+
 
 
 #endif // PLA_HEADER

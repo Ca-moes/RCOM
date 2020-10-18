@@ -5,6 +5,9 @@ struct termios oldtio; // utilizado para fechar a ligação em llclose
 enum stateMachine state;
 int failed = FALSE;
 
+struct linkLayer linkLayer;
+
+
 int initConnection(int *fd, char *port){
   struct termios newtio;
 
@@ -31,6 +34,13 @@ int initConnection(int *fd, char *port){
     perror("tcsetattr");
     exit(-1);
   }
+
+  strcpy(linkLayer.port,port);
+  linkLayer.baudRate = BAUDRATE;
+  linkLayer.sequenceNumber = 0;
+  linkLayer.timeout = 3;
+  linkLayer.numTransmissions = 3;
+
   log_success("New termios structure set");
   return 0;
 }
@@ -44,6 +54,7 @@ void atende(){
 
 void stateMachine_SET_UA(enum stateMachine *state, unsigned char *checkBuffer, char byte, int type){
   //printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
+
   switch (*state)
   {
   case Start:
@@ -116,7 +127,7 @@ int transmitter_SET(int fd){
     
     log_message_number("Bytes sent to Receiver\n", res);
     
-    alarm(3);
+    alarm(linkLayer.timeout);
     failed = FALSE;
 
     state = Start;      
@@ -125,7 +136,7 @@ int transmitter_SET(int fd){
 
       if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
         log_caution("transmitter: failed reading UA from receiver.");
-        if (attempt < ATTEMPT_NUM) {
+        if (attempt < linkLayer.numTransmissions) {
           log_caution("Trying again...");
           failed = TRUE;
         }
@@ -142,7 +153,7 @@ int transmitter_SET(int fd){
 
       if (state == DONE || failed) STOP=TRUE;
     }
-  }while (attempt < ATTEMPT_NUM && failed);
+  }while (attempt < linkLayer.numTransmissions && failed);
 
   alarm(0); // cancel pending alarms
 
@@ -158,28 +169,28 @@ int receiver_UA(int fd){
   state = Start;
 
   while (STOP==FALSE) {       /* loop for input */
-      res = read(fd,buf,1);   /* returns after 1 char has been input */
-      if (res == -1) {
-        log_error("receiver: failed reading SET from buffer.");
-        return -1;
-      }
-
-      log_message_number("Bytes read - ", res);
-      log_hexa(buf[0]);
-
-      stateMachine_SET_UA(&state, checkBuf, buf[0], RECEIVER);
-      if (state == DONE) STOP=TRUE;
+    res = read(fd,buf,1);   /* returns after 1 char has been input */
+    if (res == -1) {
+      log_error("receiver: failed reading SET from buffer.");
+      return -1;
     }
 
-    unsigned char replyBuf[UA_SIZE] = {FLAG, A_ER, C_UA, BCC(A_ER, C_UA), FLAG};
+    log_message_number("Bytes read - ", res);
+    log_hexa(buf[0]);
 
-    res = write(fd,replyBuf,UA_SIZE); //+1 para enviar o \0 
-    if (res == -1) {
-      log_error("receiver: failed writing UA to buffer.");
-      return -1;
-      }
+    stateMachine_SET_UA(&state, checkBuf, buf[0], RECEIVER);
+    if (state == DONE) STOP=TRUE;
+  }
 
-    log_message_number("Bytes written\n", res); //res a contar com o \n e com o \0
+  unsigned char replyBuf[UA_SIZE] = {FLAG, A_ER, C_UA, BCC(A_ER, C_UA), FLAG};
+
+  res = write(fd,replyBuf,UA_SIZE); //+1 para enviar o \0 
+  if (res == -1) {
+    log_error("receiver: failed writing UA to buffer.");
+    return -1;
+    }
+
+  log_message_number("Bytes written\n", res); //res a contar com o \n e com o \0
   
   return fd;
 }
@@ -215,7 +226,6 @@ int llopen(int porta, int type){
   }
 }
 
-
 int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsigned char* footerBuf, unsigned char* dataBuffer, int dataSize){
   int finalIndex = 0, dataIndex = 0, footerBufIndex=0;
 
@@ -238,11 +248,14 @@ int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsign
 int llwrite(int fd, char *buffer, int lenght){
   int res;
   int currentLenght = lenght;
-  unsigned char buf1[4] = {FLAG, A_ER, C_I(0), BCC(A_ER, C_I(0))};  
+  unsigned char buf1[4] = {FLAG, A_ER, C_I(linkLayer.sequenceNumber), BCC(A_ER, C_I(linkLayer.sequenceNumber))};  
   unsigned char *dataBuffer = (unsigned char *)malloc(lenght * sizeof(char));
   unsigned char buf_read[255];
   volatile int STOP=FALSE;
   int attempt = 0;
+
+  if (lenght > MAX_SIZE)
+    return -1;
 
   /*building trama I*/
   unsigned char BCC2 = buffer[0];
@@ -284,15 +297,16 @@ int llwrite(int fd, char *buffer, int lenght){
     
     log_message_number("Bytes written \n", res);
     
-    alarm(3);
+    alarm(linkLayer.timeout);
     failed = FALSE;
     
+    //state = Start;
     while (STOP==FALSE) {       /* loop for input */
       res = read(fd,buf_read,1);   /* returns after 1 char has been input */
 
       if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
         log_caution("llwrite: failed reading RR from receiver.");
-        if (attempt < ATTEMPT_NUM) {
+        if (attempt < linkLayer.numTransmissions) {
           log_caution("Trying again...");
           failed = TRUE;
         }
@@ -306,21 +320,135 @@ int llwrite(int fd, char *buffer, int lenght){
       log_message_number("Bytes read ", res);
       log_hexa(buf_read[0]);
 
-      /*TO DO: Maquina de estados para verificar trama RR (buf_read)*/
-      /* para alem de enviar a trama I temos de enviar o numero de sequencia (Ns)
-        não sei se é suposto usar a struct que ele tem no slide 17 com aquilo tudo (?)*/
+      //stateMachine_RR
 
       if (failed) STOP=TRUE;
     }
-  }while (attempt < ATTEMPT_NUM && failed);
+  }while (attempt < linkLayer.numTransmissions && failed);
 
   alarm(0);
+  linkLayer.sequenceNumber ^= 1;
+
+  return 0;
+}
+
+int stateMachine_Read(enum stateMachine *state, unsigned char *checkBuffer, char byte){
+  //printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
+
+  static int frameIndex;
+  linkLayer.frame[frameIndex] = byte;
+  switch (*state)
+  {
+  case Start:
+  frameIndex = 0;
+    if (byte == FLAG){
+      *state = FLAG_RCV;
+      frameIndex++;
+    }  
+    break;
+  case FLAG_RCV:
+    if (byte == A_ER) {
+      *state = A_RCV;
+      checkBuffer[0] = byte;
+      frameIndex++;
+    }
+    else if (byte!= FLAG){
+      *state = Start;
+    }
+    break;
+  case A_RCV:
+
+    if (byte == linkLayer.sequenceNumber) {
+      *state = C_RCV;
+      checkBuffer[1] = byte;
+      frameIndex++;
+    } else if (byte == FLAG){
+      *state = FLAG_RCV;
+      frameIndex = 1;
+    } else{
+      return -1;
+    }
+    break;
+  case C_RCV:
+    frameIndex = 3;
+    if (byte == BCC(checkBuffer[0],checkBuffer[1])){
+      *state = BCC_OK;
+      frameIndex++;
+    }
+    else if (byte == FLAG){
+      *state = FLAG_RCV;
+      frameIndex = 1;
+    }
+    else{
+      return -1;
+    }
+    // precisa de valores de A & C
+    break;
+
+  case BCC_OK:
+    if (byte == FLAG){
+      unsigned char BCC2;
+      for (int i = 4; i<frameIndex; i++){
+        BCC2 = BCC2 ^ linkLayer.frame[i];
+      }
+
+      if (linkLayer.frame[frameIndex-1]==BCC2){
+        linkLayer.sequenceNumber = linkLayer.sequenceNumber ^ 1;
+        *state = DONE;
+      }
+      else{
+        return -1;
+      }
+    }
+    break;
+    
+  case DONE:
+    break;
+  }
 
   return 0;
 }
 
 int llread(int fd, char *buffer){
-  return 0;
+  unsigned char buf[SET_SIZE];
+  unsigned char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
+  int res;
+  volatile int STOP=FALSE;
+  state = Start;
+
+  unsigned char c;
+
+  while (STOP==FALSE) {       /* loop for input */
+    res = read(fd,buf,1);   /* returns after 1 char has been input */
+    if (res == -1) {
+      log_error("receiver: failed reading frame from buffer.");
+      return -1;
+    }
+
+    log_message_number("Bytes read - ", res);
+    log_hexa(buf[0]);
+    
+    if (stateMachine_Read(&state, checkBuf, buf[0]) == -1){
+      c = C_REJ(linkLayer.sequenceNumber ^ 1);
+      break;
+    }
+
+    c = C_RR(linkLayer.sequenceNumber ^ 1);
+    
+    if (state == DONE) STOP=TRUE;
+  }
+
+  unsigned char replyBuf[5] = {FLAG, A_ER, c, BCC(A_ER, c), FLAG};
+
+  res = write(fd,replyBuf,5);
+  if (res == -1) {
+    log_error("receiver: failed writing response to buffer.");
+    return -1;
+  }
+
+  linkLayer.sequenceNumber^=1;
+  
+  return fd;
 }
 
 int llclose(int fd){

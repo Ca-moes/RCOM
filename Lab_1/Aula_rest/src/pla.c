@@ -215,7 +215,7 @@ int llopen(int porta, int type){
 int llwrite(int fd, char *buffer, int lenght){
   int res;
   int currentLenght = lenght;
-  unsigned char buf1[5] = {FLAG, A_ER, C_I(1), BCC(A_ER, C_I(1)), '\0'}; /*trama I*/
+  unsigned char buf1[5] = {FLAG, A_ER, C_I(0), BCC(A_ER, C_I(0)), '\0'}; /*trama I*/
   unsigned char *dataBuffer = (unsigned char *)malloc(lenght * sizeof(char));
   unsigned char buf_read[255];
   volatile int STOP=FALSE;

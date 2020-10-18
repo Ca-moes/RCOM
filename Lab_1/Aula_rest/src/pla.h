@@ -70,6 +70,19 @@ int receiver_UA(int fd);
  * @return int identificador da ligação de dados OU -1 em caso de erro
  */
 int llopen(int porta, int type);
+
+
+/**
+ * @brief Stuffs the final buffer with the Information Packet
+ * 
+ * @param finalBuffer pointer to the Information buffer
+ * @param headerBuf pointer to the header buffer [FLAG, A, C, BCC1]
+ * @param footerBuf pointer to the footer buffer [BCC2, FLAG]
+ * @param dataBuffer pointer to the Data Buffer [D1, D2, ..., Dn]
+ * @param dataSize dize of Data Buffer
+ * @return int size of finalBuffer
+ */
+int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsigned char* footerBuf, unsigned char* dataBuffer, int dataSize);
 /**
  * @brief 
  * 

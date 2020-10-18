@@ -125,7 +125,10 @@ int transmitter_SET(int fd){
 
       if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
         log_caution("transmitter: failed reading UA from receiver.");
-        if (attempt < ATTEMPT_NUM) log_caution("Trying again...");
+        if (attempt < ATTEMPT_NUM) {
+          log_caution("Trying again...");
+          failed = TRUE;
+        }
         break;
       } else if (res == -1){
         log_error("transmitter: failed reading UA from buffer.");
@@ -212,10 +215,30 @@ int llopen(int porta, int type){
   }
 }
 
+
+int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsigned char* footerBuf, unsigned char* dataBuffer, int dataSize){
+  int finalIndex = 0, dataIndex = 0, footerBufIndex=0;
+
+  while (finalIndex < 4){
+  finalBuffer[finalIndex] = headerBuf[finalIndex];
+  finalIndex++;
+  }
+  while (dataIndex < dataSize){
+    finalBuffer[finalIndex] = dataBuffer[dataIndex];
+    finalIndex++; dataIndex++;
+  }
+  while (footerBufIndex < 2){
+    finalBuffer[finalIndex] = footerBuf[footerBufIndex];
+    finalIndex++; footerBufIndex++;
+  }
+
+  return finalIndex;
+}
+
 int llwrite(int fd, char *buffer, int lenght){
   int res;
   int currentLenght = lenght;
-  unsigned char buf1[5] = {FLAG, A_ER, C_I(0), BCC(A_ER, C_I(0)), '\0'}; /*trama I*/
+  unsigned char buf1[4] = {FLAG, A_ER, C_I(0), BCC(A_ER, C_I(0))};  
   unsigned char *dataBuffer = (unsigned char *)malloc(lenght * sizeof(char));
   unsigned char buf_read[255];
   volatile int STOP=FALSE;
@@ -227,7 +250,7 @@ int llwrite(int fd, char *buffer, int lenght){
     BCC2 = BCC2 ^ buffer[i];
   }
 
-  unsigned char buf2[3] = {BCC2, FLAG, '\0'};
+  unsigned char buf2[2] = {BCC2, FLAG};
   
   for (int i = 0, k=0; i<lenght; i++, k++){
     if (buffer[i] == 0x7E || buffer[i] == 0x7D){
@@ -237,23 +260,18 @@ int llwrite(int fd, char *buffer, int lenght){
       dataBuffer[k+1] = buffer[i] ^ 0x20;
       dataBuffer[k] = 0x7D;
       k++;
-      
     }
     else{
       dataBuffer[k] = buffer[i];
     }
   }
 
-  unsigned char finalBuffer[currentLenght + 6]; /*trama I*/
+  unsigned char finalBuffer[currentLenght + 6]; /*trama I completa*/
+  int finalIndex = fillFinalBuffer(finalBuffer, buf1, buf2, dataBuffer, currentLenght);
+  
 
-  strcpy((char *) finalBuffer,(char *) buf1);
-  strcat((char *) finalBuffer,(char *) dataBuffer);
-  strcat((char *) finalBuffer, (char *) buf2);
-
-  // 0x04 está a mais
-  for (int i = 0; i<currentLenght + 6; i++){
+  for (int i = 0; i<finalIndex; i++)
     log_hexa(finalBuffer[i]);
-  }
 
   /*sending trama I*/
   do{
@@ -264,7 +282,7 @@ int llwrite(int fd, char *buffer, int lenght){
       return -1;
     }
     
-    log_message_number("Bytes written ", res);
+    log_message_number("Bytes written \n", res);
     
     alarm(3);
     failed = FALSE;
@@ -274,7 +292,10 @@ int llwrite(int fd, char *buffer, int lenght){
 
       if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
         log_caution("llwrite: failed reading RR from receiver.");
-        if (attempt < ATTEMPT_NUM) log_caution("Trying again...");
+        if (attempt < ATTEMPT_NUM) {
+          log_caution("Trying again...");
+          failed = TRUE;
+        }
         break;
       }
       else if (res == -1){
@@ -292,7 +313,9 @@ int llwrite(int fd, char *buffer, int lenght){
       if (failed) STOP=TRUE;
     }
   }while (attempt < ATTEMPT_NUM && failed);
-  
+
+  alarm(0);
+
   return 0;
 }
 

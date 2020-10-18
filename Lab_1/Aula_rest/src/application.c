@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
     return -1;
   } else log_success("Connection established.");
 
-  if (type == TRANSMITTER) llwrite(fd,"hel~o",5);
+  if (type == TRANSMITTER) llwrite(fd,"hel~o}",6);
 
 
   printf("Closing Connection..\n");

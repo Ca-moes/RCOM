@@ -41,7 +41,7 @@ void parseArgs(int argc, char** argv, int* x, int* type){
 int main(int argc, char** argv) {
   printf("Started App\n");
 
-  int fd, x, type;
+  int fd, x, type, size;
   parseArgs(argc, argv, &x, &type);
 
   fd = llopen(x, type);
@@ -51,9 +51,16 @@ int main(int argc, char** argv) {
     return -1;
   } else log_success("Connection established.");
 
-  char buffer[512];
-  if (type == TRANSMITTER) llwrite(fd,"hel~o",5);
-  else if (type == RECEIVER) llread(fd,buffer);
+  unsigned char *buffer;
+  if (type == TRANSMITTER) llwrite(fd,"hel~o}",strlen("hel~o}"));
+  else if (type == RECEIVER) {
+    size=llread(fd,buffer);
+    printf("Mensagem em main de tamanho %d:\n", size);
+    for (int i = 0; i < size; i++)
+      log_hexa(buffer[i]);
+    buffer[size]='\0';
+    printf("\nMensagem: %s\n", buffer);
+  }
 
 
   printf("Closing Connection..\n");

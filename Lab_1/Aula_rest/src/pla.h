@@ -28,6 +28,8 @@
 
 #define MAX_SIZE 512
 
+enum stateMachine {Start, FLAG_RCV, A_RCV, C_RCV, BCC_OK, DONE};
+
 struct linkLayer {
   char port[20]; /*Dispositivo /dev/ttySx, x = 0, 1*/
   int baudRate; /*Velocidade de transmissão*/
@@ -110,7 +112,7 @@ int llwrite(int fd, char *buffer, int lenght);
  * @param buffer array de caracteres recebidos
  * @return int comprimento do array (número de caracteres lidos) ou -1 em caso de erro
  */
-int llread(int fd, char *buffer);
+int llread(int fd, unsigned char *buffer);
 /**
  * @brief 
  * 
@@ -125,8 +127,9 @@ int llclose(int fd);
  * @param state estado atual da máquina de estados SET-UA
  * @param checkBuffer Buffer que guarda os valores dos bytes A e C
  * @param byte Byte a ser processado pela máquina de estados
+ * @return -1 if BCC's don't match or SequenceNumber is wrong. 0 otherwise
  */
-int stateMachine_Read(enum stateMachine *state, unsigned char *checkBuffer, char byte);
+int stateMachine_Read(enum stateMachine *state, unsigned char *checkBuffer, char byte, unsigned char **buffer, int* buffersize);
 
 
 

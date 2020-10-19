@@ -53,8 +53,6 @@ void atende(){
 }
 
 void stateMachine_SET_UA(enum stateMachine *state, unsigned char *checkBuffer, char byte, int type){
-  //printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
-
   switch (*state)
   {
   case Start:
@@ -63,47 +61,33 @@ void stateMachine_SET_UA(enum stateMachine *state, unsigned char *checkBuffer, c
   case FLAG_RCV:
     if (byte == A_ER) {
       *state = A_RCV;
-      checkBuffer[0] = byte;
-    }
-    else if (byte!= FLAG){
+      checkBuffer[0] = byte;}
+    else if (byte!= FLAG)
       *state = Start;
-    }
     break;
-  case A_RCV:;
-    // ; de cima aqui explicado -> https://stackoverflow.com/a/19830820
-    int C_byte;
-    if (type == TRANSMITTER) C_byte = C_UA;
-    else if (type == RECEIVER) C_byte = C_SET;
-
+  case A_RCV:; // ; aqui explicado -> https://stackoverflow.com/a/19830820
+    int C_byte = (type) ? C_UA : C_SET; 
     if (byte == C_byte) {
       *state = C_RCV;
-      checkBuffer[1] = byte;
-      } else if (byte == FLAG){
-        *state = FLAG_RCV;
-      } else{
-        *state = Start;
-      }
-    
+      checkBuffer[1] = byte;} 
+    else if (byte == FLAG)
+      *state = FLAG_RCV;
+    else
+      *state = Start;    
     break;
   case C_RCV:
-    if (byte == BCC(checkBuffer[0],checkBuffer[1])){
+    if (byte == BCC(checkBuffer[0],checkBuffer[1]))
       *state = BCC_OK;
-    }
-    else if (byte == FLAG){
+    else if (byte == FLAG)
       *state = FLAG_RCV;
-    }
-    else{
+    else
       *state = Start;
-    }
-    // precisa de valores de A & C
     break;
   case BCC_OK:
-    if (byte == FLAG){
+    if (byte == FLAG)
       *state = DONE;
-    }
-    else{
+    else
       *state = Start;
-    }
     break;
   case DONE:
     break;
@@ -226,6 +210,7 @@ int llopen(int porta, int type){
   }
 }
 
+
 int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsigned char* footerBuf, unsigned char* dataBuffer, int dataSize){
   int finalIndex = 0, dataIndex = 0, footerBufIndex=0;
 
@@ -249,7 +234,7 @@ int llwrite(int fd, char *buffer, int lenght){
   int res;
   int currentLenght = lenght;
   unsigned char buf1[4] = {FLAG, A_ER, C_I(linkLayer.sequenceNumber), BCC(A_ER, C_I(linkLayer.sequenceNumber))};  
-  unsigned char *dataBuffer = (unsigned char *)malloc(lenght * sizeof(char));
+  unsigned char *dataBuffer = (unsigned char *)malloc(lenght * sizeof(unsigned char));
   unsigned char buf_read[255];
   volatile int STOP=FALSE;
   int attempt = 0;
@@ -265,10 +250,11 @@ int llwrite(int fd, char *buffer, int lenght){
 
   unsigned char buf2[2] = {BCC2, FLAG};
   
+  // Byte Stuffing
   for (int i = 0, k=0; i<lenght; i++, k++){
     if (buffer[i] == 0x7E || buffer[i] == 0x7D){
       currentLenght++;
-      dataBuffer = (unsigned char *) realloc(dataBuffer, currentLenght * sizeof(char)); 
+      dataBuffer = (unsigned char *) realloc(dataBuffer, currentLenght * sizeof(unsigned char)); 
 
       dataBuffer[k+1] = buffer[i] ^ 0x20;
       dataBuffer[k] = 0x7D;
@@ -332,7 +318,7 @@ int llwrite(int fd, char *buffer, int lenght){
   return 0;
 }
 
-int stateMachine_Read(enum stateMachine *state, unsigned char *checkBuffer, char byte){
+int stateMachine_Read(enum stateMachine *state, unsigned char *checkBuffer, char byte, unsigned char **buffer, int* buffersize){
   //printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
 
   static int frameIndex;
@@ -352,25 +338,24 @@ int stateMachine_Read(enum stateMachine *state, unsigned char *checkBuffer, char
       checkBuffer[0] = byte;
       frameIndex++;
     }
-    else if (byte!= FLAG){
+    else if (byte!= FLAG)
       *state = Start;
-    }
     break;
   case A_RCV:
-
-    if (byte == linkLayer.sequenceNumber) {
+    // caso mande a mensagem errada
+    if (byte == C_I(linkLayer.sequenceNumber ^ 1)) return -1;
+  
+    if (byte == C_I(linkLayer.sequenceNumber)) {
       *state = C_RCV;
       checkBuffer[1] = byte;
       frameIndex++;
     } else if (byte == FLAG){
       *state = FLAG_RCV;
       frameIndex = 1;
-    } else{
-      return -1;
-    }
+    } else 
+      *state = Start;
     break;
-  case C_RCV:
-    frameIndex = 3;
+  case C_RCV:  
     if (byte == BCC(checkBuffer[0],checkBuffer[1])){
       *state = BCC_OK;
       frameIndex++;
@@ -379,29 +364,41 @@ int stateMachine_Read(enum stateMachine *state, unsigned char *checkBuffer, char
       *state = FLAG_RCV;
       frameIndex = 1;
     }
-    else{
+    else
       return -1;
-    }
-    // precisa de valores de A & C
     break;
-
   case BCC_OK:
+    frameIndex++;
     if (byte == FLAG){
-      unsigned char BCC2;
-      for (int i = 4; i<frameIndex; i++){
-        BCC2 = BCC2 ^ linkLayer.frame[i];
-      }
+      *buffer = (unsigned char *)malloc((frameIndex-6));
+      *buffersize = 0;
 
-      if (linkLayer.frame[frameIndex-1]==BCC2){
+      // Byte De-stuffing
+      for (int i = 4; i < frameIndex - 2; i++)
+      {
+        if (linkLayer.frame[i] != 0x7D)
+          (*buffer)[*buffersize] = linkLayer.frame[i];
+        else{
+          (*buffer)[*buffersize] = linkLayer.frame[i+1] ^ 0x20;
+          i++;
+        }
+        (*buffersize)++;
+      }
+      *buffer = (unsigned char *) realloc(*buffer, (*buffersize)); 
+      
+      // Formação de BCC2
+      unsigned char BCC2 = (*buffer)[0];
+      for (int i = 1; i < *buffersize; i++)
+        BCC2 = BCC2 ^ (*buffer)[i];
+
+      if (linkLayer.frame[frameIndex-2]==BCC2){
         linkLayer.sequenceNumber = linkLayer.sequenceNumber ^ 1;
         *state = DONE;
       }
-      else{
+      else
         return -1;
-      }
     }
     break;
-    
   case DONE:
     break;
   }
@@ -409,17 +406,18 @@ int stateMachine_Read(enum stateMachine *state, unsigned char *checkBuffer, char
   return 0;
 }
 
-int llread(int fd, char *buffer){
+int llread(int fd, unsigned char *buffer){
   unsigned char buf[SET_SIZE];
   unsigned char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
-  int res;
+  unsigned char *dataBuf;
+  int res, retBufferSize;
   volatile int STOP=FALSE;
   state = Start;
 
   unsigned char c;
 
-  while (STOP==FALSE) {       /* loop for input */
-    res = read(fd,buf,1);   /* returns after 1 char has been input */
+  while (STOP==FALSE) {       
+    res = read(fd,buf,1);   
     if (res == -1) {
       log_error("receiver: failed reading frame from buffer.");
       return -1;
@@ -428,17 +426,18 @@ int llread(int fd, char *buffer){
     log_message_number("Bytes read - ", res);
     log_hexa(buf[0]);
     
-    if (stateMachine_Read(&state, checkBuf, buf[0]) == -1){
-      c = C_REJ(linkLayer.sequenceNumber ^ 1);
+    if (stateMachine_Read(&state, checkBuf, buf[0], &dataBuf, &retBufferSize) == -1){
+      c = C_REJ(linkLayer.sequenceNumber);
       break;
     }
-
-    c = C_RR(linkLayer.sequenceNumber ^ 1);
-    
+    c = C_RR(linkLayer.sequenceNumber);
     if (state == DONE) STOP=TRUE;
   }
-
   unsigned char replyBuf[5] = {FLAG, A_ER, c, BCC(A_ER, c), FLAG};
+
+  for (int i = 0; i < retBufferSize; i++){
+    buffer[i] = dataBuf[i];
+  }
 
   res = write(fd,replyBuf,5);
   if (res == -1) {
@@ -448,7 +447,7 @@ int llread(int fd, char *buffer){
 
   linkLayer.sequenceNumber^=1;
   
-  return fd;
+  return retBufferSize; 
 }
 
 int llclose(int fd){

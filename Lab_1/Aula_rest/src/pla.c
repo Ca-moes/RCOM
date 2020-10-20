@@ -355,6 +355,7 @@ int llwrite(int fd, char *buffer, int lenght){
       log_message_number("Bytes read ", res);
       log_hexa(buf_read[0]);
 
+      // TO-DO tratar do return da state Machine
       stateMachine_Write(buf_read[0]);
 
       if (state == DONE || failed) STOP=TRUE;
@@ -392,7 +393,8 @@ int stateMachine_Read(char byte, unsigned char **buffer, int* buffersize){
       state = Start;
     break;
   case A_RCV:
-    // caso mande a mensagem errada
+    // TO-DO Caso já tenha recebido a mensagem
+    // https://github.com/Ca-moes/RCOM/issues/22
     if (byte == C_I(linkLayer.sequenceNumber ^ 1)) return -1;
   
     if (byte == C_I(linkLayer.sequenceNumber)) {

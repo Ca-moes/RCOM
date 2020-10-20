@@ -66,4 +66,12 @@ void log_message_number(char *arr, int numb);
  */
 void log_hexa(unsigned char a);
 
+/**
+ * @brief Apresenta a mensagem recebida pelo llread()
+ * 
+ * @param buf Buffer da mensagem
+ * @param size Tamanho da mensagem
+ */
+void log_received_message(unsigned char *buf, int size);
+
 #endif // LOGS_HEADER

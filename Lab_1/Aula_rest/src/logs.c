@@ -36,6 +36,14 @@ void log_hexa(unsigned char a){
   write(STDOUT_FILENO, msg, strlen(msg));
 }
 
+void log_received_message(unsigned char *buf, int size){
+  printf("Message received from llread() - Size %d:\n", size);
+  for (int i = 0; i < size; i++)
+    printf("%#4.2x ", buf[i]);
+  buf[size]='\0';
+  printf("\nMensagem: %s\n", buf);
+}
+
 /* To test if cheanged;
   log_message_number("oi oi teste", 11);
   log_error("error message");

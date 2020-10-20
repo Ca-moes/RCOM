@@ -55,11 +55,7 @@ int main(int argc, char** argv) {
   if (type == TRANSMITTER) llwrite(fd,"hel~o}",strlen("hel~o}"));
   else if (type == RECEIVER) {
     size=llread(fd,buffer);
-    printf("Mensagem em main de tamanho %d:\n", size);
-    for (int i = 0; i < size; i++)
-      log_hexa(buffer[i]);
-    buffer[size]='\0';
-    printf("\nMensagem: %s\n", buffer);
+    log_received_message(buffer, size);
   }
 
 

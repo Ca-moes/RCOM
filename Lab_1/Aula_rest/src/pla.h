@@ -33,7 +33,7 @@ enum stateMachine {Start, FLAG_RCV, A_RCV, C_RCV, BCC_OK, DONE};
 struct linkLayer {
   char port[20]; /*Dispositivo /dev/ttySx, x = 0, 1*/
   int baudRate; /*Velocidade de transmissão*/
-  unsigned int sequenceNumber;   /*Número de sequência da trama: 0, 1*/
+  unsigned char sequenceNumber;   /*Número de sequência da trama: 0x00, 0x01*/
   unsigned int timeout; /*Valor do temporizador: 1 s*/
   unsigned int numTransmissions; /*Número de tentativas em caso defalha*/
   unsigned char frame[MAX_SIZE]; /*Trama*/
@@ -59,7 +59,7 @@ void atende();
  * @param byte Byte a ser processado pela máquina de estados
  * @param type TRANSMITTER|RECEIVER - Tipo da máquina de estados 
  */
-void stateMachine_SET_UA(enum stateMachine *state, unsigned char *checkBuffer, char byte, int type);
+void stateMachine_SET_UA(enum stateMachine *state, char byte, int type);
 /**
  * @brief Função que envia Trama SET e recebe trama UA
  * 
@@ -96,6 +96,8 @@ int llopen(int porta, int type);
  * @return int size of finalBuffer
  */
 int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsigned char* footerBuf, unsigned char* dataBuffer, int dataSize);
+
+int stateMachine_Write(enum stateMachine *state, char byte);
 /**
  * @brief 
  * 

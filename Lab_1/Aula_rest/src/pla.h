@@ -97,7 +97,7 @@ int llopen(int porta, int type);
  */
 int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsigned char* footerBuf, unsigned char* dataBuffer, int dataSize);
 
-int stateMachine_Write(enum stateMachine *state, char byte);
+int stateMachine_Write(enum stateMachine *state,unsigned char byte);
 /**
  * @brief 
  * 
@@ -131,7 +131,7 @@ int llclose(int fd);
  * @param byte Byte a ser processado pela máquina de estados
  * @return -1 if BCC's don't match or SequenceNumber is wrong. 0 otherwise
  */
-int stateMachine_Read(enum stateMachine *state, unsigned char *checkBuffer, char byte, unsigned char **buffer, int* buffersize);
+int stateMachine_Read(enum stateMachine *state, char byte, unsigned char **buffer, int* buffersize);
 
 
 

@@ -231,7 +231,7 @@ int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsign
   return finalIndex;
 }
 
-int stateMachine_Write(enum stateMachine *state, char byte){
+int stateMachine_Write(enum stateMachine *state, unsigned char byte){
   static unsigned char checkBuffer[2];
   switch (*state)
   {
@@ -246,16 +246,17 @@ int stateMachine_Write(enum stateMachine *state, char byte){
       *state = Start;
     break;
   case A_RCV:
-    if (byte == C_REJ(linkLayer.sequenceNumber))
+    if (byte == C_REJ(linkLayer.sequenceNumber^0x01))
       return -1;
-    
-    if (byte == C_RR(linkLayer.sequenceNumber)) {
+
+    if (byte == C_RR(linkLayer.sequenceNumber^0x01)) {
       *state = C_RCV;
       checkBuffer[1] = byte;} 
     else if (byte == FLAG)
       *state = FLAG_RCV;
-    else
+    else{
       *state = Start;    
+    }
     break;
   case C_RCV:
     if (byte == BCC(checkBuffer[0],checkBuffer[1]))
@@ -366,8 +367,9 @@ int llwrite(int fd, char *buffer, int lenght){
   return 0;
 }
 
-int stateMachine_Read(enum stateMachine *state, unsigned char *checkBuffer, char byte, unsigned char **buffer, int* buffersize){
+int stateMachine_Read(enum stateMachine *state, char byte, unsigned char **buffer, int* buffersize){
   //printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
+  static unsigned char checkBuffer[2];
 
   static int frameIndex;
   linkLayer.frame[frameIndex] = byte;
@@ -456,15 +458,12 @@ int stateMachine_Read(enum stateMachine *state, unsigned char *checkBuffer, char
 
 int llread(int fd, unsigned char *buffer){
   unsigned char buf[SET_SIZE];
-  unsigned char checkBuf[2]; // checkBuf terá valores de A e C para verificar BCC
   unsigned char *dataBuf;
   int res, retBufferSize;
   volatile int STOP=FALSE;
   state = Start;
 
   unsigned char c;
-  log_message("c value before any assignment: ");
-  log_hexa(c);
 
   log_message("Attemp to read I packet: ");
   while (STOP==FALSE) {       
@@ -477,7 +476,7 @@ int llread(int fd, unsigned char *buffer){
     log_message_number("Bytes read - ", res);
     log_hexa(buf[0]);
     
-    if (stateMachine_Read(&state, checkBuf, buf[0], &dataBuf, &retBufferSize) == -1){
+    if (stateMachine_Read(&state, buf[0], &dataBuf, &retBufferSize) == -1){
       c = C_REJ(linkLayer.sequenceNumber);
       log_error("Error in BCC or Wronf Sequence Number.");
       break;
@@ -485,8 +484,6 @@ int llread(int fd, unsigned char *buffer){
     c = C_RR(linkLayer.sequenceNumber);
     if (state == DONE) STOP=TRUE;
   }
-  log_message("c value after reading all: ");
-  log_hexa(c);
   unsigned char replyBuf[5] = {FLAG, A_ER, c, BCC(A_ER, c), FLAG};
 
   for (int i = 0; i < retBufferSize; i++)

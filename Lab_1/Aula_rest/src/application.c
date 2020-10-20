@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
     return -1;
   } else log_success("Connection established.");
 
-  unsigned char *buffer;
+  unsigned char buffer[MAX_SIZE];
   if (type == TRANSMITTER) llwrite(fd,"hel~o}",strlen("hel~o}"));
   else if (type == RECEIVER) {
     size=llread(fd,buffer);

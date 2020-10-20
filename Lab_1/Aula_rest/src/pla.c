@@ -509,6 +509,7 @@ int llread(int fd, unsigned char *buffer){
 
 int llclose(int fd){
   // Falta Mandar Disc -> Disc -> UA
+  sleep(1); /* give llwrite time to receive response*/
 
   if (tcsetattr(fd,TCSANOW,&oldtio) != 0){
     log_error("Error on tcsetattr");

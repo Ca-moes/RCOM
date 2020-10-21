@@ -57,6 +57,13 @@ int main(int argc, char** argv) {
     size=llread(fd,buffer);
     log_received_message(buffer, size);
   }
+  
+  sleep(1);
+  if (type == TRANSMITTER) llwrite(fd,"message number 2",strlen("message number 2"));
+  else if (type == RECEIVER) {
+    size=llread(fd,buffer);
+    log_received_message(buffer, size);
+  }
 
 
   printf("Closing Connection..\n");

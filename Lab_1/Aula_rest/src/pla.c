@@ -141,7 +141,9 @@ int transmitter_SET(int fd){
 
   alarm(0); // cancel pending alarms
 
-  if(failed) return -1;
+  if(failed){
+    log_error("transmitter_SET() - Failed all attempts");
+  } return -1;
   return fd;
 }
 
@@ -206,6 +208,7 @@ int llopen(int porta, int type){
     return receiver_UA(fd);
     break;
   default:
+    log_error("llopen() - Wrong value for variable type");
     return -1;
     break;
   }
@@ -246,8 +249,10 @@ int stateMachine_Write(unsigned char byte){
       state = Start;
     break;
   case A_RCV:
-    if (byte == C_REJ(linkLayer.sequenceNumber^0x01))
+    if (byte == C_REJ(linkLayer.sequenceNumber^0x01)){
+      log_error("stateMachine_Write() - Reject Controll Byte Received");
       return -1;
+    }
 
     if (byte == C_RR(linkLayer.sequenceNumber^0x01)) {
       state = C_RCV;
@@ -263,8 +268,9 @@ int stateMachine_Write(unsigned char byte){
       state = BCC_OK;
     else if (byte == FLAG)
       state = FLAG_RCV;
-    else
-      return -1;
+    else{
+      log_error("stateMachine_Write() - Error in BCC");
+      return -1;}
     break;
   case BCC_OK:
     if (byte == FLAG)
@@ -287,8 +293,10 @@ int llwrite(int fd, char *buffer, int lenght){
   volatile int STOP=FALSE;
   int attempt = 0;
 
-  if (lenght > MAX_SIZE)
+  if (lenght > MAX_SIZE){
+    log_error("llwrite() - Message size greater than MAX_SIZE");
     return -1;
+  }
 
   /*building trama I*/
   unsigned char BCC2 = buffer[0];
@@ -372,6 +380,7 @@ int llwrite(int fd, char *buffer, int lenght){
 
   return 0;
 }
+
 
 int stateMachine_Read(char byte, unsigned char **buffer, int* buffersize){
   //printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
@@ -515,6 +524,7 @@ int llread(int fd, unsigned char *buffer){
   free(dataBuf);
   return retBufferSize; 
 }
+
 
 int llclose(int fd){
   // Falta Mandar Disc -> Disc -> UA

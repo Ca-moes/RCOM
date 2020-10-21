@@ -112,21 +112,6 @@ int stateMachine_Write(unsigned char byte);
  * @return int numero de caracteres escritos ou -1 em caso de erro
  */
 int llwrite(int fd, char *buffer, int lenght);
-/**
- * @brief 
- * 
- * @param fd identificador da ligação de dados
- * @param buffer array de caracteres recebidos
- * @return int comprimento do array (número de caracteres lidos) ou -1 em caso de erro
- */
-int llread(int fd, unsigned char *buffer);
-/**
- * @brief 
- * 
- * @param fd identificador da ligação de dados
- * @return int valor positivo em caso de sucesso ou -1 em caso de erro
- */
-int llclose(int fd);
 
 /**
  * @brief Função para processar o estado da leitura das tramas SET-UA
@@ -137,6 +122,24 @@ int llclose(int fd);
  * @return -1 if BCC's don't match or SequenceNumber is wrong. 0 otherwise
  */
 int stateMachine_Read(char byte, unsigned char **buffer, int* buffersize);
+
+/**
+ * @brief 
+ * 
+ * @param fd identificador da ligação de dados
+ * @param buffer array de caracteres recebidos
+ * @return int comprimento do array (número de caracteres lidos) ou -1 em caso de erro
+ */
+int llread(int fd, unsigned char *buffer);
+
+/**
+ * @brief 
+ * 
+ * @param fd identificador da ligação de dados
+ * @return int valor positivo em caso de sucesso ou -1 em caso de erro
+ */
+int llclose(int fd);
+
 
 
 

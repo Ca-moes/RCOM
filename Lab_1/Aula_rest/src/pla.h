@@ -119,7 +119,7 @@ int llwrite(int fd, char *buffer, int lenght);
  * @param state estado atual da máquina de estados SET-UA
  * @param checkBuffer Buffer que guarda os valores dos bytes A e C
  * @param byte Byte a ser processado pela máquina de estados
- * @return -1 if BCC's don't match or SequenceNumber is wrong. 0 otherwise
+ * @return -1 if BCC's don't match, -2 if SequenceNumber is wrong. 0 otherwise
  */
 int stateMachine_Read(unsigned char byte, unsigned char **buffer, int* buffersize);
 

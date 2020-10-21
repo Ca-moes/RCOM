@@ -46,7 +46,6 @@ int main(int argc, char** argv) {
 
   fd = llopen(x, type);
 
-  log_message_number("fd em main\n", fd);
   if (fd < 0) {
     log_error("Unable to establish connection. Exiting..  ");
     return -1;

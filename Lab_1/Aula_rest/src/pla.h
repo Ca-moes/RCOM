@@ -59,7 +59,7 @@ void atende();
  * @param byte Byte a ser processado pela máquina de estados
  * @param type TRANSMITTER|RECEIVER - Tipo da máquina de estados 
  */
-void stateMachine_SET_UA(char byte, int type);
+void stateMachine_SET_UA(unsigned char byte, int type);
 /**
  * @brief Função que envia Trama SET e recebe trama UA
  * 
@@ -121,7 +121,7 @@ int llwrite(int fd, char *buffer, int lenght);
  * @param byte Byte a ser processado pela máquina de estados
  * @return -1 if BCC's don't match or SequenceNumber is wrong. 0 otherwise
  */
-int stateMachine_Read(char byte, unsigned char **buffer, int* buffersize);
+int stateMachine_Read(unsigned char byte, unsigned char **buffer, int* buffersize);
 
 /**
  * @brief 

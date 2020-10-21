@@ -45,7 +45,8 @@ int main(int argc, char** argv) {
   parseArgs(argc, argv, &x, &type);
 
   fd = llopen(x, type);
-  
+
+  log_message_number("fd em main\n", fd);
   if (fd < 0) {
     log_error("Unable to establish connection. Exiting..  ");
     return -1;
@@ -58,7 +59,6 @@ int main(int argc, char** argv) {
     log_received_message(buffer, size);
   }
   
-  sleep(1);
   if (type == TRANSMITTER) llwrite(fd,"message number 2",strlen("message number 2"));
   else if (type == RECEIVER) {
     size=llread(fd,buffer);

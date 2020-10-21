@@ -47,11 +47,12 @@ int initConnection(int *fd, char *port){
 void atende(){ 
   if (state != DONE){
     failed = TRUE;
+    log_message("Handler - Failed = TRUE");
     return;
   }
 }
 
-void stateMachine_SET_UA(char byte, int type){
+void stateMachine_SET_UA(unsigned char byte, int type){
   static unsigned char checkBuffer[2];
   switch (state)
   {
@@ -66,7 +67,7 @@ void stateMachine_SET_UA(char byte, int type){
       state = Start;
     break;
   case A_RCV:; // ; aqui explicado -> https://stackoverflow.com/a/19830820
-    int C_byte = (type) ? C_UA : C_SET; 
+    unsigned char C_byte = (type) ? C_UA : C_SET; 
     if (byte == C_byte) {
       state = C_RCV;
       checkBuffer[1] = byte;} 
@@ -134,16 +135,22 @@ int transmitter_SET(int fd){
       log_hexa(buf_read[0]);
       
       stateMachine_SET_UA(buf_read[0], TRANSMITTER);
-
+      
       if (state == DONE || failed) STOP=TRUE;
     }
   }while (attempt < linkLayer.numTransmissions && failed);
 
   alarm(0); // cancel pending alarms
+  log_message_number("state (5=Done)\n", state);
+  log_message_number("failed\n", failed);
+  log_message_number("fd antes de if(failed)\n", fd);
 
-  if(failed){
+  if(failed == TRUE){
     log_error("transmitter_SET() - Failed all attempts");
-  } return -1;
+    return -1;
+  } 
+
+  log_message_number("fd antes de return\n", fd);
   return fd;
 }
 
@@ -183,7 +190,7 @@ int receiver_UA(int fd){
 }
 
 int llopen(int porta, int type){
-  int fd;
+  int fd, temp;
   char port[12]; // "/dev/ttyS11\0" <- 12 chars
   snprintf(port, 12, "/dev/ttyS%d", porta);
   
@@ -202,7 +209,9 @@ int llopen(int porta, int type){
   switch (type)
   {
   case TRANSMITTER:
-    return transmitter_SET(fd);
+    temp = transmitter_SET(fd);
+    log_message_number("return de transmitter_set\n", temp);
+    return temp;
     break;
   case RECEIVER:
     return receiver_UA(fd);
@@ -212,6 +221,7 @@ int llopen(int porta, int type){
     return -1;
     break;
   }
+
 }
 
 
@@ -288,7 +298,7 @@ int llwrite(int fd, char *buffer, int lenght){
   int res;
   int currentLenght = lenght;
   unsigned char buf1[4] = {FLAG, A_ER, C_I(linkLayer.sequenceNumber), BCC(A_ER, C_I(linkLayer.sequenceNumber))};  
-  unsigned char *dataBuffer = (unsigned char *)malloc(lenght * sizeof(unsigned char));
+  unsigned char *dataBuffer = (unsigned char *)malloc(lenght);
   unsigned char buf_read[255];
   volatile int STOP=FALSE;
   int attempt = 0;
@@ -310,7 +320,7 @@ int llwrite(int fd, char *buffer, int lenght){
   for (int i = 0, k=0; i<lenght; i++, k++){
     if (buffer[i] == 0x7E || buffer[i] == 0x7D){
       currentLenght++;
-      dataBuffer = (unsigned char *) realloc(dataBuffer, currentLenght * sizeof(unsigned char)); 
+      dataBuffer = (unsigned char *) realloc(dataBuffer, currentLenght); 
 
       dataBuffer[k+1] = buffer[i] ^ 0x20;
       dataBuffer[k] = 0x7D;
@@ -382,7 +392,7 @@ int llwrite(int fd, char *buffer, int lenght){
 }
 
 
-int stateMachine_Read(char byte, unsigned char **buffer, int* buffersize){
+int stateMachine_Read(unsigned char byte, unsigned char **buffer, int* buffersize){
   //printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
   static unsigned char checkBuffer[2];
 

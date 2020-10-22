@@ -37,6 +37,7 @@ struct linkLayer {
   unsigned int timeout; /*Valor do temporizador: 1 s*/
   unsigned int numTransmissions; /*Número de tentativas em caso defalha*/
   unsigned char frame[MAX_SIZE]; /*Trama*/
+  unsigned int status; /*TRANSMITTER | RECEIVER*/
 };
 
 /**
@@ -57,9 +58,10 @@ void atende();
  * @param state estado atual da máquina de estados SET-UA
  * @param checkBuffer Buffer que guarda os valores dos bytes A e C
  * @param byte Byte a ser processado pela máquina de estados
- * @param type TRANSMITTER|RECEIVER - Tipo da máquina de estados 
+ * @param c_flag C flag to be used on state machine
+ * @param a_flag A flag to be used on state machine
  */
-void stateMachine_SET_UA(unsigned char byte, int type);
+void stateMachine_Supervision(unsigned char byte, unsigned char c_flag, unsigned char a_flag);
 /**
  * @brief Função que envia Trama SET e recebe trama UA
  * 

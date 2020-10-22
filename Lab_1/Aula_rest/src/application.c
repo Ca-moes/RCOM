@@ -52,9 +52,10 @@ int main(int argc, char** argv) {
   } else log_success("Connection established.");
 
   unsigned char buffer[MAX_SIZE];
-  if (type == TRANSMITTER) llwrite(fd,"hel~o}",strlen("hel~o}"));
+  if (type == TRANSMITTER) llwrite(fd,"hel~o}iuhgfd45rtw",strlen("hel~o}iuhgfd45rtw"));
   else if (type == RECEIVER) {
     size=llread(fd,buffer);
+    printf("%d\n", size);
     log_received_message(buffer, size);
   }
   
@@ -63,8 +64,7 @@ int main(int argc, char** argv) {
     size=llread(fd,buffer);
     log_received_message(buffer, size);
   }
-
-
+  
   printf("Closing Connection..\n");
   if (llclose(fd) < 0){
     log_error("Error on llclose()");

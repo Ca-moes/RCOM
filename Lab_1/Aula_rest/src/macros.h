@@ -6,6 +6,7 @@
  * 
  */
 
+#define DISC_SIZE 5  // tamanho em bytes da trama SET
 #define SET_SIZE 5  // tamanho em bytes da trama SET
 #define UA_SIZE 5  // tamanho em bytes da trama UA
 

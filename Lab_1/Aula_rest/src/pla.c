@@ -52,7 +52,7 @@ void atende(){
   }
 }
 
-void stateMachine_SET_UA(unsigned char byte, int type){
+void stateMachine_Supervision(unsigned char byte, enum C_FLAG c_flag){
   static unsigned char checkBuffer[2];
   switch (state)
   {
@@ -66,9 +66,8 @@ void stateMachine_SET_UA(unsigned char byte, int type){
     else if (byte!= FLAG)
       state = Start;
     break;
-  case A_RCV:; // ; aqui explicado -> https://stackoverflow.com/a/19830820
-    unsigned char C_byte = (type) ? C_UA : C_SET; 
-    if (byte == C_byte) {
+  case A_RCV:; // ; aqui explicado -> https://stackoverflow.com/a/19830820 
+    if (byte == c_flag) {
       state = C_RCV;
       checkBuffer[1] = byte;} 
     else if (byte == FLAG)
@@ -128,7 +127,7 @@ int transmitter_SET(int fd){
         return -1;
       }
       
-      stateMachine_SET_UA(buf_read[0], TRANSMITTER);
+      stateMachine_Supervision(buf_read[0], C_UA);
       
       if (state == DONE || failed) STOP=TRUE;
     }
@@ -156,7 +155,7 @@ int receiver_UA(int fd){
       return -1;
     }
 
-    stateMachine_SET_UA(buf[0], RECEIVER);
+    stateMachine_Supervision(buf[0], C_SET);
     if (state == DONE) STOP=TRUE;
   }
 
@@ -191,9 +190,11 @@ int llopen(int porta, int type){
   switch (type)
   {
   case TRANSMITTER:
+    linkLayer.status = TRANSMITTER;
     return transmitter_SET(fd);
     break;
   case RECEIVER:
+    linkLayer.status = RECEIVER; 
     return receiver_UA(fd);
     break;
   default:
@@ -279,7 +280,7 @@ int llwrite(int fd, char *buffer, int lenght){
   int currentLenght = lenght;
   unsigned char buf1[4] = {FLAG, A_ER, C_I(linkLayer.sequenceNumber), BCC(A_ER, C_I(linkLayer.sequenceNumber))};  
   unsigned char *dataBuffer = (unsigned char *)malloc(lenght);
-  unsigned char buf_read[255];
+  unsigned char buf_read[MAX_SIZE];
   volatile int STOP=FALSE;
   int attempt = 0;
 
@@ -469,7 +470,7 @@ int stateMachine_Read(unsigned char byte, unsigned char **buffer, int* buffersiz
 }
 
 int llread(int fd, unsigned char *buffer){
-  unsigned char buf[SET_SIZE];
+  unsigned char buf[1];
   unsigned char *dataBuf;
   int res, retBufferSize, retStateMachine;
   volatile int STOP=FALSE;
@@ -499,6 +500,7 @@ int llread(int fd, unsigned char *buffer){
     c = C_RR(linkLayer.sequenceNumber);
     if (state == DONE) STOP=TRUE;
   }
+
   unsigned char replyBuf[5] = {FLAG, A_ER, c, BCC(A_ER, c), FLAG};
 
   for (int i = 0; i < retBufferSize; i++)
@@ -515,9 +517,129 @@ int llread(int fd, unsigned char *buffer){
 }
 
 
+int transmitter_DISC_UA(int fd){
+  unsigned char buf[SET_SIZE] = {FLAG, A_ER, C_DISC, BCC(A_ER, C_DISC), FLAG};
+  unsigned char buf_read[UA_SIZE]; // read buffer
+  int attempt = 0, res;
+  volatile int STOP=FALSE;
+
+  do{
+    attempt++;
+    res = write(fd,buf,DISC_SIZE);
+    if (res == -1) {
+      log_error("transmitter_DISC_UA() - Failed writing DISC to buffer.");
+      return -1;
+    }
+        
+    alarm(linkLayer.timeout);
+    failed = FALSE;
+    state = Start; 
+
+    while (STOP==FALSE) {       /* loop for input */
+      res = read(fd,buf_read,1);   /* returns after 1 char has been input */
+
+      if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
+        log_caution("transmitter_DISC_UA() - Failed reading DISC from receiver.");
+        if (attempt < linkLayer.numTransmissions) {
+          log_caution("Trying again...");
+        }
+        break;
+      } else if (res == -1){
+        log_error("transmitter_DISC_UA() - Failed reading DISC from buffer.");
+        return -1;
+      }
+      
+      stateMachine_Supervision(buf_read[0],C_DISC);
+      
+      if (state == DONE || failed) STOP=TRUE;
+    }
+  }while (attempt < linkLayer.numTransmissions && failed);
+
+  alarm(0); // cancel pending alarms
+
+  if(failed == TRUE){
+    log_error("transmitter_DISC_UA() - Failed all attempts");
+    return -1;
+  } 
+
+  unsigned char buf1[UA_SIZE] = {FLAG, A_ER, C_UA, BCC(A_ER, C_UA), FLAG};
+
+  res = write(fd,buf1,UA_SIZE);
+    if (res == -1) {
+      log_error("transmitter_DISC_UA() - Failed writing UA to buffer.");
+      return -1;
+    }
+
+  return fd;
+}
+
+int receiver_DISC_UA(int fd){
+  unsigned char buf[DISC_SIZE];
+  int res;
+  volatile int STOP=FALSE;
+  state = Start;
+  
+  /* parse DISC*/
+  while (STOP==FALSE) {       /* loop for input */
+    res = read(fd,buf,1);   /* returns after 1 char has been input */
+    if (res == -1) {
+      log_error("receiver_DISC_UA() - Failed reading DISC from buffer.");
+      return -1;
+    }
+
+    stateMachine_Supervision(buf[0], C_DISC);
+    if (state == DONE) STOP=TRUE;
+  }
+
+  unsigned char replyBuf[DISC_SIZE] = {FLAG, A_ER, C_DISC, BCC(A_ER, C_DISC), FLAG};
+
+  res = write(fd,replyBuf,DISC_SIZE); 
+  if (res == -1) {
+    log_error("receiver_DISC_UA() - Failed writing DISC to buffer.");
+    return -1;
+  }
+
+  unsigned char buf1[UA_SIZE];
+  alarm(5); /* waits a limited time for UA response from Transmitter */
+  STOP=FALSE;
+  state = Start;
+
+  /* parse UA*/
+  while (STOP==FALSE) {       /* loop for input */
+    res = read(fd,buf1,1);   /* returns after 1 char has been input */
+    
+    if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
+      log_caution("receiver_DISC_UA() - Failed reading UA from transmitter.");
+      return -1;
+
+    } else if (res == -1){
+      log_error("receiver_DISC_UA() - Failed reading UA from buffer.");
+      return -1;
+    }
+
+    stateMachine_Supervision(buf1[0], C_UA);
+    if (state == DONE) STOP=TRUE;
+  }
+  alarm(0);
+
+  return fd;
+}
+
 int llclose(int fd){
-  // Falta Mandar Disc -> Disc -> UA
   sleep(1); /* give llwrite time to receive response*/
+  int returnValue = fd;
+
+  switch (linkLayer.status)
+  {
+  case TRANSMITTER:
+    if (transmitter_DISC_UA(fd) <0)
+      returnValue = -1;
+    break;
+  case RECEIVER:
+    if (receiver_DISC_UA(fd) <0)
+      returnValue = -1;
+    break;
+  }
 
   if (tcsetattr(fd,TCSANOW,&oldtio) != 0){
     log_error("llclose() - Error on tcsetattr()");
@@ -527,6 +649,9 @@ int llclose(int fd){
     log_error("llclose() - Error on close()");
     return -1;
   }
-  log_success("Closing Successful");
-  return 0;
+
+  if (returnValue>0)
+    log_success("Closing Successful");
+
+  return returnValue;
 }

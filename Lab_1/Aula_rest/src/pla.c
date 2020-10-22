@@ -52,7 +52,7 @@ void atende(){
   }
 }
 
-void stateMachine_Supervision(unsigned char byte, enum C_FLAG c_flag){
+void stateMachine_Supervision(unsigned char byte, unsigned char c_flag, unsigned char a_flag){
   static unsigned char checkBuffer[2];
   switch (state)
   {
@@ -60,7 +60,7 @@ void stateMachine_Supervision(unsigned char byte, enum C_FLAG c_flag){
     if (byte == FLAG) state = FLAG_RCV;    
     break;
   case FLAG_RCV:
-    if (byte == A_ER) {
+    if (byte == a_flag) {
       state = A_RCV;
       checkBuffer[0] = byte;}
     else if (byte!= FLAG)
@@ -95,14 +95,14 @@ void stateMachine_Supervision(unsigned char byte, enum C_FLAG c_flag){
 }
 
 int transmitter_SET(int fd){
-  unsigned char buf[SET_SIZE] = {FLAG, A_ER, C_SET, BCC(A_ER, C_SET), FLAG};
-  unsigned char buf_read[UA_SIZE]; // read buffer
+  unsigned char buf[SU_FRAME_SIZE] = {FLAG, A_ER, C_SET, BCC(A_ER, C_SET), FLAG};
+  unsigned char buf_read[1]; // read buffer
   int attempt = 0, res;
   volatile int STOP=FALSE;
 
   do{
     attempt++;
-    res = write(fd,buf,SET_SIZE);
+    res = write(fd,buf,SU_FRAME_SIZE);
     if (res == -1) {
       log_error("transmitter_SET() - Failed writing SET to buffer.");
       return -1;
@@ -127,7 +127,7 @@ int transmitter_SET(int fd){
         return -1;
       }
       
-      stateMachine_Supervision(buf_read[0], C_UA);
+      stateMachine_Supervision(buf_read[0], C_UA, A_ER);
       
       if (state == DONE || failed) STOP=TRUE;
     }
@@ -143,7 +143,7 @@ int transmitter_SET(int fd){
 }
 
 int receiver_UA(int fd){
-  unsigned char buf[SET_SIZE];
+  unsigned char buf[1];
   int res;
   volatile int STOP=FALSE;
   state = Start;
@@ -155,13 +155,13 @@ int receiver_UA(int fd){
       return -1;
     }
 
-    stateMachine_Supervision(buf[0], C_SET);
+    stateMachine_Supervision(buf[0], C_SET, A_ER);
     if (state == DONE) STOP=TRUE;
   }
 
-  unsigned char replyBuf[UA_SIZE] = {FLAG, A_ER, C_UA, BCC(A_ER, C_UA), FLAG};
+  unsigned char replyBuf[SU_FRAME_SIZE] = {FLAG, A_ER, C_UA, BCC(A_ER, C_UA), FLAG};
 
-  res = write(fd,replyBuf,UA_SIZE); //+1 para enviar o \0 
+  res = write(fd,replyBuf,SU_FRAME_SIZE); //+1 para enviar o \0 
   if (res == -1) {
     log_error("receiver_UA() - Failed writing UA to buffer.");
     return -1;
@@ -518,14 +518,14 @@ int llread(int fd, unsigned char *buffer){
 
 
 int transmitter_DISC_UA(int fd){
-  unsigned char buf[SET_SIZE] = {FLAG, A_ER, C_DISC, BCC(A_ER, C_DISC), FLAG};
-  unsigned char buf_read[UA_SIZE]; // read buffer
+  unsigned char buf[SU_FRAME_SIZE] = {FLAG, A_ER, C_DISC, BCC(A_ER, C_DISC), FLAG};
+  unsigned char buf_read[SU_FRAME_SIZE]; // read buffer
   int attempt = 0, res;
   volatile int STOP=FALSE;
 
   do{
     attempt++;
-    res = write(fd,buf,DISC_SIZE);
+    res = write(fd,buf,SU_FRAME_SIZE);
     if (res == -1) {
       log_error("transmitter_DISC_UA() - Failed writing DISC to buffer.");
       return -1;
@@ -549,7 +549,7 @@ int transmitter_DISC_UA(int fd){
         return -1;
       }
       
-      stateMachine_Supervision(buf_read[0],C_DISC);
+      stateMachine_Supervision(buf_read[0],C_DISC, A_RE);
       
       if (state == DONE || failed) STOP=TRUE;
     }
@@ -562,9 +562,9 @@ int transmitter_DISC_UA(int fd){
     return -1;
   } 
 
-  unsigned char buf1[UA_SIZE] = {FLAG, A_ER, C_UA, BCC(A_ER, C_UA), FLAG};
+  unsigned char buf1[SU_FRAME_SIZE] = {FLAG, A_RE, C_UA, BCC(A_RE, C_UA), FLAG};
 
-  res = write(fd,buf1,UA_SIZE);
+  res = write(fd,buf1,SU_FRAME_SIZE);
     if (res == -1) {
       log_error("transmitter_DISC_UA() - Failed writing UA to buffer.");
       return -1;
@@ -574,7 +574,7 @@ int transmitter_DISC_UA(int fd){
 }
 
 int receiver_DISC_UA(int fd){
-  unsigned char buf[DISC_SIZE];
+  unsigned char buf[1];
   int res;
   volatile int STOP=FALSE;
   state = Start;
@@ -586,20 +586,20 @@ int receiver_DISC_UA(int fd){
       log_error("receiver_DISC_UA() - Failed reading DISC from buffer.");
       return -1;
     }
-
-    stateMachine_Supervision(buf[0], C_DISC);
+    
+    stateMachine_Supervision(buf[0], C_DISC, A_ER);
     if (state == DONE) STOP=TRUE;
   }
 
-  unsigned char replyBuf[DISC_SIZE] = {FLAG, A_ER, C_DISC, BCC(A_ER, C_DISC), FLAG};
+  unsigned char replyBuf[SU_FRAME_SIZE] = {FLAG, A_RE, C_DISC, BCC(A_RE, C_DISC), FLAG};
 
-  res = write(fd,replyBuf,DISC_SIZE); 
+  res = write(fd,replyBuf,SU_FRAME_SIZE); 
   if (res == -1) {
     log_error("receiver_DISC_UA() - Failed writing DISC to buffer.");
     return -1;
   }
 
-  unsigned char buf1[UA_SIZE];
+  unsigned char buf1[1];
   alarm(5); /* waits a limited time for UA response from Transmitter */
   STOP=FALSE;
   state = Start;
@@ -616,8 +616,8 @@ int receiver_DISC_UA(int fd){
       log_error("receiver_DISC_UA() - Failed reading UA from buffer.");
       return -1;
     }
-
-    stateMachine_Supervision(buf1[0], C_UA);
+    
+    stateMachine_Supervision(buf1[0], C_UA, A_RE);
     if (state == DONE) STOP=TRUE;
   }
   alarm(0);

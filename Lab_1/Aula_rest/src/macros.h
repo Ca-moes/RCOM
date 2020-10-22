@@ -6,9 +6,7 @@
  * 
  */
 
-#define DISC_SIZE 5  // tamanho em bytes da trama SET
-#define SET_SIZE 5  // tamanho em bytes da trama SET
-#define UA_SIZE 5  // tamanho em bytes da trama UA
+#define SU_FRAME_SIZE 5  // tamanho em bytes das tramas de Supervisão e Não Numeradas
 
 #define FLAG 0b01111110  // (0x7E) flag de inicio e fim
 

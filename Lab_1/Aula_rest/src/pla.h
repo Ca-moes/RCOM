@@ -23,17 +23,12 @@
 #define TRANSMITTER 1
 #define RECEIVER 0
 
-#define PARSE_DISC 1
-#define PARSE_UA 0
-
 #define FALSE 0
 #define TRUE 1
 
 #define MAX_SIZE 512
 
 enum stateMachine {Start, FLAG_RCV, A_RCV, C_RCV, BCC_OK, DONE};
-
-enum C_FLAG{SET, UA, DISC};
 
 struct linkLayer {
   char port[20]; /*Dispositivo /dev/ttySx, x = 0, 1*/
@@ -63,9 +58,10 @@ void atende();
  * @param state estado atual da máquina de estados SET-UA
  * @param checkBuffer Buffer que guarda os valores dos bytes A e C
  * @param byte Byte a ser processado pela máquina de estados
- * @param c_flag C flag that to be used on state machine
+ * @param c_flag C flag to be used on state machine
+ * @param a_flag A flag to be used on state machine
  */
-void stateMachine_Supervision(unsigned char byte, enum C_FLAG c_flag);
+void stateMachine_Supervision(unsigned char byte, unsigned char c_flag, unsigned char a_flag);
 /**
  * @brief Função que envia Trama SET e recebe trama UA
  * 

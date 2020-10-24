@@ -16,19 +16,8 @@
 
 #include "macros.h"
 #include "logs.h"
+#include "statemachine.h"
 
-#define BAUDRATE B38400
-
-// valores de type usados em application.c
-#define TRANSMITTER 1
-#define RECEIVER 0
-
-#define FALSE 0
-#define TRUE 1
-
-#define MAX_SIZE 512
-
-enum stateMachine {Start, FLAG_RCV, A_RCV, C_RCV, BCC_OK, DONE};
 
 struct linkLayer {
   char port[20]; /*Dispositivo /dev/ttySx, x = 0, 1*/
@@ -39,6 +28,8 @@ struct linkLayer {
   unsigned char frame[MAX_SIZE]; /*Trama*/
   unsigned int status; /*TRANSMITTER | RECEIVER*/
 };
+
+struct linkLayer linkLayer;
 
 /**
  * @brief Estabelece ligação ao cabo e cria fd

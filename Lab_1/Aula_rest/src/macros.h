@@ -3,7 +3,6 @@
 
 /**
  * @brief Enum com Valores para a Máquina de Estados de SET-UA
- * 
  */
 
 #define SU_FRAME_SIZE 5  // tamanho em bytes das tramas de Supervisão e Não Numeradas
@@ -22,5 +21,16 @@
 
 #define BCC(a,c) (a ^ c) // XOR entre a e c
 
+
+#define FALSE 0
+#define TRUE 1
+
+#define BAUDRATE B38400
+
+// valores de type usados em application.c
+#define TRANSMITTER 1
+#define RECEIVER 0
+
+#define MAX_SIZE 512
 
 #endif // MACROS_HEADER

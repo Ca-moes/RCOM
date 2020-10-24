@@ -1,7 +1,8 @@
 #!/bin/bash
 
+clear
 
-if gcc -o progread -Wall application.c pla.c logs.c; then
+if gcc -o progread -Wall application.c pla.c logs.c statemachine.c; then
 echo "---------"
 ./progread receiver 11;
 else 

@@ -66,13 +66,13 @@ int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char 
   return 0;
 }
 
-int writeCycle(enum writingType type, int fd, unsigned char *buf){
+int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
   int attempt = 0, res;
   volatile int STOP=FALSE;
 
   do{
     attempt++;
-    res = write(fd,buf,sizeof(buf));
+    res = write(fd,buf,bufsize);
     if (res == -1) {
       switch (type)
       {
@@ -142,10 +142,8 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf){
         }
         return -1;
       }
-
-
-      if (type == writeR)
-      {
+      
+      if (type == writeR){
         if (stateMachine(buf_r[0], NULL, NULL) < 0){
           log_error("llwrite() - Error while receiving RR or REJ");
           failed = TRUE;
@@ -214,7 +212,7 @@ int transmitter_SET(int fd){
 
   stateMachineSetUp(C_UA, A_ER, Start, Supervision);
 
-  writeCycle(trans_SET, fd, buf);
+  writeCycle(trans_SET, fd, buf, SU_FRAME_SIZE);
   
   if(failed == TRUE){
     log_error("transmitter_SET() - Failed all attempts");
@@ -296,13 +294,9 @@ int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsign
 }
 
 int llwrite(int fd, char *buffer, int lenght){
-  int res;
   int currentLenght = lenght;
   unsigned char buf1[4] = {FLAG, A_ER, C_I(linkLayer.sequenceNumber), BCC(A_ER, C_I(linkLayer.sequenceNumber))};  
   unsigned char *dataBuffer = (unsigned char *)malloc(lenght);
-  unsigned char buf_read[1];
-  volatile int STOP=FALSE;
-  int attempt = 0;
 
   if (lenght > MAX_SIZE){
     log_error("llwrite() - Message size greater than MAX_SIZE");
@@ -333,51 +327,13 @@ int llwrite(int fd, char *buffer, int lenght){
   }
 
   unsigned char finalBuffer[currentLenght + 6]; /*trama I completa*/
+
   fillFinalBuffer(finalBuffer, buf1, buf2, dataBuffer, currentLenght);
 
   stateMachineSetUp(C_RR(linkLayer.sequenceNumber^0x01), A_ER, Start, Write);
 
-  /*sending trama I*/
-  do{
-    attempt++;
-    res = write(fd,finalBuffer,sizeof(finalBuffer));
-    if (res == -1) {
-      log_error("llwrite() - Failed writing data to buffer.");
-      return -1;
-    }
-    
-    alarm(linkLayer.timeout);
-    failed = FALSE;
-    state_machine.state = Start;
-
-    while (STOP==FALSE) {       /* loop for input */
-      res = read(fd,buf_read,1);   /* returns after 1 char has been input */
-
-      if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
-        log_caution("llwrite: failed reading RR from receiver.");
-        if (attempt < linkLayer.numTransmissions) {
-          log_caution("Trying again...");
-          failed = TRUE;
-        }
-        break;
-      }
-      else if (res == -1){
-        log_error("llwrite() - Failed reading RR from buffer.");
-        return -1;
-      }
-
-      if (-1 == stateMachine(buf_read[0], NULL, NULL)){
-        log_error("llwrite() - Error while receiving RR or REJ");
-        failed = TRUE;
-        alarm(0);
-        break;
-      }
-
-      if (state_machine.state == DONE || failed) STOP=TRUE;
-    }
-  }while (attempt < linkLayer.numTransmissions && failed);
-
-  alarm(0);
+  writeCycle(writeR, fd, finalBuffer, sizeof(finalBuffer));
+  
   linkLayer.sequenceNumber ^= 0x01;
 
   return 0;
@@ -413,7 +369,7 @@ int transmitter_DISC_UA(int fd){
 
   stateMachineSetUp(C_DISC, A_RE, Start, Supervision);
 
-  writeCycle(trans_DISC_UA, fd, buf);
+  writeCycle(trans_DISC_UA, fd, buf, SU_FRAME_SIZE);
 
   if(failed == TRUE){
     log_error("transmitter_DISC_UA() - Failed all attempts");

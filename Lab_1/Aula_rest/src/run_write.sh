@@ -1,7 +1,7 @@
 #!/bin/bash
 
-
-if gcc -o progwrite -Wall application.c pla.c logs.c; then 
+clear
+if gcc -o progwrite -Wall application.c pla.c logs.c statemachine.c; then 
 echo "---------"
 ./progwrite transmitter 10;
 else 

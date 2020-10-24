@@ -44,16 +44,6 @@ int initConnection(int *fd, char *port);
  */
 void atende();
 /**
- * @brief Função para processar o estado da leitura das tramas SET-UA
- * 
- * @param state estado atual da máquina de estados SET-UA
- * @param checkBuffer Buffer que guarda os valores dos bytes A e C
- * @param byte Byte a ser processado pela máquina de estados
- * @param c_flag C flag to be used on state machine
- * @param a_flag A flag to be used on state machine
- */
-void stateMachine_Supervision(unsigned char byte, unsigned char c_flag, unsigned char a_flag);
-/**
  * @brief Função que envia Trama SET e recebe trama UA
  * 
  * @param fd identificador da ligação de dados
@@ -89,13 +79,6 @@ int llopen(int porta, int type);
  * @return int size of finalBuffer
  */
 int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsigned char* footerBuf, unsigned char* dataBuffer, int dataSize);
-/**
- * @brief Função para processar o estado da leitura das tramas I
- * 
- * @param byte Byte a ser processado pela Máquina de Estados
- * @return int -1 if BCC don't match or SequenceNumber is wrong. 0 otherwise
- */
-int stateMachine_Write(unsigned char byte);
 /**
  * @brief 
  * 

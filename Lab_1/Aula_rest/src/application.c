@@ -55,7 +55,6 @@ int main(int argc, char** argv) {
   if (type == TRANSMITTER) llwrite(fd,"hel~o}iuhgfd45rtw",strlen("hel~o}iuhgfd45rtw"));
   else if (type == RECEIVER) {
     size=llread(fd,buffer);
-    printf("%d\n", size);
     log_received_message(buffer, size);
   }
   

@@ -50,48 +50,6 @@ void atende(){
   }
 }
 
-void stateMachine_Supervision(unsigned char byte, unsigned char c_flag, unsigned char a_flag){
-  static unsigned char checkBuffer[2];
-  switch (state)
-  {
-  case Start:
-    if (byte == FLAG) state = FLAG_RCV;    
-    break;
-  case FLAG_RCV:
-    if (byte == a_flag) {
-      state = A_RCV;
-      checkBuffer[0] = byte;}
-    else if (byte!= FLAG)
-      state = Start;
-    break;
-  case A_RCV:; // ; aqui explicado -> https://stackoverflow.com/a/19830820 
-    if (byte == c_flag) {
-      state = C_RCV;
-      checkBuffer[1] = byte;} 
-    else if (byte == FLAG)
-      state = FLAG_RCV;
-    else
-      state = Start;    
-    break;
-  case C_RCV:
-    if (byte == BCC(checkBuffer[0],checkBuffer[1]))
-      state = BCC_OK;
-    else if (byte == FLAG)
-      state = FLAG_RCV;
-    else
-      state = Start;
-    break;
-  case BCC_OK:
-    if (byte == FLAG)
-      state = DONE;
-    else
-      state = Start;
-    break;
-  case DONE:
-    break;
-  }
-}
-
 int transmitter_SET(int fd){
   unsigned char buf[SU_FRAME_SIZE] = {FLAG, A_ER, C_SET, BCC(A_ER, C_SET), FLAG};
   unsigned char buf_read[1]; // read buffer
@@ -132,7 +90,6 @@ int transmitter_SET(int fd){
       }
       
       stateMachine(buf_read[0], NULL, NULL);
-      log_message_number("state\n", state_machine.state);
       if (state_machine.state == DONE || failed) STOP=TRUE;
     }
   }while (attempt < linkLayer.numTransmissions && failed);
@@ -233,56 +190,6 @@ int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsign
   return finalIndex;
 }
 
-int stateMachine_Write(unsigned char byte){
-  static unsigned char checkBuffer[2];
-  switch (state)
-  {
-  case Start:
-    if (byte == FLAG) state = FLAG_RCV;    
-    break;
-  case FLAG_RCV:
-    if (byte == A_ER) {
-      state = A_RCV;
-      checkBuffer[0] = byte;}
-    else if (byte!= FLAG)
-      state = Start;
-    break;
-  case A_RCV:
-    if (byte == C_REJ(linkLayer.sequenceNumber^0x01)){
-      log_error("stateMachine_Write() - Reject Controll Byte Received");
-      return -1;
-    }
-
-    if (byte == C_RR(linkLayer.sequenceNumber^0x01)) {
-      state = C_RCV;
-      checkBuffer[1] = byte;} 
-    else if (byte == FLAG)
-      state = FLAG_RCV;
-    else{
-      state = Start;    
-    }
-    break;
-  case C_RCV:
-    if (byte == BCC(checkBuffer[0],checkBuffer[1]))
-      state = BCC_OK;
-    else if (byte == FLAG)
-      state = FLAG_RCV;
-    else{
-      log_error("stateMachine_Write() - Error in BCC");
-      return -1;}
-    break;
-  case BCC_OK:
-    if (byte == FLAG)
-      state = DONE;
-    else
-      state = Start;
-    break;
-  case DONE:
-    break;
-  }
-  return 0;
-}
-
 int llwrite(int fd, char *buffer, int lenght){
   int res;
   int currentLenght = lenght;
@@ -323,6 +230,12 @@ int llwrite(int fd, char *buffer, int lenght){
   unsigned char finalBuffer[currentLenght + 6]; /*trama I completa*/
   fillFinalBuffer(finalBuffer, buf1, buf2, dataBuffer, currentLenght);
 
+  // Set-Up State Machine
+  state_machine.control = C_RR(linkLayer.sequenceNumber^0x01);
+  state_machine.address = A_ER;
+  state_machine.state = Start;
+  state_machine.type = Write;
+
   /*sending trama I*/
   do{
     attempt++;
@@ -334,7 +247,7 @@ int llwrite(int fd, char *buffer, int lenght){
     
     alarm(linkLayer.timeout);
     failed = FALSE;
-    state = Start;
+    state_machine.state = Start;
 
     while (STOP==FALSE) {       /* loop for input */
       res = read(fd,buf_read,1);   /* returns after 1 char has been input */
@@ -352,14 +265,14 @@ int llwrite(int fd, char *buffer, int lenght){
         return -1;
       }
 
-      if (-1 == stateMachine_Write(buf_read[0])){
+      if (-1 == stateMachine(buf_read[0], NULL, NULL)){
         log_error("llwrite() - Error while receiving RR or REJ");
         failed = TRUE;
         alarm(0);
         break;
       }
 
-      if (state == DONE || failed) STOP=TRUE;
+      if (state_machine.state == DONE || failed) STOP=TRUE;
     }
   }while (attempt < linkLayer.numTransmissions && failed);
 

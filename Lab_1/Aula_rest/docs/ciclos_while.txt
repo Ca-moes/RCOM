@@ -1,4 +1,5 @@
 // ciclos while TODO
+// falta ciclos do_while
 // receiver UA
 while (STOP==FALSE) {       /* loop for input */
   res = read(fd,buf,1);   /* returns after 1 char has been input */

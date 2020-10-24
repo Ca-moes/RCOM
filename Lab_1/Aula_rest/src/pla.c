@@ -525,6 +525,12 @@ int transmitter_DISC_UA(int fd){
   int attempt = 0, res;
   volatile int STOP=FALSE;
 
+  // Set-Up State Machine
+  state_machine.control = C_DISC;
+  state_machine.address = A_RE;
+  state_machine.state = Start;
+  state_machine.type = Supervision;
+
   do{
     attempt++;
     res = write(fd,buf,SU_FRAME_SIZE);
@@ -535,7 +541,7 @@ int transmitter_DISC_UA(int fd){
         
     alarm(linkLayer.timeout);
     failed = FALSE;
-    state = Start; 
+    state_machine.state = Start; 
 
     while (STOP==FALSE) {       /* loop for input */
       res = read(fd,buf_read,1);   /* returns after 1 char has been input */
@@ -551,9 +557,9 @@ int transmitter_DISC_UA(int fd){
         return -1;
       }
       
-      stateMachine_Supervision(buf_read[0],C_DISC, A_RE);
+      stateMachine(buf_read[0],NULL, NULL);
       
-      if (state == DONE || failed) STOP=TRUE;
+      if (state_machine.state == DONE || failed) STOP=TRUE;
     }
   }while (attempt < linkLayer.numTransmissions && failed);
 
@@ -567,10 +573,10 @@ int transmitter_DISC_UA(int fd){
   unsigned char buf1[SU_FRAME_SIZE] = {FLAG, A_RE, C_UA, BCC(A_RE, C_UA), FLAG};
 
   res = write(fd,buf1,SU_FRAME_SIZE);
-    if (res == -1) {
-      log_error("transmitter_DISC_UA() - Failed writing UA to buffer.");
-      return -1;
-    }
+  if (res == -1) {
+    log_error("transmitter_DISC_UA() - Failed writing UA to buffer.");
+    return -1;
+  }
 
   return fd;
 }
@@ -579,7 +585,11 @@ int receiver_DISC_UA(int fd){
   unsigned char buf[1];
   int res;
   volatile int STOP=FALSE;
-  state = Start;
+  // Set-Up State Machine
+  state_machine.control = C_DISC;
+  state_machine.address = A_ER;
+  state_machine.state = Start;
+  state_machine.type = Supervision;
   
   /* parse DISC*/
   while (STOP==FALSE) {       /* loop for input */
@@ -589,8 +599,8 @@ int receiver_DISC_UA(int fd){
       return -1;
     }
     
-    stateMachine_Supervision(buf[0], C_DISC, A_ER);
-    if (state == DONE) STOP=TRUE;
+    stateMachine(buf[0], NULL, NULL);
+    if (state_machine.state == DONE) STOP=TRUE;
   }
 
   unsigned char replyBuf[SU_FRAME_SIZE] = {FLAG, A_RE, C_DISC, BCC(A_RE, C_DISC), FLAG};
@@ -604,7 +614,11 @@ int receiver_DISC_UA(int fd){
   unsigned char buf1[1];
   alarm(5); /* waits a limited time for UA response from Transmitter */
   STOP=FALSE;
-  state = Start;
+  // Set-Up State Machine
+  state_machine.control = C_UA;
+  state_machine.address = A_RE;
+  state_machine.state = Start;
+  state_machine.type = Supervision;
 
   /* parse UA*/
   while (STOP==FALSE) {       /* loop for input */
@@ -619,8 +633,8 @@ int receiver_DISC_UA(int fd){
       return -1;
     }
     
-    stateMachine_Supervision(buf1[0], C_UA, A_RE);
-    if (state == DONE) STOP=TRUE;
+    stateMachine(buf1[0], NULL, NULL);
+    if (state_machine.state == DONE) STOP=TRUE;
   }
   alarm(0);
 

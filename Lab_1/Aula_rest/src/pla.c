@@ -66,6 +66,104 @@ int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char 
   return 0;
 }
 
+int writeCycle(enum writingType type, int fd, unsigned char *buf){
+  int attempt = 0, res;
+  volatile int STOP=FALSE;
+
+  do{
+    attempt++;
+    res = write(fd,buf,sizeof(buf));
+    if (res == -1) {
+      switch (type)
+      {
+      case trans_SET:
+        log_error("transmitter_SET() - Failed writing SET to buffer.");
+        break;
+      case writeR:
+        log_error("llwrite() - Failed writing data to buffer.");
+        break;
+      case trans_DISC_UA:
+        log_error("transmitter_DISC_UA() - Failed writing DISC to buffer.");
+        break;
+      default:
+        log_error("writeCycle() - Unknown type");
+        return -1;
+        break;
+      }
+      return -1;
+    }
+
+    alarm(linkLayer.timeout);
+    failed = FALSE;
+    state_machine.state = Start; 
+    unsigned char buf_r[1];
+    
+    while (STOP==FALSE) { 
+      res = read(fd,buf_r,1);   /* returns after 1 char has been input */
+
+      if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
+        switch (type)
+        {
+        case trans_SET:
+          log_caution("transmitter_SET - Failed reading UA from receiver.");
+          break;
+        case writeR:
+          log_caution("llwrite: failed reading RR from receiver.");
+          break;
+        case trans_DISC_UA:
+          log_caution("transmitter_DISC_UA() - Failed reading DISC from receiver.");
+          break;
+        default:
+          log_error("writeCycle() - Unknown type");
+          return -1;
+          break;
+        }
+        if (attempt < linkLayer.numTransmissions) {
+          log_caution("Trying again...");
+          failed = TRUE;
+        }
+        break;
+      } else if (res == -1){
+        switch (type)
+        {
+        case trans_SET:
+          log_error("transmitter_SET() - Failed reading UA from buffer.");
+          break;
+        case writeR:
+          log_error("llwrite() - Failed reading RR from buffer.");
+          break;
+        case trans_DISC_UA:
+          log_error("transmitter_DISC_UA() - Failed reading DISC from buffer.");
+          break;
+        default:
+          log_error("writeCycle() - Unknown type");
+          return -1;
+          break;
+        }
+        return -1;
+      }
+
+
+      if (type == writeR)
+      {
+        if (stateMachine(buf_r[0], NULL, NULL) < 0){
+          log_error("llwrite() - Error while receiving RR or REJ");
+          failed = TRUE;
+          alarm(0);
+          break;
+        }
+      } else {
+        stateMachine(buf_r[0], NULL, NULL);
+      }
+    
+      if (state_machine.state == DONE || failed) STOP=TRUE;
+    }
+  }while (attempt < linkLayer.numTransmissions && failed);
+  alarm(0);
+  return 0;
+}
+
+
 int initConnection(int *fd, char *port){
   struct termios newtio;
 
@@ -113,46 +211,11 @@ void atende(){
 
 int transmitter_SET(int fd){
   unsigned char buf[SU_FRAME_SIZE] = {FLAG, A_ER, C_SET, BCC(A_ER, C_SET), FLAG};
-  unsigned char buf_read[1]; // read buffer
-  int attempt = 0, res;
-  volatile int STOP=FALSE;
 
   stateMachineSetUp(C_UA, A_ER, Start, Supervision);
 
-  do{
-    attempt++;
-    res = write(fd,buf,SU_FRAME_SIZE);
-    if (res == -1) {
-      log_error("transmitter_SET() - Failed writing SET to buffer.");
-      return -1;
-    }
-        
-    alarm(linkLayer.timeout);
-    failed = FALSE;
-    state_machine.state = Start; 
-
-    while (STOP==FALSE) {       /* loop for input */
-      res = read(fd,buf_read,1);   /* returns after 1 char has been input */
-
-      if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
-        log_caution("transmitter_SET - Failed reading UA from receiver.");
-        if (attempt < linkLayer.numTransmissions) {
-          log_caution("Trying again...");
-          failed = TRUE;
-        }
-        break;
-      } else if (res == -1){
-        log_error("transmitter_SET() - Failed reading UA from buffer.");
-        return -1;
-      }
-      
-      stateMachine(buf_read[0], NULL, NULL);
-      if (state_machine.state == DONE || failed) STOP=TRUE;
-    }
-  }while (attempt < linkLayer.numTransmissions && failed);
-
-  alarm(0); // cancel pending alarms
-
+  writeCycle(trans_SET, fd, buf);
+  
   if(failed == TRUE){
     log_error("transmitter_SET() - Failed all attempts");
     return -1;
@@ -338,8 +401,7 @@ int llread(int fd, unsigned char *buffer){
   int res = write(fd,replyBuf,5);
   if (res == -1) {
     log_error("llread() - Failed writing response to buffer.");
-    return -1;
-  }
+    return -1;}
 
   free(dataBuf);
   return retBufferSize; 
@@ -348,45 +410,10 @@ int llread(int fd, unsigned char *buffer){
 
 int transmitter_DISC_UA(int fd){
   unsigned char buf[SU_FRAME_SIZE] = {FLAG, A_ER, C_DISC, BCC(A_ER, C_DISC), FLAG};
-  unsigned char buf_read[SU_FRAME_SIZE]; // read buffer
-  int attempt = 0, res;
-  volatile int STOP=FALSE;
 
   stateMachineSetUp(C_DISC, A_RE, Start, Supervision);
 
-  do{
-    attempt++;
-    res = write(fd,buf,SU_FRAME_SIZE);
-    if (res == -1) {
-      log_error("transmitter_DISC_UA() - Failed writing DISC to buffer.");
-      return -1;
-    }
-        
-    alarm(linkLayer.timeout);
-    failed = FALSE;
-    state_machine.state = Start; 
-
-    while (STOP==FALSE) {       /* loop for input */
-      res = read(fd,buf_read,1);   /* returns after 1 char has been input */
-
-      if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
-        log_caution("transmitter_DISC_UA() - Failed reading DISC from receiver.");
-        if (attempt < linkLayer.numTransmissions) {
-          log_caution("Trying again...");
-        }
-        break;
-      } else if (res == -1){
-        log_error("transmitter_DISC_UA() - Failed reading DISC from buffer.");
-        return -1;
-      }
-      
-      stateMachine(buf_read[0],NULL, NULL);
-      
-      if (state_machine.state == DONE || failed) STOP=TRUE;
-    }
-  }while (attempt < linkLayer.numTransmissions && failed);
-
-  alarm(0); // cancel pending alarms
+  writeCycle(trans_DISC_UA, fd, buf);
 
   if(failed == TRUE){
     log_error("transmitter_DISC_UA() - Failed all attempts");
@@ -395,7 +422,7 @@ int transmitter_DISC_UA(int fd){
 
   unsigned char buf1[SU_FRAME_SIZE] = {FLAG, A_RE, C_UA, BCC(A_RE, C_UA), FLAG};
 
-  res = write(fd,buf1,SU_FRAME_SIZE);
+  int res = write(fd,buf1,SU_FRAME_SIZE);
   if (res == -1) {
     log_error("transmitter_DISC_UA() - Failed writing UA to buffer.");
     return -1;

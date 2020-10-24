@@ -29,6 +29,7 @@ struct linkLayer {
   unsigned int status; /*TRANSMITTER | RECEIVER*/
 };
 enum readingType {openR, readR, closeDISC, closeUA};
+enum writingType {trans_SET, writeR, trans_DISC_UA};
 
 struct linkLayer linkLayer;
 struct termios oldtio; // utilizado para fechar a ligação em llclose

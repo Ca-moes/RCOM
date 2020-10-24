@@ -2,8 +2,6 @@
 #include "pla.h"
 
 
-
-
 int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char **dataBuf, int *retBufferSize){
   volatile int STOP=FALSE;
   int res;
@@ -118,10 +116,8 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
           return -1;
           break;
         }
-        if (attempt < linkLayer.numTransmissions) {
+        if (attempt < linkLayer.numTransmissions)
           log_caution("Trying again...");
-          failed = TRUE;
-        }
         break;
       } else if (res == -1){
         switch (type)
@@ -142,7 +138,7 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
         }
         return -1;
       }
-      
+
       if (type == writeR){
         if (stateMachine(buf_r[0], NULL, NULL) < 0){
           log_error("llwrite() - Error while receiving RR or REJ");

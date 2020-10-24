@@ -32,19 +32,51 @@ int frameIndex, wrongC;
  */
 void stateMachineSetUp(unsigned char control, unsigned char address, enum stateMachineState state, enum stateMachineType type);
 /**
- * @brief 
+ * @brief The StateMachine function that processes a byte and updates it's state
  * 
- * @param byte 
- * @param buf 
- * @param size 
- * @return int 
+ * @param byte byte to process
+ * @param buf buffer to put data if stateMachineType is Read
+ * @param size variable to keeo size of buf if stateMachineType is Read
+ * @return int negative value in case of error, 0 otherwise
  */
 int stateMachine(unsigned char byte, unsigned char **buf, int *size);
 
+/**
+ * @brief Function to process a byte in case the state is Start
+ * 
+ * @param byte byte to be processed
+ * @return int negative value in case of error, 0 otherwise
+ */
 int processStart(unsigned char byte);
+/**
+ * @brief Function to process a byte in case the state is FLAG_RCV
+ * 
+ * @param byte byte to be processed
+ * @return int negative value in case of error, 0 otherwise
+ */
 int processFLAG_RCV(unsigned char byte);
+/**
+ * @brief Function to process a byte in case the state is A_RCV
+ * 
+ * @param byte byte to be processed
+ * @return int negative value in case of error, 0 otherwise
+ */
 int processA_RCV(unsigned char byte);
+/**
+ * @brief Function to process a byte in case the state is C_RCV
+ * 
+ * @param byte byte to be processed
+ * @return int negative value in case of error, 0 otherwise
+ */
 int processC_RCV(unsigned char byte);
+/**
+ * @brief Function to process a byte in case the state is BCC_OK
+ * 
+ * @param byte byte to be processed
+ * @param buffer buffer to put data if stateMachineType is Read
+ * @param buffersize variable to keeo size of buf if stateMachineType is Read
+ * @return int negative value in case of error, 0 otherwise
+ */
 int processBCC_OK(unsigned char byte, unsigned char **buffer, int *buffersize);
 
 #endif // PLA_HEADER

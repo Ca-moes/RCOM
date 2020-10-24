@@ -30,8 +30,8 @@ struct linkLayer {
   unsigned char frame[MAX_SIZE+6]; /*Frame*/
   unsigned int status; /*TRANSMITTER | RECEIVER*/
 };
-enum readingType {openR, readR, closeDISC, closeUA}; // Enum of possible modification to readingCycle()
-enum writingType {trans_SET, writeR, trans_DISC_UA}; // Enum of possible modification to writeCycle()
+enum readingType {openR, readR, closeDISC, closeUA}; // Enum of possible modifications to readingCycle()
+enum writingType {trans_SET, writeR, trans_DISC_UA}; // Enum of possible modifications to writeCycle()
 
 struct linkLayer linkLayer;  // Data relative to the link layer
 struct termios oldtio; // used in llclose to reset termios

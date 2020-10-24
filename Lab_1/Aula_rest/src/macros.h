@@ -31,6 +31,9 @@
 #define TRANSMITTER 1
 #define RECEIVER 0
 
+/**
+ * Tamanho máximo em bytes dos dados da trama I === Tamanho máximo do pacote de dados
+ */
 #define MAX_SIZE 512
 
 #endif // MACROS_HEADER

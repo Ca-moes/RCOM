@@ -118,8 +118,7 @@ int receiver_UA(int fd){
     res = read(fd,buf,1);   /* returns after 1 char has been input */
     if (res == -1) {
       log_error("receiver: failed reading SET from buffer.");
-      return -1;
-    }
+      return -1;}
 
       stateMachine(buf[0], NULL, NULL);
     if (state_machine.state == DONE) STOP=TRUE;
@@ -195,7 +194,7 @@ int llwrite(int fd, char *buffer, int lenght){
   int currentLenght = lenght;
   unsigned char buf1[4] = {FLAG, A_ER, C_I(linkLayer.sequenceNumber), BCC(A_ER, C_I(linkLayer.sequenceNumber))};  
   unsigned char *dataBuffer = (unsigned char *)malloc(lenght);
-  unsigned char buf_read[MAX_SIZE];
+  unsigned char buf_read[1];
   volatile int STOP=FALSE;
   int attempt = 0;
 
@@ -299,9 +298,8 @@ int llread(int fd, unsigned char *buffer){
     res = read(fd,buf,1);   
     if (res == -1) {
       log_error("llread() - Failed reading frame from buffer.");
-      return -1;
-    }
-    
+      return -1;}
+
     retStateMachine = stateMachine(buf[0], &dataBuf, &retBufferSize);
     if (retStateMachine == -1){
       c = C_REJ(linkLayer.sequenceNumber);

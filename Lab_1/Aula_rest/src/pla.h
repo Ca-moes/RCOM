@@ -25,7 +25,7 @@ struct linkLayer {
   unsigned char sequenceNumber;   /*Número de sequência da trama: 0x00, 0x01*/
   unsigned int timeout; /*Valor do temporizador: 1 s*/
   unsigned int numTransmissions; /*Número de tentativas em caso defalha*/
-  unsigned char frame[MAX_SIZE]; /*Trama*/
+  unsigned char frame[MAX_SIZE+6]; /*Trama*/
   unsigned int status; /*TRANSMITTER | RECEIVER*/
 };
 

@@ -57,7 +57,6 @@ int transmitter_SET(int fd);
  * @return int identificador da ligação de dados OU -1 em caso de erro 
  */
 int receiver_UA(int fd);
-
 /**
  * @brief Abre uma ligação de dados com a porta série
  * 
@@ -88,16 +87,6 @@ int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsign
  * @return int numero de caracteres escritos ou -1 em caso de erro
  */
 int llwrite(int fd, char *buffer, int lenght);
-
-/**
- * @brief Função para processar o estado da leitura das tramas SET-UA
- * 
- * @param state estado atual da máquina de estados SET-UA
- * @param checkBuffer Buffer que guarda os valores dos bytes A e C
- * @param byte Byte a ser processado pela máquina de estados
- * @return -1 if BCC's don't match, -2 if SequenceNumber is wrong. 0 otherwise
- */
-int stateMachine_Read(unsigned char byte, unsigned char **buffer, int* buffersize);
 
 /**
  * @brief 

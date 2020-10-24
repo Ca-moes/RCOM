@@ -1,6 +1,8 @@
 #include "statemachine.h"
 
 int stateMachine(unsigned char byte, unsigned char **buf, int *size){
+  if (state_machine.type == Read) linkLayer.frame[frameIndex] = byte;
+  
   switch (state_machine.state)
   {
   case Start:

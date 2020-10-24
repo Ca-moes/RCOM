@@ -282,114 +282,16 @@ int llwrite(int fd, char *buffer, int lenght){
   return 0;
 }
 
-
-int stateMachine_Read(unsigned char byte, unsigned char **buffer, int* buffersize){
-  //printf("A:%#4.2x C:%#4.2x \n", checkBuffer[0], checkBuffer[1]);
-  static unsigned char checkBuffer[2];
-  static int frameIndex, wrongC;
-  linkLayer.frame[frameIndex] = byte;
-  switch (state)
-  {
-  case Start:
-    frameIndex = 0;
-    wrongC = FALSE;
-    if (byte == FLAG){
-      state = FLAG_RCV;
-      frameIndex++;
-    }  
-    break;
-  case FLAG_RCV:
-    if (byte == A_ER) {
-      state = A_RCV;
-      checkBuffer[0] = byte;
-      frameIndex++;
-    }
-    else if (byte!= FLAG)
-      state = Start;
-    break;
-  case A_RCV:
-    if (byte == C_I(linkLayer.sequenceNumber ^ 1)) {
-      log_caution("stateMachine_Read() - Control Byte with wrong sequence number, need to check BCC");
-      wrongC = TRUE;
-      state = C_RCV;
-      checkBuffer[1] = byte;
-      frameIndex++;
-    }
-    else if (byte == C_I(linkLayer.sequenceNumber)) {
-      state = C_RCV;
-      checkBuffer[1] = byte;
-      frameIndex++;
-    } else if (byte == FLAG){
-      state = FLAG_RCV;
-      frameIndex = 1;
-    } else 
-      state = Start;
-    break;
-  case C_RCV:  
-    if (byte == BCC(checkBuffer[0],checkBuffer[1])){
-      if (wrongC == TRUE){
-        log_caution("stateMachine_Read() - Received already read Packet");
-        return -2;
-      }
-      state = BCC_OK;
-      frameIndex++;
-    }
-    else if (byte == FLAG){
-      state = FLAG_RCV;
-      frameIndex = 1;
-    }
-    else{
-      log_error("stateMachine_Read() - BCC received with Errors");
-      return -1;
-    }
-    break;
-  case BCC_OK:
-    frameIndex++;
-    if (byte == FLAG){
-      *buffer = (unsigned char *)malloc((frameIndex-6));
-      *buffersize = 0;
-
-      // Byte De-stuffing
-      for (int i = 4; i < frameIndex - 2; i++)
-      {
-        if (linkLayer.frame[i] != 0x7D)
-          (*buffer)[*buffersize] = linkLayer.frame[i];
-        else{
-          (*buffer)[*buffersize] = linkLayer.frame[i+1] ^ 0x20;
-          i++;
-        }
-        (*buffersize)++;
-      }
-      *buffer = (unsigned char *) realloc(*buffer, (*buffersize)); 
-      
-      // Formação de BCC2
-      unsigned char BCC2 = (*buffer)[0];
-      for (int i = 1; i < *buffersize; i++)
-        BCC2 = BCC2 ^ (*buffer)[i];
-
-      if (linkLayer.frame[frameIndex-2]==BCC2){
-        linkLayer.sequenceNumber = linkLayer.sequenceNumber ^ 1;
-        state = DONE;
-      }
-      else{
-        log_error("stateMachine_Read() - BCC2 received with Errors");
-        return -1;
-      }
-    }
-    break;
-  case DONE:
-    break;
-  }
-
-  return 0;
-}
-
 int llread(int fd, unsigned char *buffer){
   unsigned char buf[1];
   unsigned char *dataBuf;
   int res, retBufferSize, retStateMachine;
   volatile int STOP=FALSE;
-  state = Start;
+  // Set-Up State Machine
+  state_machine.control = C_I(linkLayer.sequenceNumber);
+  state_machine.address = A_ER;
+  state_machine.state = Start;
+  state_machine.type = Read;
 
   unsigned char c;
 
@@ -400,7 +302,7 @@ int llread(int fd, unsigned char *buffer){
       return -1;
     }
     
-    retStateMachine = stateMachine_Read(buf[0], &dataBuf, &retBufferSize);
+    retStateMachine = stateMachine(buf[0], &dataBuf, &retBufferSize);
     if (retStateMachine == -1){
       c = C_REJ(linkLayer.sequenceNumber);
       log_error("llread() - Error in BCC");
@@ -411,9 +313,8 @@ int llread(int fd, unsigned char *buffer){
       log_error("llread() - Error in C, wrong sequence number");
       break;
     }
-
     c = C_RR(linkLayer.sequenceNumber);
-    if (state == DONE) STOP=TRUE;
+    if (state_machine.state == DONE) STOP=TRUE;
   }
 
   unsigned char replyBuf[5] = {FLAG, A_ER, c, BCC(A_ER, c), FLAG};

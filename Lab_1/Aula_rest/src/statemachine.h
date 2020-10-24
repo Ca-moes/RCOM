@@ -19,6 +19,8 @@ struct stateMachineParams state_machine;
 unsigned checkBuffer[2];
 int frameIndex, wrongC;
 
+
+void stateMachineSetUp(unsigned char control, unsigned char address, enum stateMachineState state, enum stateMachineType type);
 int stateMachine(unsigned char byte, unsigned char **buf, int *size);
 
 int processStart(unsigned char byte);

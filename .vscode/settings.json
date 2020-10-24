@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "*.U1": "makefile",
+    "*.Q1": "makefile",
+    "*.tcc": "cpp"
+  }
+}

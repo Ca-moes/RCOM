@@ -28,9 +28,14 @@ struct linkLayer {
   unsigned char frame[MAX_SIZE+6]; /*Trama*/
   unsigned int status; /*TRANSMITTER | RECEIVER*/
 };
+enum readingType {openR, readR, closeDISC, closeUA};
 
 struct linkLayer linkLayer;
+struct termios oldtio; // utilizado para fechar a ligação em llclose
+volatile int failed;
 
+
+int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char **dataBuf, int *retBufferSize);
 /**
  * @brief Estabelece ligação ao cabo e cria fd
  * 

@@ -31,9 +31,20 @@
 #define TRANSMITTER 1
 #define RECEIVER 0
 
+/*-------package control--------*/
+
+//C flag
+#define DATA 0x01
+#define START 0x02
+#define END 0x03
+
+//T flag
+#define T_SIZE 0x00
+#define T_NAME 0x01
+
 /**
  * Tamanho máximo em bytes dos dados da trama I === Tamanho máximo do pacote de dados
  */
-#define MAX_SIZE 512
+#define MAX_SIZE 1024
 
 #endif // MACROS_HEADER

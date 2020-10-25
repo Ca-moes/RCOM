@@ -37,11 +37,11 @@ void log_hexa(unsigned char a){
 }
 
 void log_received_message(unsigned char *buf, int size){
-  /*printf("Message received from llread() - Size %d:\n", size);
+  printf("Message received from llread() - Size %d:\n", size);
   for (int i = 0; i < size; i++)
-    printf("%#4.2x ", buf[i]);*/
-  buf[size]='\0'; 
-  printf("\nMensagem: %s\n", buf);
+    printf("%#4.2x ", buf[i]);
+  //buf[size]='\0'; 
+  //printf("\nMensagem: %s\n", buf);
 }
 
 /* To test if cheanged;

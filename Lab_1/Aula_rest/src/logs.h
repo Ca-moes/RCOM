@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/stat.h>
+
 
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */

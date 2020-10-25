@@ -299,8 +299,8 @@ int llread(int fd, unsigned char *buffer){
     if (res == -1) {
       log_error("llread() - Failed reading frame from buffer.");
       return -1;}
-
     retStateMachine = stateMachine(buf[0], &dataBuf, &retBufferSize);
+
     if (retStateMachine == -1){
       c = C_REJ(linkLayer.sequenceNumber);
       log_error("llread() - Error in BCC");
@@ -403,6 +403,7 @@ int receiver_DISC_UA(int fd){
   state_machine.state = Start;
   state_machine.type = Supervision;
   
+  log_message("parsing DISC\n");
   /* parse DISC*/
   while (STOP==FALSE) {       /* loop for input */
     res = read(fd,buf,1);   /* returns after 1 char has been input */
@@ -411,6 +412,7 @@ int receiver_DISC_UA(int fd){
       return -1;
     }
     
+    log_hexa(buf[0]);
     stateMachine(buf[0], NULL, NULL);
     if (state_machine.state == DONE) STOP=TRUE;
   }
@@ -432,6 +434,7 @@ int receiver_DISC_UA(int fd){
   state_machine.state = Start;
   state_machine.type = Supervision;
 
+  log_message("RECEIVER TRYING TO READ UA:\n");
   /* parse UA*/
   while (STOP==FALSE) {       /* loop for input */
     res = read(fd,buf1,1);   /* returns after 1 char has been input */
@@ -445,6 +448,7 @@ int receiver_DISC_UA(int fd){
       return -1;
     }
     
+    log_hexa(buf1[0]);
     stateMachine(buf1[0], NULL, NULL);
     if (state_machine.state == DONE) STOP=TRUE;
   }
@@ -454,16 +458,22 @@ int receiver_DISC_UA(int fd){
 }
 
 int llclose(int fd){
-  sleep(1); /* give llwrite time to receive response*/
+  //sleep(1); /* give llwrite time to receive response*/
   int returnValue = fd;
+
+  log_message("status:\n");
+  printf("%d\n", linkLayer.status);
 
   switch (linkLayer.status)
   {
   case TRANSMITTER:
+
+    log_message("TRANSMITTER\n");
     if (transmitter_DISC_UA(fd) <0)
       returnValue = -1;
     break;
   case RECEIVER:
+    log_message("RECEIVER\n");
     if (receiver_DISC_UA(fd) <0)
       returnValue = -1;
     break;

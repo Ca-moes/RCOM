@@ -79,11 +79,6 @@ int transmitterApp(int fd, char *file){
 
   llwrite(fd,controlPackage,sizeof(fileInfo.st_size) + 5 + strlen(file));
 
-  for (int i=0; i< sizeof(fileInfo.st_size)+5 + strlen(file); i++){
-    log_hexa(controlPackage[i]);
-  }
-
-
   while( (nbytes = read(file_fd,file_data,MAX_SIZE-4)) != 0){
     /*building data package*/
     dataPackage[0] = DATA;
@@ -122,7 +117,6 @@ void parseFileInfo(unsigned char *controlpackage){
     
     for (int i =next_tlv+2, k=0; i < informationsize+next_tlv+2; i++, k++){
         applayer.filename[k] = controlpackage[i];
-        log_message(applayer.filename);
     }
     applayer.filename[sizeof(applayer.filename)] = '\0';
   }

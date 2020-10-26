@@ -143,11 +143,12 @@ int receiverApp(int fd){
     }
     else if (package[0] == DATA) {
       dataPackageSize = package[3] + 256* package[2];
-
+      
       write(file_fd,&package[4], dataPackageSize);
     }
   }
-  
+  free(applayer.filename);
+
   if (close(file_fd)<0){
     log_error("Error closing file\n");
   }

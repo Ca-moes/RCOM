@@ -18,19 +18,46 @@
 #include "logs.h"
 #include "statemachine.h"
 
-
+/**
+ * @brief Struct to hold information about the lin layer
+ */
 struct linkLayer {
-  char port[20]; /*Dispositivo /dev/ttySx, x = 0, 1*/
-  int baudRate; /*Velocidade de transmissão*/
-  unsigned char sequenceNumber;   /*Número de sequência da trama: 0x00, 0x01*/
-  unsigned int timeout; /*Valor do temporizador: 1 s*/
-  unsigned int numTransmissions; /*Número de tentativas em caso defalha*/
+  char port[20]; /* Device /dev/ttySx, x = 0, 1*/
+  int baudRate; /*Transmission Speed*/
+  unsigned char sequenceNumber;   /*Frame Sequence Number: 0x00, 0x01*/
+  unsigned int timeout; /*Alarm Timeout: x s*/
+  unsigned int numTransmissions; /*Number of tries in case of failure*/
   unsigned int status; /*TRANSMITTER | RECEIVER*/
-  unsigned char frame[MAX_SIZE+6]; /*Trama*/
+  unsigned char frame[MAX_SIZE+6]; /*Frame*/
 };
+enum readingType {openR, readR, closeDISC, closeUA}; // Enum of possible modifications to readingCycle()
+enum writingType {trans_SET, writeR, trans_DISC_UA}; // Enum of possible modifications to writeCycle()
 
-struct linkLayer linkLayer;
+struct linkLayer linkLayer;  // Data relative to the link layer
+struct termios oldtio; // used in llclose to reset termios
+volatile int failed; // used in the alarm handler
 
+/**
+ * @brief Function to read a byte from fd
+ * 
+ * @param type variable to distinguish warning messages
+ * @param fd file descriptor
+ * @param c controll byte, used with type readR
+ * @param dataBuf buffer to read data, used with type readR
+ * @param retBufferSize variable to store dataBuf size, used with type readR
+ * @return int 
+ */
+int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char **dataBuf, int *retBufferSize);
+/**
+ * @brief Function used to write to fd
+ * 
+ * @param type variable to distinguish warning messages
+ * @param fd file descriptor
+ * @param buf buffer of content to write
+ * @param bufsize lenght of buffer in bytes
+ * @return int negative in case of errors, 0 otherwise
+ */
+int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize);
 /**
  * @brief Estabelece ligação ao cabo e cria fd
  * 

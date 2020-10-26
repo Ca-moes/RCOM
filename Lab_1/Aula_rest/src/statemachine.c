@@ -1,5 +1,12 @@
 #include "statemachine.h"
 
+void stateMachineSetUp(unsigned char control, unsigned char address, enum stateMachineState state, enum stateMachineType type){
+  state_machine.control = control;
+  state_machine.address = address;
+  state_machine.state = state;
+  state_machine.type = type;
+}
+
 int stateMachine(unsigned char byte, unsigned char **buf, int *size){
   if (state_machine.type == Read) linkLayer.frame[frameIndex] = byte;
   

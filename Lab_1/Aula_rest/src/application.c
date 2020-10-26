@@ -3,7 +3,7 @@
 
 struct applicationLayer{
   off_t filesize;
-  char *filename;
+  char filename[255];
   char destinationArg[255];
   char filenameArg[255];
   int type;
@@ -113,12 +113,10 @@ void parseFileInfo(unsigned char *controlpackage){
   
   if (controlpackage[next_tlv]==T_NAME){
     informationsize = controlpackage[next_tlv+1];
-    applayer.filename = malloc(sizeof(char) * (informationsize+1));
-    
     for (int i =next_tlv+2, k=0; i < informationsize+next_tlv+2; i++, k++){
         applayer.filename[k] = controlpackage[i];
     }
-    applayer.filename[sizeof(applayer.filename)] = '\0';
+    applayer.filename[informationsize+next_tlv+2] = '\0';
   }
   applayer.filesize = size;
 }
@@ -147,7 +145,6 @@ int receiverApp(int fd){
       write(file_fd,&package[4], dataPackageSize);
     }
   }
-  free(applayer.filename);
 
   if (close(file_fd)<0){
     log_error("Error closing file\n");

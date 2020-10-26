@@ -409,12 +409,13 @@ int receiver_DISC_UA(int fd){
 }
 
 int llclose(int fd){
-  sleep(1); /* give llwrite time to receive response*/
+  //sleep(1); /* give llwrite time to receive response*/
   int returnValue = fd;
 
   switch (linkLayer.status)
   {
   case TRANSMITTER:
+
     if (transmitter_DISC_UA(fd) <0)
       returnValue = -1;
     break;

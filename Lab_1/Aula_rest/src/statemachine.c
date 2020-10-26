@@ -74,7 +74,8 @@ int processA_RCV(unsigned char byte){
   case Supervision:
     if (byte == state_machine.control) {
       state_machine.state = C_RCV;
-      checkBuffer[1] = byte;} 
+      checkBuffer[1] = byte;
+      } 
     else if (byte == FLAG)
       state_machine.state = FLAG_RCV;
     else
@@ -89,7 +90,8 @@ int processA_RCV(unsigned char byte){
 
     if (byte == state_machine.control) { // Control esperado
       state_machine.state = C_RCV;
-      checkBuffer[1] = byte;} 
+      checkBuffer[1] = byte;
+      } 
     else if (byte == FLAG)
       state_machine.state = FLAG_RCV;
     else{

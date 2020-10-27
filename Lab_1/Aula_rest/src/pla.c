@@ -37,6 +37,7 @@ int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char 
           log_error("readingCycle() - Unknown type");
           break;
         }
+      log_error("readingCycle() - Error on read()");
       return -1;
       }
     }
@@ -47,7 +48,7 @@ int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char 
       if (retStateMachine == -1){
         *c = C_REJ(linkLayer.sequenceNumber);
         log_error("llread() - Error in BCC");
-        break;
+        return -1;
       }
       if (retStateMachine == -2){
         *c = C_RR(linkLayer.sequenceNumber);
@@ -118,6 +119,10 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
         }
         if (attempt < linkLayer.numTransmissions)
           log_caution("Trying again...");
+        else{
+          log_error("writeCycle() - Exceded number of attempts");
+          return -1;
+        }
         break;
       } else if (res == -1){
         switch (type)
@@ -136,6 +141,7 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
           return -1;
           break;
         }
+        log_error("writeCycle() - Error on read()");
         return -1;
       }
 
@@ -328,7 +334,10 @@ int llwrite(int fd, char *buffer, int lenght){
 
   stateMachineSetUp(C_RR(linkLayer.sequenceNumber^0x01), A_ER, Start, Write);
 
-  writeCycle(writeR, fd, finalBuffer, sizeof(finalBuffer));
+  if (writeCycle(writeR, fd, finalBuffer, sizeof(finalBuffer)) <0){
+    log_error("llwrite() - failed writing");
+    return -1;
+  }
   
   linkLayer.sequenceNumber ^= 0x01;
 
@@ -342,8 +351,11 @@ int llread(int fd, unsigned char *buffer){
 
   unsigned char c;
 
-  if (readingCycle(readR, fd, &c, &dataBuf, &retBufferSize) < 0)
+  frameIndex = 0;
+  if (readingCycle(readR, fd, &c, &dataBuf, &retBufferSize) < 0){
+    log_error("llread() - failed reading");
     return -1;
+  }
 
   unsigned char replyBuf[5] = {FLAG, A_ER, c, BCC(A_ER, c), FLAG};
 

@@ -77,7 +77,10 @@ int transmitterApp(int fd, char *file){
   controlPackage[sizeof(fileInfo.st_size)+4] = strlen(file);
   memcpy(&controlPackage[sizeof(fileInfo.st_size)+5],file,strlen(file));
 
-  llwrite(fd,controlPackage,sizeof(fileInfo.st_size) + 5 + strlen(file));
+  if(llwrite(fd,controlPackage,sizeof(fileInfo.st_size) + 5 + strlen(file))<0){
+    log_error("transmitterApp() - llwrite() failed writing Start Control Packet");
+    return -1;
+  }
 
   while( (nbytes = read(file_fd,file_data,MAX_SIZE-4)) != 0){
     /*building data package*/
@@ -87,14 +90,19 @@ int transmitterApp(int fd, char *file){
     dataPackage[3] = nbytes % 256;
     memcpy(&dataPackage[4],file_data,nbytes);
 
-    llwrite(fd,dataPackage,nbytes+4);
-
+    if (llwrite(fd,dataPackage,nbytes+4) < 0){
+      log_error("transmitterApp() - llwrite() failed writing Data Packet");
+      return -1;
+    }
     sequenceNumber++;
   }
 
   controlPackage[0] = END;
 
-  llwrite(fd,controlPackage,sizeof(fileInfo.st_size) + 5 + strlen(file));
+  if(llwrite(fd,controlPackage,sizeof(fileInfo.st_size) + 5 + strlen(file))<0){
+    log_error("transmitterApp() - llwrite() failed writing End Control Packet");
+    return -1;
+  }
   return 0;
 }
 
@@ -125,11 +133,13 @@ int receiverApp(int fd){
   unsigned char package[MAX_SIZE];
   int dataPackageSize;
 
-  int file_fd;
+  int file_fd, sizeread;
 
   while(1){
-    llread(fd,package);
-    
+    sizeread = llread(fd,package);
+    if(sizeread<0)
+      log_caution("receiverApp() - llread() error");
+
     if (package[0] == START){
       parseFileInfo(package);
       strcat(applayer.destinationArg,applayer.filename);
@@ -139,7 +149,7 @@ int receiverApp(int fd){
     else if (package[0] == END){
       break;
     }
-    else if (package[0] == DATA) {
+    else if (package[0] == DATA && sizeread>0) {
       dataPackageSize = package[3] + 256* package[2];
       
       write(file_fd,&package[4], dataPackageSize);
@@ -175,9 +185,13 @@ int main(int argc, char** argv) {
 
   
   if (applayer.type == TRANSMITTER) 
-    transmitterApp(fd, applayer.filenameArg);
+  {
+    if( transmitterApp(fd, applayer.filenameArg) < 0)
+      log_error("main() - transmitterApp error");
+  }
   else if (applayer.type == RECEIVER) {
-    receiverApp(fd);
+    if (receiverApp(fd) <0)
+      log_error("main() - receiverApp error");
   }
   
   printf("Closing Connection..\n");

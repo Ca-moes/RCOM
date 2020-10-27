@@ -27,8 +27,8 @@ struct linkLayer {
   unsigned char sequenceNumber;   /*Frame Sequence Number: 0x00, 0x01*/
   unsigned int timeout; /*Alarm Timeout: x s*/
   unsigned int numTransmissions; /*Number of tries in case of failure*/
+  unsigned char frame[MAX_SIZE_AFT_STUFF]; /*Frame with double the size of MAX_SIZE to accomodate for byte_stuffing increase*/
   unsigned int status; /*TRANSMITTER | RECEIVER*/
-  unsigned char frame[MAX_SIZE+6]; /*Frame*/
 };
 enum readingType {openR, readR, closeDISC, closeUA}; // Enum of possible modifications to readingCycle()
 enum writingType {trans_SET, writeR, trans_DISC_UA}; // Enum of possible modifications to writeCycle()

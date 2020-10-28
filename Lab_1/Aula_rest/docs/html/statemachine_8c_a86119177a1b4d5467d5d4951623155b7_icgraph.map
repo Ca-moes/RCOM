@@ -1,0 +1,16 @@
+<map id="stateMachine" name="stateMachine">
+<area shape="rect" id="node1" title="The StateMachine function that processes a byte and updates it&#39;s state." alt="" coords="604,145,704,172"/>
+<area shape="rect" id="node2" href="$dcp__spec_8h.html#ab20858e52fefe1a6b20ebd64e3bc8995" title="Function to read a byte from fd." alt="" coords="457,95,556,121"/>
+<area shape="rect" id="node10" href="$dcp__spec_8h.html#a540c8079d3498a8b9a5ab81e232c8095" title="Function used to write to fd." alt="" coords="465,171,549,197"/>
+<area shape="rect" id="node3" href="$group___data___connection___protocol.html#gae4363b4445fbc6b8a780a06e03e86068" title=" " alt="" coords="307,5,361,32"/>
+<area shape="rect" id="node6" href="$dcp__spec_8h.html#aa977e673b8488d865386035bea4d98f6" title="Receiver sequence to Disconnect." alt="" coords="267,56,401,83"/>
+<area shape="rect" id="node8" href="$dcp__spec_8h.html#aacd3aed32628f597b528272d99bebac8" title="Função que recebe trama SET e envia trama UA." alt="" coords="287,107,381,133"/>
+<area shape="rect" id="node4" href="$group___application.html#ga1edb9c48c38960f90f2ae1d199ef982b" title="Receiver part of the application." alt="" coords="112,31,203,57"/>
+<area shape="rect" id="node5" href="$group___application.html#ga3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="5,132,56,159"/>
+<area shape="rect" id="node7" href="$group___data___connection___protocol.html#ga343e4b5928516727236a390a25f28c77" title=" " alt="" coords="128,107,187,133"/>
+<area shape="rect" id="node9" href="$group___data___connection___protocol.html#gadb4ff2da522e908ce48eedc1c3c00514" title="Abre uma ligação de dados com a porta série." alt="" coords="129,157,185,184"/>
+<area shape="rect" id="node11" href="$group___data___connection___protocol.html#ga131b10b059811f151e979f1d2c53b8f6" title=" " alt="" coords="306,259,362,285"/>
+<area shape="rect" id="node13" href="$dcp__spec_8h.html#a0fc711710a4b28cadd350c7d615c1f2f" title="Transmitter sequence to Disconnect." alt="" coords="259,157,409,184"/>
+<area shape="rect" id="node14" href="$dcp__spec_8h.html#a932b8b857abc7cc9337b4c31e1588c46" title="Função que envia Trama SET e recebe trama UA." alt="" coords="275,208,393,235"/>
+<area shape="rect" id="node12" href="$group___application.html#gab716e01a43cac28a0df910355b1bc357" title="Transmitter part of the application." alt="" coords="104,259,211,285"/>
+</map>

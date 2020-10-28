@@ -1,5 +1,9 @@
+/** \addtogroup Application
+ *  @{
+ */
 #include "application.h"
 
+static struct applicationLayer applayer;  // Struct to save data about the Application
 
 void parseArgs(int argc, char** argv){
   if (argc != 4){
@@ -87,27 +91,31 @@ int transmitterApp(int fd){
   return 0;
 }
 
-void parseFileInfo(unsigned char *controlpackage){
+void parseFileInfo(unsigned char *controlpackage, int packagesize){
   off_t size = 0;
   int informationsize;
-  int next_tlv = 0;
+  int next_tlv = 1;
 
-  if (controlpackage[1]==T_SIZE){
-    informationsize = controlpackage[2];
-    for (int i =3, k=0; i < informationsize+3; i++, k++){
-      size += controlpackage[i] << 8*k;
+  while (next_tlv != packagesize)
+  {
+    if (controlpackage[next_tlv]==T_SIZE){
+      informationsize = controlpackage[next_tlv+1];
+      for (int i = next_tlv+2, k=0; i < informationsize+next_tlv+2; i++, k++){
+        size += controlpackage[i] << 8*k;
+      }
+      applayer.filesize = size;
+      next_tlv=informationsize+3;
     }
-    next_tlv=informationsize+3;
-  }
-  
-  if (controlpackage[next_tlv]==T_NAME){
-    informationsize = controlpackage[next_tlv+1];
-    for (int i =next_tlv+2, k=0; i < informationsize+next_tlv+2; i++, k++){
-      applayer.filename[k] = controlpackage[i];
+
+    if (controlpackage[next_tlv]==T_NAME){
+      informationsize = controlpackage[next_tlv+1];
+      for (int i =next_tlv+2, k=0; i < informationsize+next_tlv+2; i++, k++){
+        applayer.filename[k] = controlpackage[i];
+      }
+      applayer.filename[informationsize+next_tlv+2] = '\0';
+      next_tlv = next_tlv+2 + informationsize;
     }
-    applayer.filename[informationsize+next_tlv+2] = '\0';
   }
-  applayer.filesize = size;
 }
 
 int receiverApp(int fd){
@@ -122,7 +130,7 @@ int receiverApp(int fd){
       log_caution("receiverApp() - llread() error");
 
     if (package[0] == START){
-      parseFileInfo(package);
+      parseFileInfo(package, sizeread);
       strcat(applayer.destinationArg,applayer.filename);
       file_fd = open(applayer.destinationArg,O_RDWR | O_CREAT, 0777);
       continue;
@@ -175,3 +183,4 @@ int main(int argc, char** argv) {
   }
   return 0;
 }
+/** @}*/

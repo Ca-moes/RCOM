@@ -1,3 +1,6 @@
+/** \addtogroup Logs
+ *  @{
+ */
 #include "logs.h"
 
 void log_error(char *arr){
@@ -51,3 +54,5 @@ void log_received_message(unsigned char *buf, int size){
   log_success("sucess message");
   log_message("mensagem");
   log_hexa(0x7E); */
+
+  /** @}*/

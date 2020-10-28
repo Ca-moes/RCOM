@@ -1,7 +1,10 @@
+/** \addtogroup Application
+ *  @{
+ */
 #ifndef APP_HEADER
 #define APP_HEADER
 
-#include "pla.h"
+#include "dcp.h"
 #include "logs.h"
 
 /**
@@ -10,14 +13,11 @@
 struct applicationLayer{
   off_t filesize; // Size of file in bytes
   char filename[255];  // String with file name
-  char destinationArg[255];  // Strig with path to destination message received
+  char destinationArg[255];  // String with path to destination message received
   char filenameArg[255]; //String with filename passed by programs arguments
   int type; // TRANSMITTER | RECEIVER
   int gate; // /dev/ttySx | gate is x
 };
-
-struct applicationLayer applayer;  // Struct to save data about the Application
-
 
 /**
  * @brief Função para dar parse dos argumentos da linah de comandos
@@ -40,7 +40,7 @@ int transmitterApp(int fd);
  * 
  * @param controlpackage Control Package
  */
-void parseFileInfo(unsigned char *controlpackage);
+void parseFileInfo(unsigned char *controlpackage, int packagesize);
 
 /**
  * @brief Receiver part of the application
@@ -60,3 +60,4 @@ int receiverApp(int fd);
 int main(int argc, char** argv);
 
 #endif // APP_HEADER
+/** @}*/

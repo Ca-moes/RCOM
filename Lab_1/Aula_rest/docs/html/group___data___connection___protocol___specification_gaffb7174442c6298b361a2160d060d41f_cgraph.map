@@ -1,0 +1,5 @@
+<map id="initConnection" name="initConnection">
+<area shape="rect" id="node1" title="Estabelece ligação ao cabo e cria fd." alt="" coords="5,31,111,57"/>
+<area shape="rect" id="node2" href="$group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="170,5,242,32"/>
+<area shape="rect" id="node3" href="$group___logs.html#ga29182c2001a385b45b701b8f1cf8f16e" title="Outputs a message in green." alt="" coords="159,56,253,83"/>
+</map>

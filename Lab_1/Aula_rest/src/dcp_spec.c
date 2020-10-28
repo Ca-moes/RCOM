@@ -23,13 +23,13 @@ int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char 
         switch (type)
         {
         case openR:
-          log_error("receiver: failed reading SET from buffer.");
+          log_error("readingCycle() failed reading SET from buffer.");
           break;
         case readR:
-          log_error("llread() - Failed reading frame from buffer.");
+          log_error("readingCycle() - Failed reading frame from buffer.");
           break;
         case closeDISC:
-          log_error("receiver_DISC_UA() - Failed reading DISC from buffer.");
+          log_error("readingCycle() - Failed reading DISC from buffer.");
           break;
         default:
           log_error("readingCycle() - Unknown type");
@@ -74,13 +74,13 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
       switch (type)
       {
       case trans_SET:
-        log_error("transmitter_SET() - Failed writing SET to buffer.");
+        log_error("writeCycle() - Failed writing SET to buffer.");
         break;
       case writeR:
-        log_error("llwrite() - Failed writing data to buffer.");
+        log_error("writeCycle() - Failed writing data to buffer.");
         break;
       case trans_DISC_UA:
-        log_error("transmitter_DISC_UA() - Failed writing DISC to buffer.");
+        log_error("writeCycle() - Failed writing DISC to buffer.");
         break;
       default:
         log_error("writeCycle() - Unknown type");
@@ -103,13 +103,13 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
         switch (type)
         {
         case trans_SET:
-          log_caution("transmitter_SET - Failed reading UA from receiver.");
+          log_caution("writeCycle() - Failed reading UA from receiver.");
           break;
         case writeR:
-          log_caution("llwrite: failed reading RR from receiver.");
+          log_caution("writeCycle() - failed reading RR from receiver.");
           break;
         case trans_DISC_UA:
-          log_caution("transmitter_DISC_UA() - Failed reading DISC from receiver.");
+          log_caution("writeCycle() - Failed reading DISC from receiver.");
           break;
         default:
           log_error("writeCycle() - Unknown type");
@@ -127,13 +127,13 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
         switch (type)
         {
         case trans_SET:
-          log_error("transmitter_SET() - Failed reading UA from buffer.");
+          log_error("writeCycle() - Failed reading UA from buffer.");
           break;
         case writeR:
-          log_error("llwrite() - Failed reading RR from buffer.");
+          log_error("writeCycle() - Failed reading RR from buffer.");
           break;
         case trans_DISC_UA:
-          log_error("transmitter_DISC_UA() - Failed reading DISC from buffer.");
+          log_error("writeCycle() - Failed reading DISC from buffer.");
           break;
         default:
           log_error("writeCycle() - Unknown type");

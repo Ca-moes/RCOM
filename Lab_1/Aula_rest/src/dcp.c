@@ -99,6 +99,7 @@ int llread(int fd, unsigned char *buffer){
 
   if (readingCycle(readR, fd, &c, &dataBuf, &retBufferSize) < 0){
     log_error("llread() - failed reading");
+    tcflush(fd, TCIFLUSH);
     return -1;
   }
 

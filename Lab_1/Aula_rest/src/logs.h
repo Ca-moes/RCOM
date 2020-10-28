@@ -26,53 +26,53 @@
 #define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
 
 /**
- * @brief Apresenta uma mensagem a vermelho
+ * @brief Outputs a message in red
  * 
- * @param arr texto a apresentar
+ * @param arr message String
  */
 void log_error(char *arr);
 
 /**
- * @brief Apresenta uma mensagem a amarelo
+ * @brief Outputs a message in yellow
  * 
- * @param arr texto a apresentar
+ * @param arr message String
  */
 void log_caution(char *arr);
 
 /**
- * @brief Apresenta uma mensagem a verde
+ * @brief Outputs a message in green
  * 
- * @param arr texto a apresentar
+ * @param arr message String
  */
 void log_success(char *arr);
 
 /**
- * @brief Apresenta uma mensagem a branco
+ * @brief Outputs a message in white
  * 
- * @param arr texto a apresentar
+ * @param arr message String
  */
 void log_message(char *arr);
 
 /**
- * @brief Apresenta uma mensagem na forma "mensagem - numero"
+ * @brief Outputs a message in the form "number - message"
  * 
- * @param arr string de mensagem
- * @param numb numero 
+ * @param arr message String
+ * @param numb number
  */
 void log_message_number(char *arr, int numb);
 
 /**
- * @brief Apresenta uma mensagem na forma "Content: 0xHH"
+ * @brief Outputs a message in the form "Content: 0xHH"
  * 
- * @param a byte a apresentar
+ * @param a Byte
  */
 void log_hexa(unsigned char a);
 
 /**
- * @brief Apresenta a mensagem recebida pelo llread()
+ * @brief Outputs a message (String) received by llread
  * 
- * @param buf Buffer da mensagem
- * @param size Tamanho da mensagem
+ * @param buf message Buffer
+ * @param size Size of the message
  */
 void log_received_message(unsigned char *buf, int size);
 

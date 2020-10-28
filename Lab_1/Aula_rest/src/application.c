@@ -1,25 +1,6 @@
-#include "pla.h"
-#include "logs.h"
+#include "application.h"
 
-struct applicationLayer{
-  off_t filesize;
-  char filename[255];
-  char destinationArg[255];
-  char filenameArg[255];
-  int type;
-  int gate;
-};
 
-struct applicationLayer applayer;
-
-/**
- * @brief Função para dar parse dos argumentos da linah de comandos
- * 
- * @param argc argc de main
- * @param argv argv de main
- * @param x valor de x em "/dev/ttySx"
- * @param type RECEIVER|TRANSMITTER
- */
 void parseArgs(int argc, char** argv){
   if (argc != 4){
     log_error("Usage: ./application (receiver <destination> | transmitter <filename>) [gate = {0,1,10,11}]\n");
@@ -46,7 +27,7 @@ void parseArgs(int argc, char** argv){
   }
 }
 
-int transmitterApp(int fd, char *file){
+int transmitterApp(int fd){
   char controlPackage[255];
   char dataPackage[MAX_SIZE];
   int sequenceNumber = 0;
@@ -56,14 +37,14 @@ int transmitterApp(int fd, char *file){
 
   struct stat fileInfo;
 
-  if (stat(file, &fileInfo)<0){
-    log_error("Error obtaining file information.\n");
+  if (stat(applayer.filenameArg, &fileInfo)<0){
+    log_error("transmitterApp() - Error obtaining file information.\n");
     return -1;
   }
 
-  file_fd = open(file,O_RDONLY);
+  file_fd = open(applayer.filenameArg,O_RDONLY);
   if (file_fd <0){
-    log_error("Error opening file.\n");
+    log_error("transmitterApp() - Error opening file.\n");
     return -1;
   }
 
@@ -74,10 +55,10 @@ int transmitterApp(int fd, char *file){
   memcpy(&controlPackage[3],&fileInfo.st_size,sizeof(fileInfo.st_size));
 
   controlPackage[sizeof(fileInfo.st_size)+3] = T_NAME;
-  controlPackage[sizeof(fileInfo.st_size)+4] = strlen(file);
-  memcpy(&controlPackage[sizeof(fileInfo.st_size)+5],file,strlen(file));
+  controlPackage[sizeof(fileInfo.st_size)+4] = strlen(applayer.filenameArg);
+  memcpy(&controlPackage[sizeof(fileInfo.st_size)+5],applayer.filenameArg,strlen(applayer.filenameArg));
 
-  if(llwrite(fd,controlPackage,sizeof(fileInfo.st_size) + 5 + strlen(file))<0){
+  if(llwrite(fd,controlPackage,sizeof(fileInfo.st_size) + 5 + strlen(applayer.filenameArg))<0){
     log_error("transmitterApp() - llwrite() failed writing Start Control Packet");
     return -1;
   }
@@ -99,7 +80,7 @@ int transmitterApp(int fd, char *file){
 
   controlPackage[0] = END;
 
-  if(llwrite(fd,controlPackage,sizeof(fileInfo.st_size) + 5 + strlen(file))<0){
+  if(llwrite(fd,controlPackage,sizeof(fileInfo.st_size) + 5 + strlen(applayer.filenameArg))<0){
     log_error("transmitterApp() - llwrite() failed writing End Control Packet");
     return -1;
   }
@@ -122,7 +103,7 @@ void parseFileInfo(unsigned char *controlpackage){
   if (controlpackage[next_tlv]==T_NAME){
     informationsize = controlpackage[next_tlv+1];
     for (int i =next_tlv+2, k=0; i < informationsize+next_tlv+2; i++, k++){
-        applayer.filename[k] = controlpackage[i];
+      applayer.filename[k] = controlpackage[i];
     }
     applayer.filename[informationsize+next_tlv+2] = '\0';
   }
@@ -163,13 +144,6 @@ int receiverApp(int fd){
   return fd;
 }
 
-/**
- * @brief 
- * 
- * @param argc valor esperado: 3
- * @param argv argv[1] = receiver|transmitter argv[2]={0,1,10,11}
- * @return int 
- */
 int main(int argc, char** argv) {
   printf("Started App\n");
 
@@ -179,14 +153,14 @@ int main(int argc, char** argv) {
   fd = llopen(applayer.gate, applayer.type);
 
   if (fd < 0) {
-    log_error("Unable to establish connection. Exiting..  ");
+    log_error("main() - Unable to establish connection. Exiting..  ");
     return -1;
   } else log_success("Connection established.");
 
   
   if (applayer.type == TRANSMITTER) 
   {
-    if( transmitterApp(fd, applayer.filenameArg) < 0)
+    if( transmitterApp(fd) < 0)
       log_error("main() - transmitterApp error");
   }
   else if (applayer.type == RECEIVER) {
@@ -196,7 +170,7 @@ int main(int argc, char** argv) {
   
   printf("Closing Connection..\n");
   if (llclose(fd) < 0){
-    log_error("Error on llclose()");
+    log_error("main() - Error on llclose()");
     return -1;
   }
   return 0;

@@ -19,7 +19,7 @@
 #include "statemachine.h"
 
 /**
- * @brief Struct to hold information about the lin layer
+ * @brief Struct to hold information about the Link Layer
  */
 struct linkLayer {
   char port[20]; /* Device /dev/ttySx, x = 0, 1*/
@@ -131,8 +131,5 @@ int llread(int fd, unsigned char *buffer);
  * @return int valor positivo em caso de sucesso ou -1 em caso de erro
  */
 int llclose(int fd);
-
-
-
 
 #endif // PLA_HEADER

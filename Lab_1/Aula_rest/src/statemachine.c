@@ -84,7 +84,7 @@ int processA_RCV(unsigned char byte){
 
   case Write:
     if (byte == C_REJ(linkLayer.sequenceNumber^0x01)){
-      log_error("stateMachine_Write() - Reject Control Byte Received");
+      log_error("processA_RCV() - Reject Control Byte Received");
       return -1;
     }
 
@@ -149,11 +149,11 @@ int processC_RCV(unsigned char byte){
       state_machine.state = Start;
       break;
     case Write:
-      log_error("stateMachine_Write() - Error in BCC");
+      log_error("processC_RCV() - Error in BCC");
       return -1;
       break;
     case Read:
-      log_error("stateMachine_Read() - BCC received with Errors");
+      log_error("processC_RCV() - BCC received with Errors");
       return -1;
       break;
     default:
@@ -203,7 +203,7 @@ int processBCC_OK(unsigned char byte, unsigned char **buffer, int *buffersize){
         state_machine.state = DONE;
       }
       else{
-        log_error("stateMachine_Read() - BCC2 received with Errors");
+        log_error("processBCC_OK() - BCC2 received with Errors");
         return -1;
       }
     }

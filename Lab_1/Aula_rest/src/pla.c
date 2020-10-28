@@ -13,10 +13,10 @@ int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char 
     if (type == closeUA)
     {
       if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
-      log_caution("receiver_DISC_UA() - Failed reading UA from transmitter.");
+      log_caution("readingCycle() - Failed reading UA from transmitter.");
       return -1;
       } else if (res == -1){
-      log_error("receiver_DISC_UA() - Failed reading UA from buffer.");
+      log_error("readingCycle() - Failed reading UA from buffer.");
       return -1;}
     }
     else
@@ -47,12 +47,12 @@ int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char 
       int retStateMachine = stateMachine(buf[0], dataBuf, retBufferSize);
       if (retStateMachine == -1){
         *c = C_REJ(linkLayer.sequenceNumber);
-        log_error("llread() - Error in BCC");
+        log_error("readingCycle() - Error in BCC");
         return -1;
       }
       if (retStateMachine == -2){
         *c = C_RR(linkLayer.sequenceNumber);
-        log_error("llread() - Error in C, wrong sequence number");
+        log_error("readingCycle() - Error in C, wrong sequence number");
         break;
       }
       *c = C_RR(linkLayer.sequenceNumber);
@@ -89,6 +89,7 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
         return -1;
         break;
       }
+      log_error("writeCycle() - read error");
       return -1;
     }
 
@@ -227,8 +228,10 @@ int receiver_UA(int fd){
   stateMachineSetUp(C_SET, A_ER, Start, Supervision);
 
 
-  if (readingCycle(openR, fd, NULL, NULL, NULL) < 0)
+  if (readingCycle(openR, fd, NULL, NULL, NULL) < 0){
+    log_error("receiver_UA() - Error on reading Cycle");
     return -1;
+  }
 
   unsigned char replyBuf[SU_FRAME_SIZE] = {FLAG, A_ER, C_UA, BCC(A_ER, C_UA), FLAG};
 
@@ -413,8 +416,11 @@ int receiver_DISC_UA(int fd){
 
   alarm(5); /* waits a limited time for UA response from Transmitter */
   /* parse UA*/
-  if (readingCycle(closeDISC, fd, NULL, NULL, NULL) < 0)
+  if (readingCycle(closeDISC, fd, NULL, NULL, NULL) < 0){
+    log_error("receiver_DISC_UA() - error on reading Cycle");
     return -1;
+  }
+    
   
   alarm(0);
   return fd;

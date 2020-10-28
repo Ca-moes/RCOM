@@ -1,7 +1,7 @@
 #ifndef APP_HEADER
 #define APP_HEADER
 
-#include "pla.h"
+#include "dcp.h"
 #include "logs.h"
 
 /**
@@ -15,9 +15,6 @@ struct applicationLayer{
   int type; // TRANSMITTER | RECEIVER
   int gate; // /dev/ttySx | gate is x
 };
-
-struct applicationLayer applayer;  // Struct to save data about the Application
-
 
 /**
  * @brief Função para dar parse dos argumentos da linah de comandos

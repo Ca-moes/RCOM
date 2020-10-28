@@ -3,7 +3,7 @@
 
 #include "macros.h"
 #include "logs.h"
-#include "pla.h"
+#include "dcp.h"
 
 enum stateMachineType {Supervision, Write, Read};   // Type of State Machine
 enum stateMachineState {Start, FLAG_RCV, A_RCV, C_RCV, BCC_OK, DONE};  // State of the State Machine
@@ -19,8 +19,6 @@ struct stateMachineParams {
 };
 
 struct stateMachineParams state_machine; // Instance of the stateMachineParams struct
-unsigned checkBuffer[2]; // Buffer to hold Address and Control Bytes to check BCC1
-int frameIndex, wrongC;
 
 /**
  * @brief Function to easily change the State Machine

@@ -1,5 +1,6 @@
 #include "application.h"
 
+static struct applicationLayer applayer;  // Struct to save data about the Application
 
 void parseArgs(int argc, char** argv){
   if (argc != 4){

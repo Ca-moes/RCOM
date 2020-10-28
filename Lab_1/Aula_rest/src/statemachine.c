@@ -1,5 +1,8 @@
 #include "statemachine.h"
 
+static unsigned checkBuffer[2]; // Buffer to hold Address and Control Bytes to check BCC1
+static int frameIndex, wrongC;
+
 void stateMachineSetUp(unsigned char control, unsigned char address, enum stateMachineState state, enum stateMachineType type){
   state_machine.control = control;
   state_machine.address = address;

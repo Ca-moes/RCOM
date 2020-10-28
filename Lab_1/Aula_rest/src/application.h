@@ -1,3 +1,6 @@
+/** \addtogroup Application
+ *  @{
+ */
 #ifndef APP_HEADER
 #define APP_HEADER
 
@@ -10,7 +13,7 @@
 struct applicationLayer{
   off_t filesize; // Size of file in bytes
   char filename[255];  // String with file name
-  char destinationArg[255];  // Strig with path to destination message received
+  char destinationArg[255];  // String with path to destination message received
   char filenameArg[255]; //String with filename passed by programs arguments
   int type; // TRANSMITTER | RECEIVER
   int gate; // /dev/ttySx | gate is x
@@ -57,3 +60,4 @@ int receiverApp(int fd);
 int main(int argc, char** argv);
 
 #endif // APP_HEADER
+/** @}*/

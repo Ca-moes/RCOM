@@ -1,3 +1,6 @@
+/** \addtogroup Application
+ *  @{
+ */
 #include "application.h"
 
 static struct applicationLayer applayer;  // Struct to save data about the Application
@@ -180,3 +183,4 @@ int main(int argc, char** argv) {
   }
   return 0;
 }
+/** @}*/

@@ -1,7 +1,9 @@
 #ifndef PLA_HEADER
 #define PLA_HEADER
 #define _GNU_SOURCE
-
+/** \addtogroup Data_Connection_Protocol
+ *  @{
+ */
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -33,9 +35,9 @@ struct linkLayer {
 };
 
 
-struct linkLayer linkLayer;  // Data relative to the link layer
-struct termios oldtio; // used in llclose to reset termios
-volatile int failed; // used in the alarm handler
+struct linkLayer linkLayer;  ///< Data relative to the link layer
+struct termios oldtio; ///< used in llclose to reset termios
+volatile int failed; ///< used in the alarm handler
 
 
 /**
@@ -75,3 +77,4 @@ int llread(int fd, unsigned char *buffer);
 int llclose(int fd);
 
 #endif // PLA_HEADER
+/** @}*/

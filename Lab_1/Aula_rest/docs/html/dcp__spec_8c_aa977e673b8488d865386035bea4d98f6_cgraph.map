@@ -1,0 +1,13 @@
+<map id="receiver_DISC_UA" name="receiver_DISC_UA">
+<area shape="rect" id="node1" title="Receiver sequence to Disconnect." alt="" coords="5,392,140,418"/>
+<area shape="rect" id="node2" href="$logs_8c.html#ae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="716,265,788,292"/>
+<area shape="rect" id="node3" href="$dcp__spec_8c.html#ab20858e52fefe1a6b20ebd64e3bc8995" title="Function to read a byte from fd." alt="" coords="207,265,306,292"/>
+<area shape="rect" id="node11" href="$statemachine_8c.html#ad89d631b7674965bec03d8aac4ce5f55" title="Function to easily change the State Machine." alt="" coords="188,442,325,469"/>
+<area shape="rect" id="node4" href="$logs_8c.html#adb3d4a37c60967790061715635fbd85f" title="Outputs a message in yellow." alt="" coords="708,138,796,165"/>
+<area shape="rect" id="node5" href="$statemachine_8c.html#a86119177a1b4d5467d5d4951623155b7" title="The StateMachine function that processes a byte and updates it&#39;s state." alt="" coords="373,189,473,216"/>
+<area shape="rect" id="node6" href="$statemachine_8c.html#aa81808addf87b6173001ce2d6d573c9c" title="Function to process a byte in case the state is A_RCV." alt="" coords="534,189,647,216"/>
+<area shape="rect" id="node7" href="$statemachine_8c.html#a6ffd9bd7ba427fe92719f029e8f63441" title="Function to process a byte in case the state is BCC_OK." alt="" coords="529,290,652,317"/>
+<area shape="rect" id="node8" href="$statemachine_8c.html#a7faa93ab97e7a8d20607e5b462aadb9f" title="Function to process a byte in case the state is C_RCV." alt="" coords="533,138,648,165"/>
+<area shape="rect" id="node9" href="$statemachine_8c.html#a38a94bf0265c35a1e3549e8a02ebd004" title="Function to process a byte in case the state is FLAG_RCV." alt="" coords="521,37,660,64"/>
+<area shape="rect" id="node10" href="$statemachine_8c.html#a3a272e4e3f924cc0d79e8950b5d22f11" title="Function to process a byte in case the state is Start." alt="" coords="543,88,639,114"/>
+</map>

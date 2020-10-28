@@ -1,0 +1,15 @@
+<map id="transmitterApp" name="transmitterApp">
+<area shape="rect" id="node1" title="Transmitter part of the application." alt="" coords="5,43,112,69"/>
+<area shape="rect" id="node2" href="$group___data___connection___protocol.html#ga131b10b059811f151e979f1d2c53b8f6" title=" " alt="" coords="160,93,216,120"/>
+<area shape="rect" id="node4" href="$logs_8c.html#ae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="792,195,864,221"/>
+<area shape="rect" id="node3" href="$dcp__spec_8c.html#a8d1e3ed50df3d328fc3803e7c894f9f8" title="Stuffs the final buffer with the Information Packet." alt="" coords="283,43,382,69"/>
+<area shape="rect" id="node5" href="$statemachine_8c.html#ad89d631b7674965bec03d8aac4ce5f55" title="Function to easily change the State Machine." alt="" coords="264,195,401,221"/>
+<area shape="rect" id="node6" href="$dcp__spec_8c.html#a540c8079d3498a8b9a5ab81e232c8095" title="Function used to write to fd." alt="" coords="291,144,375,171"/>
+<area shape="rect" id="node7" href="$logs_8c.html#adb3d4a37c60967790061715635fbd85f" title="Outputs a message in yellow." alt="" coords="784,347,872,373"/>
+<area shape="rect" id="node8" href="$statemachine_8c.html#a86119177a1b4d5467d5d4951623155b7" title="The StateMachine function that processes a byte and updates it&#39;s state." alt="" coords="449,296,549,323"/>
+<area shape="rect" id="node9" href="$statemachine_8c.html#aa81808addf87b6173001ce2d6d573c9c" title="Function to process a byte in case the state is A_RCV." alt="" coords="610,296,723,323"/>
+<area shape="rect" id="node10" href="$statemachine_8c.html#a6ffd9bd7ba427fe92719f029e8f63441" title="Function to process a byte in case the state is BCC_OK." alt="" coords="605,245,728,272"/>
+<area shape="rect" id="node11" href="$statemachine_8c.html#a7faa93ab97e7a8d20607e5b462aadb9f" title="Function to process a byte in case the state is C_RCV." alt="" coords="609,347,724,373"/>
+<area shape="rect" id="node12" href="$statemachine_8c.html#a38a94bf0265c35a1e3549e8a02ebd004" title="Function to process a byte in case the state is FLAG_RCV." alt="" coords="597,397,736,424"/>
+<area shape="rect" id="node13" href="$statemachine_8c.html#a3a272e4e3f924cc0d79e8950b5d22f11" title="Function to process a byte in case the state is Start." alt="" coords="619,448,715,475"/>
+</map>

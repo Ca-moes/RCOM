@@ -1,7 +1,9 @@
-// Data Connection Protocol
+/** \addtogroup Data_Connection_Protocol
+ *  @{
+ */
 #include "dcp.h"
 
-static struct sigaction old_action;
+static struct sigaction old_action; ///< sigaction to restore SIGALRN handler
 
 int llopen(int porta, int type){
   int fd;
@@ -151,3 +153,4 @@ int llclose(int fd){
 
   return returnValue;
 }
+/** @}*/

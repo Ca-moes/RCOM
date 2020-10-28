@@ -1,6 +1,7 @@
 // Data Connection Protocol
 #include "dcp.h"
 
+static struct sigaction old_action;
 
 int llopen(int porta, int type){
   int fd;
@@ -17,7 +18,10 @@ int llopen(int porta, int type){
   sigemptyset(&sa.sa_mask);
   sa.sa_handler = atende;
   sa.sa_flags = 0;
-  sigaction(SIGALRM, &sa, NULL);
+  if (sigaction(SIGALRM, &sa, &old_action)<0){
+    log_error("llopen() - error on sigaction");
+    return -1;
+  }
 
   switch (type)
   {
@@ -134,6 +138,10 @@ int llclose(int fd){
   }
   if (close(fd) != 0){
     log_error("llclose() - Error on close()");
+    return -1;
+  }
+  if (sigaction(SIGALRM, &old_action, NULL)<0){
+    log_error("llclose() - error on sigaction");
     return -1;
   }
 

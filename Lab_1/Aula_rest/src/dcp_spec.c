@@ -301,7 +301,7 @@ int receiver_DISC_UA(int fd){
 
   stateMachineSetUp(C_UA, A_RE, Start, Supervision);
 
-  alarm(5); /* waits a limited time for UA response from Transmitter */
+  alarm(linkLayer.timeout+1); /* waits a limited time for UA response from Transmitter */
   /* parse UA*/
   if (readingCycle(closeDISC, fd, NULL, NULL, NULL) < 0){
     log_error("receiver_DISC_UA() - error on reading Cycle");

@@ -104,7 +104,7 @@ int processA_RCV(unsigned char byte){
 
   case Read:
     if (byte == C_I(linkLayer.sequenceNumber ^ 1)) {
-      log_caution("stateMachine_Read() - Control Byte with wrong sequence number, need to check BCC");
+      log_caution("processA_RCV() - Control Byte with wrong sequence number, need to check BCC");
       wrongC = TRUE;
       state_machine.state = C_RCV;
       checkBuffer[1] = byte;
@@ -131,7 +131,7 @@ int processA_RCV(unsigned char byte){
 int processC_RCV(unsigned char byte){
   if (byte == BCC(checkBuffer[0],checkBuffer[1])){
     if (state_machine.type == Read && wrongC == TRUE){
-      log_caution("stateMachine_Read() - Received already read Packet");
+      log_caution("processC_RCV() - Received already read Packet");
       return -2;
     }
     state_machine.state = BCC_OK;

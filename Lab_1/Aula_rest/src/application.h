@@ -37,7 +37,7 @@ int transmitterApp(int fd);
  * 
  * @param controlpackage Control Package
  */
-void parseFileInfo(unsigned char *controlpackage);
+void parseFileInfo(unsigned char *controlpackage, int packagesize);
 
 /**
  * @brief Receiver part of the application

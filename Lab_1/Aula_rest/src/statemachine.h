@@ -1,3 +1,6 @@
+/** \addtogroup State_Machine
+ *  @{
+ */
 #ifndef SM_HEADER
 #define SM_HEADER
 
@@ -78,3 +81,4 @@ int processC_RCV(unsigned char byte);
 int processBCC_OK(unsigned char byte, unsigned char **buffer, int *buffersize);
 
 #endif // PLA_HEADER
+/** @}*/

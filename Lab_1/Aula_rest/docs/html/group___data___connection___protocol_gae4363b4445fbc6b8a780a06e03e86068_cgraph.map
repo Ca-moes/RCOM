@@ -1,13 +1,13 @@
 <map id="llread" name="llread">
 <area shape="rect" id="node1" title=" " alt="" coords="5,392,59,418"/>
-<area shape="rect" id="node2" href="$logs_8c.html#ae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="635,265,707,292"/>
-<area shape="rect" id="node3" href="$dcp__spec_8c.html#ab20858e52fefe1a6b20ebd64e3bc8995" title="Function to read a byte from fd." alt="" coords="126,265,225,292"/>
-<area shape="rect" id="node11" href="$statemachine_8c.html#ad89d631b7674965bec03d8aac4ce5f55" title="Function to easily change the State Machine." alt="" coords="107,442,244,469"/>
-<area shape="rect" id="node4" href="$logs_8c.html#adb3d4a37c60967790061715635fbd85f" title="Outputs a message in yellow." alt="" coords="627,138,715,165"/>
-<area shape="rect" id="node5" href="$statemachine_8c.html#a86119177a1b4d5467d5d4951623155b7" title="The StateMachine function that processes a byte and updates it&#39;s state." alt="" coords="292,189,392,216"/>
-<area shape="rect" id="node6" href="$statemachine_8c.html#aa81808addf87b6173001ce2d6d573c9c" title="Function to process a byte in case the state is A_RCV." alt="" coords="453,189,566,216"/>
-<area shape="rect" id="node7" href="$statemachine_8c.html#a6ffd9bd7ba427fe92719f029e8f63441" title="Function to process a byte in case the state is BCC_OK." alt="" coords="448,290,571,317"/>
-<area shape="rect" id="node8" href="$statemachine_8c.html#a7faa93ab97e7a8d20607e5b462aadb9f" title="Function to process a byte in case the state is C_RCV." alt="" coords="452,138,567,165"/>
-<area shape="rect" id="node9" href="$statemachine_8c.html#a38a94bf0265c35a1e3549e8a02ebd004" title="Function to process a byte in case the state is FLAG_RCV." alt="" coords="440,37,579,64"/>
-<area shape="rect" id="node10" href="$statemachine_8c.html#a3a272e4e3f924cc0d79e8950b5d22f11" title="Function to process a byte in case the state is Start." alt="" coords="461,88,557,114"/>
+<area shape="rect" id="node2" href="$group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="635,265,707,292"/>
+<area shape="rect" id="node3" href="$group___data___connection___protocol___specification.html#gab20858e52fefe1a6b20ebd64e3bc8995" title="Function to read a byte from fd." alt="" coords="126,265,225,292"/>
+<area shape="rect" id="node11" href="$group___state___machine.html#gad89d631b7674965bec03d8aac4ce5f55" title="Function to easily change the State Machine." alt="" coords="107,442,244,469"/>
+<area shape="rect" id="node4" href="$group___logs.html#gadb3d4a37c60967790061715635fbd85f" title="Outputs a message in yellow." alt="" coords="627,138,715,165"/>
+<area shape="rect" id="node5" href="$group___state___machine.html#ga86119177a1b4d5467d5d4951623155b7" title="The StateMachine function that processes a byte and updates it&#39;s state." alt="" coords="292,189,392,216"/>
+<area shape="rect" id="node6" href="$group___state___machine.html#gaa81808addf87b6173001ce2d6d573c9c" title="Function to process a byte in case the state is A_RCV." alt="" coords="453,189,566,216"/>
+<area shape="rect" id="node7" href="$group___state___machine.html#ga6ffd9bd7ba427fe92719f029e8f63441" title="Function to process a byte in case the state is BCC_OK." alt="" coords="448,290,571,317"/>
+<area shape="rect" id="node8" href="$group___state___machine.html#ga7faa93ab97e7a8d20607e5b462aadb9f" title="Function to process a byte in case the state is C_RCV." alt="" coords="452,138,567,165"/>
+<area shape="rect" id="node9" href="$group___state___machine.html#ga38a94bf0265c35a1e3549e8a02ebd004" title="Function to process a byte in case the state is FLAG_RCV." alt="" coords="440,37,579,64"/>
+<area shape="rect" id="node10" href="$group___state___machine.html#ga3a272e4e3f924cc0d79e8950b5d22f11" title="Function to process a byte in case the state is Start." alt="" coords="461,88,557,114"/>
 </map>

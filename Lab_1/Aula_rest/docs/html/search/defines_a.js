@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['start_255',['START',['../macros_8h.html#a3018c7600b7bb9866400596a56a57af7',1,'macros.h']]],
-  ['su_5fframe_5fsize_256',['SU_FRAME_SIZE',['../macros_8h.html#af2c28868be944a82c355ddfe5e99232f',1,'macros.h']]]
+  ['t_5fname_244',['T_NAME',['../macros_8h.html#a19da2b67b058ddda4f4b0508f47ad6d2',1,'macros.h']]],
+  ['t_5fsize_245',['T_SIZE',['../macros_8h.html#a336ef1743175a62cdf5a7aebcf34609a',1,'macros.h']]],
+  ['transmitter_246',['TRANSMITTER',['../macros_8h.html#a4dd2cc1f618201244956369378b75c9a',1,'macros.h']]],
+  ['true_247',['TRUE',['../macros_8h.html#aa8cecfc5c5c054d2875c03e77b7be15d',1,'macros.h']]]
 ];

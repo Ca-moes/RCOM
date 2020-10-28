@@ -1,3 +1,6 @@
+/** \addtogroup Logs
+ *  @{
+ */
 #ifndef LOGS_HEADER
 #define LOGS_HEADER
 
@@ -77,3 +80,4 @@ void log_hexa(unsigned char a);
 void log_received_message(unsigned char *buf, int size);
 
 #endif // LOGS_HEADER
+/** @}*/

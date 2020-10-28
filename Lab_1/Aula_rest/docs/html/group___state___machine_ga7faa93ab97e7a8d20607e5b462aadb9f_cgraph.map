@@ -1,0 +1,5 @@
+<map id="processC_RCV" name="processC_RCV">
+<area shape="rect" id="node1" title="Function to process a byte in case the state is C_RCV." alt="" coords="5,31,120,57"/>
+<area shape="rect" id="node2" href="$group___logs.html#gadb3d4a37c60967790061715635fbd85f" title="Outputs a message in yellow." alt="" coords="168,5,256,32"/>
+<area shape="rect" id="node3" href="$group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="176,56,248,83"/>
+</map>

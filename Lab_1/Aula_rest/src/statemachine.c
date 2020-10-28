@@ -1,3 +1,6 @@
+/** \addtogroup State_Machine
+ *  @{
+ */
 #include "statemachine.h"
 
 static unsigned checkBuffer[2]; // Buffer to hold Address and Control Bytes to check BCC1
@@ -213,3 +216,4 @@ int processBCC_OK(unsigned char byte, unsigned char **buffer, int *buffersize){
   }
   return 0;
 }
+/** @}*/

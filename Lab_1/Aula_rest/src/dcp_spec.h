@@ -1,3 +1,6 @@
+/** \addtogroup Data_Connection_Protocol_Specification
+ *  @{
+ */
 #ifndef PLD_SPEC_HEADER
 #define PLD_SPEC_HEADER
 
@@ -83,3 +86,4 @@ int transmitter_DISC_UA(int fd);
  */
 int receiver_DISC_UA(int fd);
 #endif // PLD_SPEC_HEADER
+/** @}*/

@@ -1,3 +1,6 @@
+/** \addtogroup Data_Connection_Protocol_Specification
+ *  @{
+ */
 #include "dcp_spec.h"
 
 int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char **dataBuf, int *retBufferSize){
@@ -312,3 +315,4 @@ int receiver_DISC_UA(int fd){
   alarm(0);
   return fd;
 }
+/** @}*/

@@ -34,6 +34,9 @@ void parseArgs(int argc, char** argv){
 int transmitterApp(int fd){
   char controlPackage[255];
   char dataPackage[MAX_SIZE];
+  //char dataPackageTest[MAX_SIZE];
+  //int counterTest = 0;
+
   int sequenceNumber = 0;
   int nbytes;
   int file_fd;
@@ -75,11 +78,21 @@ int transmitterApp(int fd){
     dataPackage[3] = nbytes % 256;
     memcpy(&dataPackage[4],file_data,nbytes);
 
+    /*if (sequenceNumber == 2){
+      memcpy(dataPackageTest, dataPackage, MAX_SIZE);
+    }*/
+
     if (llwrite(fd,dataPackage,nbytes+4) < 0){
       log_error("transmitterApp() - llwrite() failed writing Data Packet");
       return -1;
     }
     sequenceNumber++;
+    //counterTest++;
+
+    /*if (counterTest == 5){
+      llwrite(fd,dataPackageTest,nbytes+4);
+    }*/
+
   }
 
   controlPackage[0] = END;
@@ -121,11 +134,13 @@ void parseFileInfo(unsigned char *controlpackage, int packagesize){
 int receiverApp(int fd){
   unsigned char package[MAX_SIZE];
   int dataPackageSize;
+  int nsequence_expected=0;
 
   int file_fd, sizeread;
 
   while(1){
     sizeread = llread(fd,package);
+    log_hexa(package[1]);
     if(sizeread<0)
       log_caution("receiverApp() - llread() error");
 
@@ -140,8 +155,21 @@ int receiverApp(int fd){
     }
     else if (package[0] == DATA && sizeread>0) {
       dataPackageSize = package[3] + 256* package[2];
+
+      if (package[1] != nsequence_expected){
+        off_t oofset = lseek(file_fd,package[1] * (MAX_SIZE-4),SEEK_SET);
+      }
       
-      write(file_fd,&package[4], dataPackageSize);
+      int b = write(file_fd,&package[4], dataPackageSize);
+
+      if (package[1] != nsequence_expected){
+        lseek(file_fd, 0 , SEEK_HOLE);
+      }
+
+      if (package[1]== nsequence_expected){
+        nsequence_expected++;
+      }
+      nsequence_expected %= 255;
     }
   }
 

@@ -5,28 +5,6 @@
 
 static struct applicationLayer applayer;  // Struct to save data about the Application
 
-void clearProgressBar() {
-    int i;
-    for (i = 0; i < NUM_BACKSPACES; ++i) {
-        fprintf(stdout, "\b");
-    }
-    fflush(stdout);
-}
-
-void printProgressBar(int progress, int total) {
-    int i, percentage = (int)((((double)progress) / total) * 100);
-    int num_separators = (int)((((double)progress) / total) * PROGRESS_BAR_SIZE);;
-    fprintf(stdout, "[");
-    for (i = 0; i < num_separators; ++i) {
-        fprintf(stdout, "%c", SEPARATOR_CHAR);
-    }
-    for (; i < PROGRESS_BAR_SIZE; ++i) {
-        fprintf(stdout, "%c", EMPTY_CHAR);
-    }
-    fprintf(stdout, "]  %2d%%  ", percentage);
-    fflush(stdout);
-}
-
 void parseArgs(int argc, char** argv){
   if (argc != 4){
     log_error("Usage: ./application (receiver <destination> | transmitter <filename>) [gate = {0,1,10,11}]\n");

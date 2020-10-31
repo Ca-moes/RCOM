@@ -47,6 +47,28 @@ void log_received_message(unsigned char *buf, int size){
   //printf("\nMensagem: %s\n", buf);
 }
 
+void clearProgressBar() {
+    int i;
+    for (i = 0; i < NUM_BACKSPACES; ++i) {
+        fprintf(stdout, "\b");
+    }
+    fflush(stdout);
+}
+
+void printProgressBar(int progress, int total) {
+    int i, percentage = (int)((((double)progress) / total) * 100);
+    int num_separators = (int)((((double)progress) / total) * PROGRESS_BAR_SIZE);;
+    fprintf(stdout, "[");
+    for (i = 0; i < num_separators; ++i) {
+        fprintf(stdout, "%c", SEPARATOR_CHAR);
+    }
+    for (; i < PROGRESS_BAR_SIZE; ++i) {
+        fprintf(stdout, "%c", EMPTY_CHAR);
+    }
+    fprintf(stdout, "]  %2d%%  ", percentage);
+    fflush(stdout);
+}
+
 /* To test if cheanged;
   log_message_number("oi oi teste", 11);
   log_error("error message");

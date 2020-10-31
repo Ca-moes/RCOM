@@ -7,11 +7,6 @@
 #include "dcp.h"
 #include "logs.h"
 
-#define PROGRESS_BAR_SIZE   30
-#define SEPARATOR_CHAR      '#'
-#define EMPTY_CHAR          '.'
-#define NUM_BACKSPACES      PROGRESS_BAR_SIZE + 9
-
 /**
  * @brief Struct to save data relative to the Application
  */

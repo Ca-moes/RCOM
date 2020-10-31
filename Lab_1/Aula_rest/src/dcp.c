@@ -60,13 +60,14 @@ int llwrite(int fd, char *buffer, int lenght){
   }
 
   unsigned char *buf2 = (unsigned char *)malloc(2);
-
+  int buf2Size = 2;
   // Byte Stuffing (BCC2 on buf2)
   if (BCC2 == 0x7E || BCC2 == 0x7D){
     buf2 = (unsigned char *) realloc(buf2, 3);
     buf2[0] = 0x7D;
     buf2[1] = BCC2 ^ 0x20;
     buf2[2] = FLAG;
+    buf2Size=3;
   }
   else{
     buf2[0] = BCC2;
@@ -90,7 +91,7 @@ int llwrite(int fd, char *buffer, int lenght){
 
   unsigned char finalBuffer[currentLenght + 6]; /*trama I completa*/
 
-  fillFinalBuffer(finalBuffer, buf1, buf2, sizeof(buf2), dataBuffer, currentLenght);
+  fillFinalBuffer(finalBuffer, buf1, buf2, buf2Size, dataBuffer, currentLenght);
 
   stateMachineSetUp(C_RR(linkLayer.sequenceNumber^0x01), A_ER, Start, Write);
 
@@ -98,9 +99,11 @@ int llwrite(int fd, char *buffer, int lenght){
     log_error("llwrite() - failed writing");
     return -1;
   }
-
+//  definitely lost: 12,527 bytes in 482 blocks
+//  definitely lost: 485 bytes in 241 blocks
   linkLayer.sequenceNumber ^= 0x01;
-
+  free(dataBuffer);
+  free(buf2);
   return 0;
 }
 

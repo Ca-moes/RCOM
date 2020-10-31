@@ -201,8 +201,8 @@ int initConnection(int *fd, char *port){
   strcpy(linkLayer.port,port);
   linkLayer.baudRate = BAUDRATE;
   linkLayer.sequenceNumber = 0x00;
-  linkLayer.timeout = 10;
-  linkLayer.numTransmissions = 3;
+  linkLayer.timeout = 3;
+  linkLayer.numTransmissions = 5;
 
   log_success("New termios structure set");
   return 0;

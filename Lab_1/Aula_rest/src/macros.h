@@ -4,6 +4,14 @@
 #ifndef MACROS_HEADER
 #define MACROS_HEADER
 
+/*-----------Variables-----------*/
+
+#define BAUDRATE              B38400
+#define TIME_OUT              3
+#define ATTEMPTS              5
+#define MAX_SIZE              32 // Tamanho máximo em bytes dos dados da trama I === Tamanho máximo do pacote de dados
+// entre 24-inf
+
 /**
  * @brief Enum com Valores para a Máquina de Estados de SET-UA
  */
@@ -45,10 +53,7 @@
 #define T_SIZE                0x00
 #define T_NAME                0x01
 
-/**
- * Tamanho máximo em bytes dos dados da trama I === Tamanho máximo do pacote de dados
- */
-#define MAX_SIZE              50
+
 #define MAX_SIZE_AFT_STUFF    2*MAX_SIZE
 #endif // MACROS_HEADER
 /** @}*/

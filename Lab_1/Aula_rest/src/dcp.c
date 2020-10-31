@@ -4,6 +4,7 @@
 #include "dcp.h"
 
 static struct sigaction old_action; ///< sigaction to restore SIGALRN handler
+int testSend=0;
 
 int llopen(int porta, int type){
   int fd;
@@ -89,7 +90,7 @@ int llwrite(int fd, char *buffer, int lenght){
     }
   }
 
-  unsigned char finalBuffer[currentLenght + 6]; /*trama I completa*/
+  unsigned char finalBuffer[currentLenght + 4 + buf2Size]; /*trama I completa*/
 
   fillFinalBuffer(finalBuffer, buf1, buf2, buf2Size, dataBuffer, currentLenght);
 
@@ -99,8 +100,6 @@ int llwrite(int fd, char *buffer, int lenght){
     log_error("llwrite() - failed writing");
     return -1;
   }
-//  definitely lost: 12,527 bytes in 482 blocks
-//  definitely lost: 485 bytes in 241 blocks
   linkLayer.sequenceNumber ^= 0x01;
   free(dataBuffer);
   free(buf2);
@@ -122,11 +121,8 @@ int llread(int fd, unsigned char *buffer){
 
   unsigned char replyBuf[5] = {FLAG, A_ER, c, BCC(A_ER, c), FLAG};
   
+  tcflush(fd, TCOFLUSH);
   int res = write(fd,replyBuf,5);
-  log_message("SENDING RESPONSE\n");
-  for (int i=0; i < 5; i++){
-    log_hexa(replyBuf[i]);
-  }
   if (res == -1) {
     log_error("llread() - Failed writing response to buffer.");
     return -1;}

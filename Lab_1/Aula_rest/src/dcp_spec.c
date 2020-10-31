@@ -2,6 +2,7 @@
  *  @{
  */
 #include "dcp_spec.h"
+int testSend1=0;
 
 int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char **dataBuf, int *retBufferSize){
   volatile int STOP=FALSE;
@@ -75,6 +76,7 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
   do{
     attempt++;
     res = write(fd,buf,bufsize);
+    tcflush(fd, TCIFLUSH);
     if (res == -1) {
       switch (type)
       {
@@ -101,11 +103,9 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
     state_machine.state = Start; 
     unsigned char buf_r[1]={};
     
-    log_message("PARSING RESPONSE\n");
 
     while (STOP==FALSE) { 
       res = read(fd,buf_r,1);   /* returns after 1 char has been input */
-      log_hexa(buf_r[0]);
       if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
         switch (type)
         {
@@ -164,6 +164,7 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
     
       if (state_machine.state == DONE || failed) STOP=TRUE;
     }
+    tcflush(fd, TCIOFLUSH);
   }while (attempt < linkLayer.numTransmissions && failed);
 
   alarm(0);
@@ -201,8 +202,8 @@ int initConnection(int *fd, char *port){
   strcpy(linkLayer.port,port);
   linkLayer.baudRate = BAUDRATE;
   linkLayer.sequenceNumber = 0x00;
-  linkLayer.timeout = 3;
-  linkLayer.numTransmissions = 5;
+  linkLayer.timeout = TIME_OUT;
+  linkLayer.numTransmissions = ATTEMPTS;
 
   log_success("New termios structure set");
   return 0;

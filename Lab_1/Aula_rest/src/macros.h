@@ -36,8 +36,6 @@
 #define FALSE                 0
 #define TRUE                  1
 
-#define BAUDRATE              B38400
-
 // valores de type usados em application.c
 #define TRANSMITTER           1
 #define RECEIVER              0

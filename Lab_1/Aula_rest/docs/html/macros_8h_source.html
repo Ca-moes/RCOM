@@ -27,6 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">RCOM PROJ
    </div>
+   <div id="projectbrief">Comunicação via Porta Série</div>
   </td>
  </tr>
  </tbody>
@@ -89,54 +90,60 @@ $(document).ready(function(){initNavTree('macros_8h_source.html',''); initResiza
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifndef MACROS_HEADER</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define MACROS_HEADER</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="group___macros.html#gaf2c28868be944a82c355ddfe5e99232f">   11</a></span>&#160;<span class="preprocessor">#define SU_FRAME_SIZE         5  </span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span> </div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="group___macros.html#gaf8bfae90c5d6853fcfb487e05b9f50c8">   13</a></span>&#160;<span class="preprocessor">#define FLAG                  0b01111110  </span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor"></span> </div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="group___macros.html#gae672f3b0774129f80f19bcad79123b03">   15</a></span>&#160;<span class="preprocessor">#define A_ER                  0b00000011  </span></div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="group___macros.html#ga7f827460c674ebcd1504e5a8557cad23">   16</a></span>&#160;<span class="preprocessor">#define A_RE                  0b00000001  </span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor"></span> </div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="group___macros.html#ga480bc08be2722ba0343812c003604392">   18</a></span>&#160;<span class="preprocessor">#define C_SET                 0b00000011 </span></div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="group___macros.html#gaa8684947a54e16bc93295e9638edea16">   19</a></span>&#160;<span class="preprocessor">#define C_DISC                0b00001011 </span></div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="group___macros.html#gaba4eb3c08ee682afce79d9b93c2edbb6">   20</a></span>&#160;<span class="preprocessor">#define C_UA                  0b00000111 </span></div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="group___macros.html#gacf861c22ef49f0817e712811d83e78f9">   21</a></span>&#160;<span class="preprocessor">#define C_RR(r)               ((0b00000101) ^ (r) &lt;&lt; (7)) </span></div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="group___macros.html#gac16f0cb5014975df105a8b1ae7581ead">   22</a></span>&#160;<span class="preprocessor">#define C_REJ(r)              ((0b00000001) ^ (r) &lt;&lt; (7)) </span></div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="group___macros.html#gabbf9efe0a7e22ce67e2e1b40956f1e67">   23</a></span>&#160;<span class="preprocessor">#define C_I(r)                ((0b01000000) &amp; (r) &lt;&lt; (6)) </span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span> </div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="group___macros.html#gae88eb9dd57a6183cc422d92ab982e581">   25</a></span>&#160;<span class="preprocessor">#define BCC(a,c)              (a ^ c) </span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span> </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="group___macros.html#gaa93f0eb578d23995850d61f7d61c55c1">   28</a></span>&#160;<span class="preprocessor">#define FALSE                 0</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="group___macros.html#gaa8cecfc5c5c054d2875c03e77b7be15d">   29</a></span>&#160;<span class="preprocessor">#define TRUE                  1</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="group___macros.html#ga734bbab06e1a9fd2e5522db0221ff6e3">   31</a></span>&#160;<span class="preprocessor">#define BAUDRATE              B38400</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// valores de type usados em application.c</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="group___macros.html#ga4dd2cc1f618201244956369378b75c9a">   34</a></span>&#160;<span class="preprocessor">#define TRANSMITTER           1</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="group___macros.html#ga455948b8bd5f5ce920899ae1013c4b4c">   35</a></span>&#160;<span class="preprocessor">#define RECEIVER              0</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">/*-------package control--------*/</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">/*-----------Variables-----------*/</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="group___macros.html#ga734bbab06e1a9fd2e5522db0221ff6e3">    9</a></span>&#160;<span class="preprocessor">#define BAUDRATE              B38400</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="group___macros.html#ga799517031a8334a42807b119bb456c53">   10</a></span>&#160;<span class="preprocessor">#define TIME_OUT              3</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="group___macros.html#ga8c730a41dcccce68039aea9f991e1868">   11</a></span>&#160;<span class="preprocessor">#define ATTEMPTS              5</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="group___macros.html#ga0592dba56693fad79136250c11e5a7fe">   12</a></span>&#160;<span class="preprocessor">#define MAX_SIZE              32 // Tamanho máximo em bytes dos dados da trama I === Tamanho máximo do pacote de dados</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">// entre 24-inf</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="group___macros.html#gaf2c28868be944a82c355ddfe5e99232f">   19</a></span>&#160;<span class="preprocessor">#define SU_FRAME_SIZE         5  </span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor"></span> </div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="group___macros.html#gaf8bfae90c5d6853fcfb487e05b9f50c8">   21</a></span>&#160;<span class="preprocessor">#define FLAG                  0b01111110  </span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"></span> </div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="group___macros.html#gae672f3b0774129f80f19bcad79123b03">   23</a></span>&#160;<span class="preprocessor">#define A_ER                  0b00000011  </span></div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="group___macros.html#ga7f827460c674ebcd1504e5a8557cad23">   24</a></span>&#160;<span class="preprocessor">#define A_RE                  0b00000001  </span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span> </div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="group___macros.html#ga480bc08be2722ba0343812c003604392">   26</a></span>&#160;<span class="preprocessor">#define C_SET                 0b00000011 </span></div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="group___macros.html#gaa8684947a54e16bc93295e9638edea16">   27</a></span>&#160;<span class="preprocessor">#define C_DISC                0b00001011 </span></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="group___macros.html#gaba4eb3c08ee682afce79d9b93c2edbb6">   28</a></span>&#160;<span class="preprocessor">#define C_UA                  0b00000111 </span></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="group___macros.html#gacf861c22ef49f0817e712811d83e78f9">   29</a></span>&#160;<span class="preprocessor">#define C_RR(r)               ((0b00000101) ^ (r) &lt;&lt; (7)) </span></div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="group___macros.html#gac16f0cb5014975df105a8b1ae7581ead">   30</a></span>&#160;<span class="preprocessor">#define C_REJ(r)              ((0b00000001) ^ (r) &lt;&lt; (7)) </span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="group___macros.html#gabbf9efe0a7e22ce67e2e1b40956f1e67">   31</a></span>&#160;<span class="preprocessor">#define C_I(r)                ((0b01000000) &amp; (r) &lt;&lt; (6)) </span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span> </div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="group___macros.html#gae88eb9dd57a6183cc422d92ab982e581">   33</a></span>&#160;<span class="preprocessor">#define BCC(a,c)              (a ^ c) </span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span> </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="group___macros.html#gaa93f0eb578d23995850d61f7d61c55c1">   36</a></span>&#160;<span class="preprocessor">#define FALSE                 0</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="group___macros.html#gaa8cecfc5c5c054d2875c03e77b7be15d">   37</a></span>&#160;<span class="preprocessor">#define TRUE                  1</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">//C flag</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="group___macros.html#gaad9ae913bdfab20dd94ad04ee2d5b045">   40</a></span>&#160;<span class="preprocessor">#define DATA                  0x01</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="group___macros.html#ga3018c7600b7bb9866400596a56a57af7">   41</a></span>&#160;<span class="preprocessor">#define START                 0x02</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="group___macros.html#ga29fd18bed01c4d836c7ebfe73a125c3f">   42</a></span>&#160;<span class="preprocessor">#define END                   0x03</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">//T flag</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="group___macros.html#ga336ef1743175a62cdf5a7aebcf34609a">   45</a></span>&#160;<span class="preprocessor">#define T_SIZE                0x00</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="group___macros.html#ga19da2b67b058ddda4f4b0508f47ad6d2">   46</a></span>&#160;<span class="preprocessor">#define T_NAME                0x01</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="group___macros.html#ga0592dba56693fad79136250c11e5a7fe">   51</a></span>&#160;<span class="preprocessor">#define MAX_SIZE              1024</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="group___macros.html#ga52682d3578615c3edaf5ccdf19da4945">   52</a></span>&#160;<span class="preprocessor">#define MAX_SIZE_AFT_STUFF    2*MAX_SIZE</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#endif // MACROS_HEADER</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// valores de type usados em application.c</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="group___macros.html#ga4dd2cc1f618201244956369378b75c9a">   40</a></span>&#160;<span class="preprocessor">#define TRANSMITTER           1</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="group___macros.html#ga455948b8bd5f5ce920899ae1013c4b4c">   41</a></span>&#160;<span class="preprocessor">#define RECEIVER              0</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">/*-------package control--------*/</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">//C flag</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="group___macros.html#gaad9ae913bdfab20dd94ad04ee2d5b045">   46</a></span>&#160;<span class="preprocessor">#define DATA                  0x01</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="group___macros.html#ga3018c7600b7bb9866400596a56a57af7">   47</a></span>&#160;<span class="preprocessor">#define START                 0x02</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="group___macros.html#ga29fd18bed01c4d836c7ebfe73a125c3f">   48</a></span>&#160;<span class="preprocessor">#define END                   0x03</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">//T flag</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="group___macros.html#ga336ef1743175a62cdf5a7aebcf34609a">   51</a></span>&#160;<span class="preprocessor">#define T_SIZE                0x00</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="group___macros.html#ga19da2b67b058ddda4f4b0508f47ad6d2">   52</a></span>&#160;<span class="preprocessor">#define T_NAME                0x01</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="group___macros.html#ga52682d3578615c3edaf5ccdf19da4945">   55</a></span>&#160;<span class="preprocessor">#define MAX_SIZE_AFT_STUFF    2*MAX_SIZE</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#endif // MACROS_HEADER</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="macros_8h.html">macros.h</a></li>
-    <li class="footer">Generated on Wed Oct 28 2020 21:56:46 for RCOM PROJ by
+    <li class="footer">Generated on Sat Oct 31 2020 14:41:53 for RCOM PROJ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

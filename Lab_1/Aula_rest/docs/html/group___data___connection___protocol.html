@@ -27,6 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">RCOM PROJ
    </div>
+   <div id="projectbrief">Comunicação via Porta Série</div>
   </td>
  </tr>
  </tbody>
@@ -113,6 +114,8 @@ Variables</h2></td></tr>
 <tr class="memitem:ga5da585c5678d80738700eaba39479f24"><td class="memItemLeft" align="right" valign="top">static struct sigaction&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___data___connection___protocol.html#ga5da585c5678d80738700eaba39479f24">old_action</a></td></tr>
 <tr class="memdesc:ga5da585c5678d80738700eaba39479f24"><td class="mdescLeft">&#160;</td><td class="mdescRight">sigaction to restore SIGALRN handler  <a href="group___data___connection___protocol.html#ga5da585c5678d80738700eaba39479f24">More...</a><br /></td></tr>
 <tr class="separator:ga5da585c5678d80738700eaba39479f24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2a4fa6006989be581b59a63e8b4278d5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___data___connection___protocol.html#ga2a4fa6006989be581b59a63e8b4278d5">testSend</a> =0</td></tr>
+<tr class="separator:ga2a4fa6006989be581b59a63e8b4278d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1136da9f717588bf1c2f207232951c8d"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structlink_layer.html">linkLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___data___connection___protocol.html#ga1136da9f717588bf1c2f207232951c8d">linkLayer</a></td></tr>
 <tr class="memdesc:ga1136da9f717588bf1c2f207232951c8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data relative to the link layer.  <a href="group___data___connection___protocol.html#ga1136da9f717588bf1c2f207232951c8d">More...</a><br /></td></tr>
 <tr class="separator:ga1136da9f717588bf1c2f207232951c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -369,7 +372,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int numero de caracteres escritos ou -1 em caso de erro </dd></dl>
 
-<p class="reference">References <a class="el" href="group___macros.html#gae672f3b0774129f80f19bcad79123b03">A_ER</a>, <a class="el" href="group___macros.html#gae88eb9dd57a6183cc422d92ab982e581">BCC</a>, <a class="el" href="group___macros.html#gabbf9efe0a7e22ce67e2e1b40956f1e67">C_I</a>, <a class="el" href="group___macros.html#gacf861c22ef49f0817e712811d83e78f9">C_RR</a>, <a class="el" href="group___data___connection___protocol___specification.html#ga8d1e3ed50df3d328fc3803e7c894f9f8">fillFinalBuffer()</a>, <a class="el" href="group___macros.html#gaf8bfae90c5d6853fcfb487e05b9f50c8">FLAG</a>, <a class="el" href="group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf">log_error()</a>, <a class="el" href="group___macros.html#ga0592dba56693fad79136250c11e5a7fe">MAX_SIZE</a>, <a class="el" href="structlink_layer.html#abb16cabb90fffa18a72d9916da8af724">linkLayer::sequenceNumber</a>, <a class="el" href="group___state___machine.html#ggafdeaa5452453449f1a4bb7dc5070f3bcabd5f9c956752ce4dc707b4624b3a36f7">Start</a>, <a class="el" href="group___state___machine.html#gad89d631b7674965bec03d8aac4ce5f55">stateMachineSetUp()</a>, <a class="el" href="group___state___machine.html#gga0caf795be3742822c4b5b6a6c92914ddaa56670174817e3fed92bfd8182d7c0d1">Write</a>, <a class="el" href="group___data___connection___protocol___specification.html#ga540c8079d3498a8b9a5ab81e232c8095">writeCycle()</a>, and <a class="el" href="group___data___connection___protocol___specification.html#gga8dd63ce16d768f8cb14f8cea2d66339fa69daea590d253b686fb969314ada39d6">writeR</a>.</p>
+<p class="reference">References <a class="el" href="group___macros.html#gae672f3b0774129f80f19bcad79123b03">A_ER</a>, <a class="el" href="group___macros.html#gae88eb9dd57a6183cc422d92ab982e581">BCC</a>, <a class="el" href="group___macros.html#gabbf9efe0a7e22ce67e2e1b40956f1e67">C_I</a>, <a class="el" href="group___macros.html#gacf861c22ef49f0817e712811d83e78f9">C_RR</a>, <a class="el" href="group___data___connection___protocol___specification.html#gae8b3e1bdc181ec13563cd454f625a457">fillFinalBuffer()</a>, <a class="el" href="group___macros.html#gaf8bfae90c5d6853fcfb487e05b9f50c8">FLAG</a>, <a class="el" href="group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf">log_error()</a>, <a class="el" href="group___macros.html#ga0592dba56693fad79136250c11e5a7fe">MAX_SIZE</a>, <a class="el" href="structlink_layer.html#abb16cabb90fffa18a72d9916da8af724">linkLayer::sequenceNumber</a>, <a class="el" href="group___state___machine.html#ggafdeaa5452453449f1a4bb7dc5070f3bcabd5f9c956752ce4dc707b4624b3a36f7">Start</a>, <a class="el" href="group___state___machine.html#gad89d631b7674965bec03d8aac4ce5f55">stateMachineSetUp()</a>, <a class="el" href="group___state___machine.html#gga0caf795be3742822c4b5b6a6c92914ddaa56670174817e3fed92bfd8182d7c0d1">Write</a>, <a class="el" href="group___data___connection___protocol___specification.html#ga540c8079d3498a8b9a5ab81e232c8095">writeCycle()</a>, and <a class="el" href="group___data___connection___protocol___specification.html#gga8dd63ce16d768f8cb14f8cea2d66339fa69daea590d253b686fb969314ada39d6">writeR</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="group___application.html#gab716e01a43cac28a0df910355b1bc357">transmitterApp()</a>.</p>
 <div class="dynheader">
@@ -378,7 +381,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="group___data___connection___protocol_ga131b10b059811f151e979f1d2c53b8f6_cgraph.png" border="0" usemap="#group___data___connection___protocol_ga131b10b059811f151e979f1d2c53b8f6_cgraph" alt=""/></div>
 <map name="group___data___connection___protocol_ga131b10b059811f151e979f1d2c53b8f6_cgraph" id="group___data___connection___protocol_ga131b10b059811f151e979f1d2c53b8f6_cgraph">
 <area shape="rect" title=" " alt="" coords="5,366,61,393"/>
-<area shape="rect" href="group___data___connection___protocol___specification.html#ga8d1e3ed50df3d328fc3803e7c894f9f8" title="Stuffs the final buffer with the Information Packet." alt="" coords="129,290,227,317"/>
+<area shape="rect" href="group___data___connection___protocol___specification.html#gae8b3e1bdc181ec13563cd454f625a457" title="Stuffs the final buffer with the Information Packet." alt="" coords="129,290,227,317"/>
 <area shape="rect" href="group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="637,265,709,292"/>
 <area shape="rect" href="group___state___machine.html#gad89d631b7674965bec03d8aac4ce5f55" title="Function to easily change the State Machine." alt="" coords="109,442,247,469"/>
 <area shape="rect" href="group___data___connection___protocol___specification.html#ga540c8079d3498a8b9a5ab81e232c8095" title="Function used to write to fd." alt="" coords="136,341,220,368"/>
@@ -483,12 +486,26 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="ga2a4fa6006989be581b59a63e8b4278d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2a4fa6006989be581b59a63e8b4278d5">&#9670;&nbsp;</a></span>testSend</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int testSend =0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Oct 28 2020 21:56:46 for RCOM PROJ by
+    <li class="footer">Generated on Sat Oct 31 2020 14:41:53 for RCOM PROJ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

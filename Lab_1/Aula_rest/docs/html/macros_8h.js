@@ -2,6 +2,7 @@ var macros_8h =
 [
     [ "A_ER", "group___macros.html#gae672f3b0774129f80f19bcad79123b03", null ],
     [ "A_RE", "group___macros.html#ga7f827460c674ebcd1504e5a8557cad23", null ],
+    [ "ATTEMPTS", "group___macros.html#ga8c730a41dcccce68039aea9f991e1868", null ],
     [ "BAUDRATE", "group___macros.html#ga734bbab06e1a9fd2e5522db0221ff6e3", null ],
     [ "BCC", "group___macros.html#gae88eb9dd57a6183cc422d92ab982e581", null ],
     [ "C_DISC", "group___macros.html#gaa8684947a54e16bc93295e9638edea16", null ],
@@ -21,6 +22,7 @@ var macros_8h =
     [ "SU_FRAME_SIZE", "group___macros.html#gaf2c28868be944a82c355ddfe5e99232f", null ],
     [ "T_NAME", "group___macros.html#ga19da2b67b058ddda4f4b0508f47ad6d2", null ],
     [ "T_SIZE", "group___macros.html#ga336ef1743175a62cdf5a7aebcf34609a", null ],
+    [ "TIME_OUT", "group___macros.html#ga799517031a8334a42807b119bb456c53", null ],
     [ "TRANSMITTER", "group___macros.html#ga4dd2cc1f618201244956369378b75c9a", null ],
     [ "TRUE", "group___macros.html#gaa8cecfc5c5c054d2875c03e77b7be15d", null ]
 ];

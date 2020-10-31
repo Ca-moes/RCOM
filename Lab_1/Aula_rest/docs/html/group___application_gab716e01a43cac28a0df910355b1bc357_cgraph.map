@@ -2,7 +2,7 @@
 <area shape="rect" id="node1" title="Transmitter part of the application." alt="" coords="5,43,112,69"/>
 <area shape="rect" id="node2" href="$group___data___connection___protocol.html#ga131b10b059811f151e979f1d2c53b8f6" title=" " alt="" coords="160,93,216,120"/>
 <area shape="rect" id="node4" href="$group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="792,195,864,221"/>
-<area shape="rect" id="node3" href="$group___data___connection___protocol___specification.html#ga8d1e3ed50df3d328fc3803e7c894f9f8" title="Stuffs the final buffer with the Information Packet." alt="" coords="283,43,382,69"/>
+<area shape="rect" id="node3" href="$group___data___connection___protocol___specification.html#gae8b3e1bdc181ec13563cd454f625a457" title="Stuffs the final buffer with the Information Packet." alt="" coords="283,43,382,69"/>
 <area shape="rect" id="node5" href="$group___state___machine.html#gad89d631b7674965bec03d8aac4ce5f55" title="Function to easily change the State Machine." alt="" coords="264,195,401,221"/>
 <area shape="rect" id="node6" href="$group___data___connection___protocol___specification.html#ga540c8079d3498a8b9a5ab81e232c8095" title="Function used to write to fd." alt="" coords="291,144,375,171"/>
 <area shape="rect" id="node7" href="$group___logs.html#gadb3d4a37c60967790061715635fbd85f" title="Outputs a message in yellow." alt="" coords="784,347,872,373"/>

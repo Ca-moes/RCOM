@@ -16,5 +16,6 @@ var group___data___connection___protocol =
     [ "failed", "group___data___connection___protocol.html#ga9a6faff5ef6059d595aa97bfa6d84402", null ],
     [ "linkLayer", "group___data___connection___protocol.html#ga1136da9f717588bf1c2f207232951c8d", null ],
     [ "old_action", "group___data___connection___protocol.html#ga5da585c5678d80738700eaba39479f24", null ],
-    [ "oldtio", "group___data___connection___protocol.html#ga391db8cfdf340336e4e012e67ca21fa9", null ]
+    [ "oldtio", "group___data___connection___protocol.html#ga391db8cfdf340336e4e012e67ca21fa9", null ],
+    [ "testSend", "group___data___connection___protocol.html#ga2a4fa6006989be581b59a63e8b4278d5", null ]
 ];

@@ -48,7 +48,7 @@
 /**
  * Tamanho máximo em bytes dos dados da trama I === Tamanho máximo do pacote de dados
  */
-#define MAX_SIZE              1024
+#define MAX_SIZE              50
 #define MAX_SIZE_AFT_STUFF    2*MAX_SIZE
 #endif // MACROS_HEADER
 /** @}*/

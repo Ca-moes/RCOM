@@ -186,8 +186,18 @@ int processBCC_OK(unsigned char byte, unsigned char **buffer, int *buffersize){
       *buffer = (unsigned char *)malloc((frameIndex-6));
       *buffersize = 0;
 
+      unsigned char BCC2_destufed;
+      int decrement=2;
+      //BCC2 De-stuffing
+      if (linkLayer.frame[frameIndex-3] != 0x7D)
+          BCC2_destufed = linkLayer.frame[frameIndex-2];
+      else{
+        BCC2_destufed = linkLayer.frame[frameIndex-2] ^ 0x20;
+        decrement=3;
+      }
+
       // Byte De-stuffing
-      for (int i = 4; i < frameIndex - 2; i++)
+      for (int i = 4; i < frameIndex - decrement; i++)
       {
         if (linkLayer.frame[i] != 0x7D)
           (*buffer)[*buffersize] = linkLayer.frame[i];
@@ -204,7 +214,7 @@ int processBCC_OK(unsigned char byte, unsigned char **buffer, int *buffersize){
       for (int i = 1; i < *buffersize; i++)
         BCC2 = BCC2 ^ (*buffer)[i];
 
-      if (linkLayer.frame[frameIndex-2]==BCC2){
+      if (BCC2_destufed==BCC2){
         linkLayer.sequenceNumber = linkLayer.sequenceNumber ^ 1;
         state_machine.state = DONE;
       }

@@ -59,9 +59,21 @@ int llwrite(int fd, char *buffer, int lenght){
     BCC2 = BCC2 ^ buffer[i];
   }
 
-  unsigned char buf2[2] = {BCC2, FLAG};
+  unsigned char *buf2 = (unsigned char *)malloc(2);
+
+  // Byte Stuffing (BCC2 on buf2)
+  if (BCC2 == 0x7E || BCC2 == 0x7D){
+    buf2 = (unsigned char *) realloc(buf2, 3);
+    buf2[0] = 0x7D;
+    buf2[1] = BCC2 ^ 0x20;
+    buf2[2] = FLAG;
+  }
+  else{
+    buf2[0] = BCC2;
+    buf2[1] = FLAG;
+  }
   
-  // Byte Stuffing
+  // Byte Stuffing (data buffer)
   for (int i = 0, k=0; i<lenght; i++, k++){
     if (buffer[i] == 0x7E || buffer[i] == 0x7D){
       currentLenght++;
@@ -78,7 +90,7 @@ int llwrite(int fd, char *buffer, int lenght){
 
   unsigned char finalBuffer[currentLenght + 6]; /*trama I completa*/
 
-  fillFinalBuffer(finalBuffer, buf1, buf2, dataBuffer, currentLenght);
+  fillFinalBuffer(finalBuffer, buf1, buf2, sizeof(buf2), dataBuffer, currentLenght);
 
   stateMachineSetUp(C_RR(linkLayer.sequenceNumber^0x01), A_ER, Start, Write);
 
@@ -86,7 +98,7 @@ int llwrite(int fd, char *buffer, int lenght){
     log_error("llwrite() - failed writing");
     return -1;
   }
-  
+
   linkLayer.sequenceNumber ^= 0x01;
 
   return 0;
@@ -106,14 +118,18 @@ int llread(int fd, unsigned char *buffer){
   }
 
   unsigned char replyBuf[5] = {FLAG, A_ER, c, BCC(A_ER, c), FLAG};
-
-  for (int i = 0; i < retBufferSize; i++)
-    buffer[i] = dataBuf[i];
   
   int res = write(fd,replyBuf,5);
+  log_message("SENDING RESPONSE\n");
+  for (int i=0; i < 5; i++){
+    log_hexa(replyBuf[i]);
+  }
   if (res == -1) {
     log_error("llread() - Failed writing response to buffer.");
     return -1;}
+
+  for (int i = 0; i < retBufferSize; i++)
+    buffer[i] = dataBuf[i];
 
   free(dataBuf);
   return retBufferSize; 

@@ -134,13 +134,14 @@ void parseFileInfo(unsigned char *controlpackage, int packagesize){
 int receiverApp(int fd){
   unsigned char package[MAX_SIZE];
   int dataPackageSize;
-  int nsequence_expected=0;
+  int nsequence_expected=0, nsequence_expected_aux;
+  int offset_need = 0;
 
   int file_fd, sizeread;
 
   while(1){
     sizeread = llread(fd,package);
-    log_hexa(package[1]);
+    
     if(sizeread<0)
       log_caution("receiverApp() - llread() error");
 
@@ -157,10 +158,11 @@ int receiverApp(int fd){
       dataPackageSize = package[3] + 256* package[2];
 
       if (package[1] != nsequence_expected){
-        off_t oofset = lseek(file_fd,package[1] * (MAX_SIZE-4),SEEK_SET);
+        off_t offset = (package[1] + offset_need) * (MAX_SIZE-4) ;
+        lseek(file_fd, offset, SEEK_SET);
       }
       
-      int b = write(file_fd,&package[4], dataPackageSize);
+      write(file_fd,&package[4], dataPackageSize);
 
       if (package[1] != nsequence_expected){
         lseek(file_fd, 0 , SEEK_HOLE);
@@ -169,7 +171,13 @@ int receiverApp(int fd){
       if (package[1]== nsequence_expected){
         nsequence_expected++;
       }
+      
+      nsequence_expected_aux = nsequence_expected;
       nsequence_expected %= 255;
+
+      if (nsequence_expected % 255 == 0 && nsequence_expected_aux!= 0){
+        offset_need+=255;
+      }
     }
   }
 

@@ -61,6 +61,8 @@ int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char 
     else
       stateMachine(buf[0], NULL, NULL);
 
+    
+
     if (state_machine.state == DONE) STOP=TRUE;
   }
   return 0;
@@ -97,11 +99,13 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
     alarm(linkLayer.timeout);
     failed = FALSE;
     state_machine.state = Start; 
-    unsigned char buf_r[1];
+    unsigned char buf_r[1]={};
     
+    log_message("PARSING RESPONSE\n");
+
     while (STOP==FALSE) { 
       res = read(fd,buf_r,1);   /* returns after 1 char has been input */
-
+      log_hexa(buf_r[0]);
       if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
         switch (type)
         {
@@ -161,6 +165,7 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
       if (state_machine.state == DONE || failed) STOP=TRUE;
     }
   }while (attempt < linkLayer.numTransmissions && failed);
+
   alarm(0);
   return 0;
 }
@@ -196,7 +201,7 @@ int initConnection(int *fd, char *port){
   strcpy(linkLayer.port,port);
   linkLayer.baudRate = BAUDRATE;
   linkLayer.sequenceNumber = 0x00;
-  linkLayer.timeout = 3;
+  linkLayer.timeout = 10;
   linkLayer.numTransmissions = 3;
 
   log_success("New termios structure set");
@@ -245,7 +250,7 @@ int receiver_UA(int fd){
 }
 
 
-int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsigned char* footerBuf, unsigned char* dataBuffer, int dataSize){
+int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsigned char* footerBuf, int footerBufSize, unsigned char* dataBuffer, int dataSize){
   int finalIndex = 0, dataIndex = 0, footerBufIndex=0;
 
   while (finalIndex < 4){
@@ -256,7 +261,7 @@ int fillFinalBuffer(unsigned char* finalBuffer, unsigned char* headerBuf, unsign
     finalBuffer[finalIndex] = dataBuffer[dataIndex];
     finalIndex++; dataIndex++;
   }
-  while (footerBufIndex < 2){
+  while (footerBufIndex < footerBufSize){
     finalBuffer[finalIndex] = footerBuf[footerBufIndex];
     finalIndex++; footerBufIndex++;
   }

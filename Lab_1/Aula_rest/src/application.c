@@ -5,6 +5,28 @@
 
 static struct applicationLayer applayer;  // Struct to save data about the Application
 
+void clearProgressBar() {
+    int i;
+    for (i = 0; i < NUM_BACKSPACES; ++i) {
+        fprintf(stdout, "\b");
+    }
+    fflush(stdout);
+}
+
+void printProgressBar(int progress, int total) {
+    int i, percentage = (int)((((double)progress) / total) * 100);
+    int num_separators = (int)((((double)progress) / total) * PROGRESS_BAR_SIZE);;
+    fprintf(stdout, "[");
+    for (i = 0; i < num_separators; ++i) {
+        fprintf(stdout, "%c", SEPARATOR_CHAR);
+    }
+    for (; i < PROGRESS_BAR_SIZE; ++i) {
+        fprintf(stdout, "%c", EMPTY_CHAR);
+    }
+    fprintf(stdout, "]  %2d%%  ", percentage);
+    fflush(stdout);
+}
+
 void parseArgs(int argc, char** argv){
   if (argc != 4){
     log_error("Usage: ./application (receiver <destination> | transmitter <filename>) [gate = {0,1,10,11}]\n");
@@ -69,6 +91,7 @@ int transmitterApp(int fd){
     log_error("transmitterApp() - llwrite() failed writing Start Control Packet");
     return -1;
   }
+  int progress = 0;
 
   while( (nbytes = read(file_fd,file_data,MAX_SIZE-4)) != 0){
     /*building data package*/
@@ -82,6 +105,9 @@ int transmitterApp(int fd){
       memcpy(dataPackageTest, dataPackage, MAX_SIZE);
     }*/
 
+    progress+=nbytes;
+    printProgressBar(progress,fileInfo.st_size);
+
     if (llwrite(fd,dataPackage,nbytes+4) < 0){
       log_error("transmitterApp() - llwrite() failed writing Data Packet");
       return -1;
@@ -93,7 +119,11 @@ int transmitterApp(int fd){
       llwrite(fd,dataPackageTest,nbytes+4);
     }*/
 
+    clearProgressBar();
+
   }
+
+  printProgressBar(1,1);
 
   controlPackage[0] = END;
 

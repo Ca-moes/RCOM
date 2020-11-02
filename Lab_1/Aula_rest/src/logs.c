@@ -49,6 +49,7 @@ void log_received_message(unsigned char *buf, int size){
 
 void clearProgressBar() {
     int i;
+    
     for (i = 0; i < NUM_BACKSPACES; ++i) {
         fprintf(stdout, "\b");
     }
@@ -56,6 +57,10 @@ void clearProgressBar() {
 }
 
 void printProgressBar(int progress, int total) {
+
+    if (progress == 1)
+      fprintf(stdout, "\b");
+
     int i, percentage = (int)((((double)progress) / total) * 100);
     int num_separators = (int)((((double)progress) / total) * PROGRESS_BAR_SIZE);;
     fprintf(stdout, "[");

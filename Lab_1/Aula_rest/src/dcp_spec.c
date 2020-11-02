@@ -77,8 +77,8 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
 
   do{
     attempt++;
+    tcflush(fd,TCIFLUSH);
     res = write(fd,buf,bufsize);
-    tcflush(fd, TCIFLUSH);
     if (res == -1) {
       switch (type)
       {

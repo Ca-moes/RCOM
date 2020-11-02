@@ -69,6 +69,7 @@ int transmitterApp(int fd){
     log_error("transmitterApp() - llwrite() failed writing Start Control Packet");
     return -1;
   }
+  int progress = 0;
 
   while( (nbytes = read(file_fd,file_data,MAX_SIZE-4)) != 0){
     /*building data package*/
@@ -82,6 +83,9 @@ int transmitterApp(int fd){
       memcpy(dataPackageTest, dataPackage, MAX_SIZE);
     }*/
 
+    progress+=nbytes;
+    printProgressBar(progress,fileInfo.st_size);
+
     if (llwrite(fd,dataPackage,nbytes+4) < 0){
       log_error("transmitterApp() - llwrite() failed writing Data Packet");
       return -1;
@@ -93,7 +97,11 @@ int transmitterApp(int fd){
       llwrite(fd,dataPackageTest,nbytes+4);
     }*/
 
+    clearProgressBar();
+
   }
+
+  printProgressBar(1,1);
 
   controlPackage[0] = END;
 

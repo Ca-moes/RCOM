@@ -28,6 +28,12 @@
 #define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
 #define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
 
+
+#define PROGRESS_BAR_SIZE   30
+#define SEPARATOR_CHAR      '#'
+#define EMPTY_CHAR          '.'
+#define NUM_BACKSPACES      PROGRESS_BAR_SIZE + 9
+
 /**
  * @brief Outputs a message in red
  * 
@@ -78,6 +84,20 @@ void log_hexa(unsigned char a);
  * @param size Size of the message
  */
 void log_received_message(unsigned char *buf, int size);
+
+/**
+ * @brief Clears progress bar from terminal
+ * 
+ */
+void clearProgressBar();
+
+/**
+ * @brief Prints progress bar on terminal
+ * 
+ * @param progress nbytes already sent
+ * @param total number of bytes to send
+ */
+void printProgressBar(int progress, int total);
 
 #endif // LOGS_HEADER
 /** @}*/

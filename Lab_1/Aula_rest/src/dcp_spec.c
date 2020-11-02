@@ -11,6 +11,8 @@ int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char 
 
   while (STOP==FALSE) {       /* loop for input */
     res = read(fd,buf,1);   /* returns after 1 char has been input */
+    if (res == 0)
+      continue;
 
     if (type == closeUA)
     {
@@ -54,8 +56,8 @@ int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char 
       }
       if (retStateMachine == -2){
         *c = C_RR(linkLayer.sequenceNumber);
-        log_error("readingCycle() - Error in C, wrong sequence number");
-        break;
+        log_caution("readingCycle() - Error in C, wrong sequence number");
+        return -2;
       }
       *c = C_RR(linkLayer.sequenceNumber);
     }
@@ -75,8 +77,8 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
 
   do{
     attempt++;
+    tcflush(fd,TCIFLUSH);
     res = write(fd,buf,bufsize);
-    tcflush(fd, TCIFLUSH);
     if (res == -1) {
       switch (type)
       {
@@ -103,9 +105,12 @@ int writeCycle(enum writingType type, int fd, unsigned char *buf, int bufsize){
     state_machine.state = Start; 
     unsigned char buf_r[1]={};
     
-
     while (STOP==FALSE) { 
       res = read(fd,buf_r,1);   /* returns after 1 char has been input */
+      
+      if (res == 0)
+        continue;
+
       if (res == -1 && errno == EINTR) {  /*returns -1 when interrupted by SIGALRM and sets errno to EINTR*/
         switch (type)
         {
@@ -189,8 +194,8 @@ int initConnection(int *fd, char *port){
   newtio.c_oflag = 0;
   /* set input mode (non-canonical, no echo,...) */
   newtio.c_lflag = 0;
-  newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused */
-  newtio.c_cc[VMIN]     = 1;   /* blocking read until 5 chars received */
+  newtio.c_cc[VTIME]    = 1;   /* inter-character timer unused */
+  newtio.c_cc[VMIN]     = 0;   /* blocking read until 5 chars received */
 
   tcflush(*fd, TCIOFLUSH);
 
@@ -212,7 +217,7 @@ int initConnection(int *fd, char *port){
 void atende(){ 
   if (state_machine.state != DONE){
     failed = TRUE;
-    log_caution("Alarm Activated");
+    log_caution("\nAlarm Activated");
     return;
   }
 }

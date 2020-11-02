@@ -108,12 +108,13 @@ int llwrite(int fd, char *buffer, int lenght){
 
 int llread(int fd, unsigned char *buffer){
   unsigned char *dataBuf;
-  int retBufferSize;
+  int retBufferSize = 0;
   stateMachineSetUp(C_I(linkLayer.sequenceNumber), A_ER, Start, Read);
 
   unsigned char c;
 
-  if (readingCycle(readR, fd, &c, &dataBuf, &retBufferSize) < 0){
+  int reading_r = readingCycle(readR, fd, &c, &dataBuf, &retBufferSize);
+  if ( reading_r == -1){
     log_error("llread() - failed reading");
     tcflush(fd, TCIFLUSH);
     return -1;
@@ -125,12 +126,16 @@ int llread(int fd, unsigned char *buffer){
   int res = write(fd,replyBuf,5);
   if (res == -1) {
     log_error("llread() - Failed writing response to buffer.");
-    return -1;}
+    return -1;} 
+  
+  if (reading_r != -2){
+    for (int i = 0; i < retBufferSize; i++)
+      buffer[i] = dataBuf[i];
 
-  for (int i = 0; i < retBufferSize; i++)
-    buffer[i] = dataBuf[i];
+    free(dataBuf);
+  }
 
-  free(dataBuf);
+  
   return retBufferSize; 
 }
 

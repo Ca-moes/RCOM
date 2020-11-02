@@ -9,7 +9,7 @@
 #define BAUDRATE              B38400
 #define TIME_OUT              3
 #define ATTEMPTS              5
-#define MAX_SIZE              32 // Tamanho máximo em bytes dos dados da trama I === Tamanho máximo do pacote de dados
+#define MAX_SIZE              1024 // Tamanho máximo em bytes dos dados da trama I === Tamanho máximo do pacote de dados
 // entre 24-inf
 
 /**

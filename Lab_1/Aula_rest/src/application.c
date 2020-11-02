@@ -37,12 +37,15 @@ int transmitterApp(int fd){
   //char dataPackageTest[MAX_SIZE];
   //int counterTest = 0;
 
+  struct timespec start_time_general;
+
   int sequenceNumber = 0;
   int nbytes;
   int file_fd;
   char * file_data[MAX_SIZE];
 
   struct stat fileInfo;
+  startTime(&start_time_general);
 
   if (stat(applayer.filenameArg, &fileInfo)<0){
     log_error("transmitterApp() - Error obtaining file information.\n");
@@ -69,6 +72,7 @@ int transmitterApp(int fd){
     log_error("transmitterApp() - llwrite() failed writing Start Control Packet");
     return -1;
   }
+
   int progress = 0;
 
   while( (nbytes = read(file_fd,file_data,MAX_SIZE-4)) != 0){
@@ -98,17 +102,20 @@ int transmitterApp(int fd){
     }*/
 
     clearProgressBar();
-
   }
 
   printProgressBar(1,1);
-
+  
   controlPackage[0] = END;
 
   if(llwrite(fd,controlPackage,sizeof(fileInfo.st_size) + 5 + strlen(applayer.filenameArg))<0){
     log_error("transmitterApp() - llwrite() failed writing End Control Packet");
     return -1;
   }
+
+  log_elapsedTime("\n\nTotal time elapsed: ",start_time_general);
+  log_bitsPerSecond(fileInfo.st_size,start_time_general);
+
   return 0;
 }
 
@@ -147,6 +154,8 @@ int receiverApp(int fd){
 
   int file_fd, sizeread;
 
+  int progress = 0;
+
   while(1){
     sizeread = llread(fd,package);
     
@@ -163,6 +172,12 @@ int receiverApp(int fd){
       break;
     }
     else if (package[0] == DATA && sizeread>0) {
+      
+      /*printing bar*/
+      progress+=sizeread;
+      printProgressBar(progress,applayer.filesize);
+
+
       dataPackageSize = package[3] + 256* package[2];
 
       if (package[1] != nsequence_expected){
@@ -187,7 +202,11 @@ int receiverApp(int fd){
         offset_need+=255;
       }
     }
+
+    clearProgressBar();
   }
+
+  printProgressBar(1,1);
 
   if (close(file_fd)<0){
     log_error("Error closing file\n");

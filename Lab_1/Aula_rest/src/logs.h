@@ -4,6 +4,7 @@
 #ifndef LOGS_HEADER
 #define LOGS_HEADER
 
+#include <time.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -98,6 +99,20 @@ void clearProgressBar();
  * @param total number of bytes to send
  */
 void printProgressBar(int progress, int total);
+
+/**
+ * @brief starts counting time
+ * 
+ */
+void startTime(struct timespec *start_time);
+
+/**
+ * @brief starts counting time
+ * 
+ */
+void log_elapsedTime(char * message, struct timespec start_time);
+
+void log_bitsPerSecond(double nbytes, struct timespec start_time);
 
 #endif // LOGS_HEADER
 /** @}*/

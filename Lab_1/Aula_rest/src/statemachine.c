@@ -132,6 +132,11 @@ int processA_RCV(unsigned char byte){
 }
 
 int processC_RCV(unsigned char byte){
+
+  if(PROBABILITY_BCC1 != 0 && state_machine.type == Read){
+      generateErrorBCC1(checkBuffer);
+  }
+
   if (byte == BCC(checkBuffer[0],checkBuffer[1])){
     if (state_machine.type == Read && wrongC == TRUE){
       log_caution("processC_RCV() - Received already read Packet");
@@ -183,6 +188,13 @@ int processBCC_OK(unsigned char byte, unsigned char **buffer, int *buffersize){
   {
     frameIndex++;
     if (byte == FLAG){
+
+      if(PROBABILITY_BCC2 != 0){
+          generateErrorBCC2(linkLayer.frame,frameIndex+1);
+      }
+
+      sleep(T_PROP_DELAY);
+      
       *buffer = (unsigned char *)malloc((frameIndex-6));
       *buffersize = 0;
 

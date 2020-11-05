@@ -6,11 +6,15 @@
 
 /*-----------Variables-----------*/
 
-#define BAUDRATE              B38400
+#define BAUDRATE              B50
 #define TIME_OUT              3
 #define ATTEMPTS              5
 #define MAX_SIZE              1024 // Tamanho máximo em bytes dos dados da trama I === Tamanho máximo do pacote de dados
 // entre 24-inf
+
+#define PROBABILITY_BCC2      0 //percentage
+#define PROBABILITY_BCC1      0 //percentage
+#define T_PROP_DELAY          0
 
 /**
  * @brief Enum com Valores para a Máquina de Estados de SET-UA

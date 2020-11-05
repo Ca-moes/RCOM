@@ -86,5 +86,11 @@ int transmitter_DISC_UA(int fd);
  * @return int -1 in case of errors, 0 otherwise
  */
 int receiver_DISC_UA(int fd);
+
+
+void generateErrorBCC2(unsigned char *frame, int frameSize);
+
+void generateErrorBCC1(unsigned int *checkBuffer);
+
 #endif // PLD_SPEC_HEADER
 /** @}*/

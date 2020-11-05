@@ -326,4 +326,30 @@ int receiver_DISC_UA(int fd){
   alarm(0);
   return fd;
 }
+
+
+void generateErrorBCC2(unsigned char *frame, int frameSize){
+  int prob = (rand() % 100) + 1;
+
+  if (prob <= PROBABILITY_BCC2){
+    int i = (rand() % (frameSize - 5)) + 4; /* only considering data and BCC2*/
+    unsigned char randomAscii = (unsigned char)((rand() % 177));
+    frame[i] = randomAscii;
+    log_message("\nGenerate BCC2 with errors.\n");
+  }
+
+}
+
+void generateErrorBCC1(unsigned int *checkBuffer){
+  int prob = (rand() % 100) + 1;
+  if (prob <= PROBABILITY_BCC1)
+  {
+    int i = (rand() % 2);
+    unsigned char randomAscii = (unsigned char)((rand() % 177));
+    checkBuffer[i] = randomAscii;
+    log_message("\nGenerate BCC1 with errors.");
+  }
+
+}
+
 /** @}*/

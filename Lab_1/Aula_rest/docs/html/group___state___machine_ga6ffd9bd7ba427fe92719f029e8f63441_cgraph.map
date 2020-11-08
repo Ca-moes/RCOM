@@ -1,4 +1,0 @@
-<map id="processBCC_OK" name="processBCC_OK">
-<area shape="rect" id="node1" title="Function to process a byte in case the state is BCC_OK." alt="" coords="5,5,128,32"/>
-<area shape="rect" id="node2" href="$group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="176,5,248,32"/>
-</map>

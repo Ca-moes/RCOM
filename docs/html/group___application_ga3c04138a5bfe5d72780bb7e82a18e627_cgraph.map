@@ -1,0 +1,38 @@
+<map id="main" name="main">
+<area shape="rect" id="node1" title=" " alt="" coords="5,369,56,395"/>
+<area shape="rect" id="node2" href="$group___data___connection___protocol.html#ga343e4b5928516727236a390a25f28c77" title="Closes the connection to the serial port." alt="" coords="128,318,187,345"/>
+<area shape="rect" id="node3" href="$group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="1009,517,1081,543"/>
+<area shape="rect" id="node4" href="$group___logs.html#ga29182c2001a385b45b701b8f1cf8f16e" title="Outputs a message in green." alt="" coords="479,10,573,37"/>
+<area shape="rect" id="node20" href="$group___data___connection___protocol.html#gadb4ff2da522e908ce48eedc1c3c00514" title="Opens a data connection with the serial port." alt="" coords="129,369,185,395"/>
+<area shape="rect" id="node25" href="$group___application.html#ga860ddb7326d94dbdd58266acdaf773b1" title="Função para dar parse dos argumentos da linah de comandos." alt="" coords="819,1226,901,1253"/>
+<area shape="rect" id="node26" href="$group___application.html#ga1edb9c48c38960f90f2ae1d199ef982b" title="Receiver part of the application." alt="" coords="112,821,203,847"/>
+<area shape="rect" id="node31" href="$group___application.html#gab716e01a43cac28a0df910355b1bc357" title="Transmitter part of the application." alt="" coords="104,998,211,1025"/>
+<area shape="rect" id="node5" href="$group___data___connection___protocol___specification.html#gaa977e673b8488d865386035bea4d98f6" title="Receiver sequence to Disconnect." alt="" coords="267,318,401,345"/>
+<area shape="rect" id="node18" href="$group___data___connection___protocol___specification.html#ga0fc711710a4b28cadd350c7d615c1f2f" title="Transmitter sequence to Disconnect." alt="" coords="259,489,409,515"/>
+<area shape="rect" id="node6" href="$group___data___connection___protocol___specification.html#gab20858e52fefe1a6b20ebd64e3bc8995" title="Function to read a byte from fd." alt="" coords="477,365,575,391"/>
+<area shape="rect" id="node17" href="$group___state___machine.html#gad89d631b7674965bec03d8aac4ce5f55" title="Function to easily change the State Machine." alt="" coords="457,466,595,493"/>
+<area shape="rect" id="node7" href="$group___logs.html#gadb3d4a37c60967790061715635fbd85f" title="Outputs a message in yellow." alt="" coords="1001,1125,1089,1151"/>
+<area shape="rect" id="node8" href="$group___state___machine.html#ga86119177a1b4d5467d5d4951623155b7" title="The StateMachine function that processes a byte and updates it&#39;s state." alt="" coords="643,618,743,645"/>
+<area shape="rect" id="node9" href="$group___state___machine.html#gaa81808addf87b6173001ce2d6d573c9c" title="Function to process a byte in case the state is A_RCV." alt="" coords="803,719,917,746"/>
+<area shape="rect" id="node10" href="$group___state___machine.html#ga6ffd9bd7ba427fe92719f029e8f63441" title="Function to process a byte in case the state is BCC_OK." alt="" coords="799,466,921,493"/>
+<area shape="rect" id="node13" href="$group___state___machine.html#ga7faa93ab97e7a8d20607e5b462aadb9f" title="Function to process a byte in case the state is C_RCV." alt="" coords="803,1023,917,1050"/>
+<area shape="rect" id="node15" href="$group___state___machine.html#ga38a94bf0265c35a1e3549e8a02ebd004" title="Function to process a byte in case the state is FLAG_RCV." alt="" coords="791,618,929,645"/>
+<area shape="rect" id="node16" href="$group___state___machine.html#ga3a272e4e3f924cc0d79e8950b5d22f11" title="Function to process a byte in case the state is Start." alt="" coords="812,669,908,695"/>
+<area shape="rect" id="node11" href="$group___data___connection___protocol___specification.html#gabc11d1f27de5129d6fb065ea2a694b1b" title="Generates a error on BCC2 based on PROBABILITY_BCC2." alt="" coords="977,466,1113,493"/>
+<area shape="rect" id="node12" href="$group___logs.html#gaac4f33ec74556738382a648e4b78b3c7" title="Outputs a message in white." alt="" coords="1161,631,1260,658"/>
+<area shape="rect" id="node14" href="$group___data___connection___protocol___specification.html#ga1cea7cccd9bb0fb112c3da22d13b8c81" title="Generates a error on BCC based on PROBABILITY_BCC2." alt="" coords="977,795,1113,822"/>
+<area shape="rect" id="node19" href="$group___data___connection___protocol___specification.html#ga540c8079d3498a8b9a5ab81e232c8095" title="Function used to write to fd." alt="" coords="484,618,568,645"/>
+<area shape="rect" id="node21" href="$group___data___connection___protocol___specification.html#gadc4d249c47efd1729a17f2782de863c2" title="Função handler do sinal de alarme." alt="" coords="662,1106,723,1133"/>
+<area shape="rect" id="node22" href="$group___data___connection___protocol___specification.html#gaffb7174442c6298b361a2160d060d41f" title="Estabelece ligação ao cabo e cria fd." alt="" coords="281,61,387,87"/>
+<area shape="rect" id="node23" href="$group___data___connection___protocol___specification.html#gaacd3aed32628f597b528272d99bebac8" title="Função que recebe trama SET e envia trama UA." alt="" coords="287,369,381,395"/>
+<area shape="rect" id="node24" href="$group___data___connection___protocol___specification.html#ga932b8b857abc7cc9337b4c31e1588c46" title="Função que envia Trama SET e recebe trama UA." alt="" coords="275,542,393,569"/>
+<area shape="rect" id="node27" href="$group___logs.html#ga25be2d197e9a718025d6144f5f5d4d99" title="Clears progress bar from terminal." alt="" coords="273,973,395,999"/>
+<area shape="rect" id="node28" href="$group___data___connection___protocol.html#gae4363b4445fbc6b8a780a06e03e86068" title="Reads from fd to buffer." alt="" coords="307,426,361,453"/>
+<area shape="rect" id="node29" href="$group___application.html#ga2c8ab2c9bd8d617ebc4e2e3a8bd22595" title="Parses the info of a Control Package to the Application Layer Struct." alt="" coords="285,821,383,847"/>
+<area shape="rect" id="node30" href="$group___logs.html#gaded331a96cd48066de4ca05217894411" title="Prints progress bar on terminal." alt="" coords="275,922,393,949"/>
+<area shape="rect" id="node32" href="$group___data___connection___protocol.html#ga131b10b059811f151e979f1d2c53b8f6" title="Writes the content of buffer to fd." alt="" coords="306,719,362,746"/>
+<area shape="rect" id="node34" href="$group___logs.html#ga93babc197835d5af1cda4641bc6d6899" title=" " alt="" coords="269,1074,399,1101"/>
+<area shape="rect" id="node35" href="$group___logs.html#ga3e0261202bbd0897b60295c72b98f67b" title="starts counting time" alt="" coords="274,1125,394,1151"/>
+<area shape="rect" id="node36" href="$group___logs.html#ga6c70750dcda77838ddc03524dd3ea87d" title="starts counting time" alt="" coords="295,1175,373,1202"/>
+<area shape="rect" id="node33" href="$group___data___connection___protocol___specification.html#gae8b3e1bdc181ec13563cd454f625a457" title="Stuffs the final buffer with the Information Packet." alt="" coords="477,770,575,797"/>
+</map>

@@ -1,0 +1,16 @@
+<map id="receiver_UA" name="receiver_UA">
+<area shape="rect" id="node1" title="Função que recebe trama SET e envia trama UA." alt="" coords="5,390,100,417"/>
+<area shape="rect" id="node2" href="$group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="700,238,772,265"/>
+<area shape="rect" id="node3" href="$group___data___connection___protocol___specification.html#gab20858e52fefe1a6b20ebd64e3bc8995" title="Function to read a byte from fd." alt="" coords="167,263,266,290"/>
+<area shape="rect" id="node14" href="$group___state___machine.html#gad89d631b7674965bec03d8aac4ce5f55" title="Function to easily change the State Machine." alt="" coords="148,441,285,467"/>
+<area shape="rect" id="node4" href="$group___logs.html#gadb3d4a37c60967790061715635fbd85f" title="Outputs a message in yellow." alt="" coords="692,137,780,163"/>
+<area shape="rect" id="node5" href="$group___state___machine.html#ga86119177a1b4d5467d5d4951623155b7" title="The StateMachine function that processes a byte and updates it&#39;s state." alt="" coords="333,187,433,214"/>
+<area shape="rect" id="node6" href="$group___state___machine.html#gaa81808addf87b6173001ce2d6d573c9c" title="Function to process a byte in case the state is A_RCV." alt="" coords="494,137,607,163"/>
+<area shape="rect" id="node7" href="$group___state___machine.html#ga6ffd9bd7ba427fe92719f029e8f63441" title="Function to process a byte in case the state is BCC_OK." alt="" coords="489,289,612,315"/>
+<area shape="rect" id="node10" href="$group___state___machine.html#ga7faa93ab97e7a8d20607e5b462aadb9f" title="Function to process a byte in case the state is C_RCV." alt="" coords="493,187,608,214"/>
+<area shape="rect" id="node12" href="$group___state___machine.html#ga38a94bf0265c35a1e3549e8a02ebd004" title="Function to process a byte in case the state is FLAG_RCV." alt="" coords="481,35,620,62"/>
+<area shape="rect" id="node13" href="$group___state___machine.html#ga3a272e4e3f924cc0d79e8950b5d22f11" title="Function to process a byte in case the state is Start." alt="" coords="503,86,599,113"/>
+<area shape="rect" id="node8" href="$group___data___connection___protocol___specification.html#gabc11d1f27de5129d6fb065ea2a694b1b" title="Generates a error on BCC2 based on PROBABILITY_BCC2." alt="" coords="668,289,804,315"/>
+<area shape="rect" id="node9" href="$group___logs.html#gaac4f33ec74556738382a648e4b78b3c7" title="Outputs a message in white." alt="" coords="852,238,951,265"/>
+<area shape="rect" id="node11" href="$group___data___connection___protocol___specification.html#ga1cea7cccd9bb0fb112c3da22d13b8c81" title="Generates a error on BCC based on PROBABILITY_BCC2." alt="" coords="668,187,804,214"/>
+</map>

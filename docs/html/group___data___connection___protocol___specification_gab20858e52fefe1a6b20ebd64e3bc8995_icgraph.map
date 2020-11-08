@@ -1,0 +1,10 @@
+<map id="readingCycle" name="readingCycle">
+<area shape="rect" id="node1" title="Function to read a byte from fd." alt="" coords="425,56,524,83"/>
+<area shape="rect" id="node2" href="$group___data___connection___protocol.html#gae4363b4445fbc6b8a780a06e03e86068" title="Reads from fd to buffer." alt="" coords="283,5,337,32"/>
+<area shape="rect" id="node5" href="$group___data___connection___protocol___specification.html#gaa977e673b8488d865386035bea4d98f6" title="Receiver sequence to Disconnect." alt="" coords="243,56,377,83"/>
+<area shape="rect" id="node7" href="$group___data___connection___protocol___specification.html#gaacd3aed32628f597b528272d99bebac8" title="Função que recebe trama SET e envia trama UA." alt="" coords="263,107,357,133"/>
+<area shape="rect" id="node3" href="$group___application.html#ga1edb9c48c38960f90f2ae1d199ef982b" title="Receiver part of the application." alt="" coords="104,5,195,32"/>
+<area shape="rect" id="node4" href="$group___application.html#ga3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="5,56,56,83"/>
+<area shape="rect" id="node6" href="$group___data___connection___protocol.html#ga343e4b5928516727236a390a25f28c77" title="Closes the connection to the serial port." alt="" coords="120,56,179,83"/>
+<area shape="rect" id="node8" href="$group___data___connection___protocol.html#gadb4ff2da522e908ce48eedc1c3c00514" title="Opens a data connection with the serial port." alt="" coords="121,107,177,133"/>
+</map>

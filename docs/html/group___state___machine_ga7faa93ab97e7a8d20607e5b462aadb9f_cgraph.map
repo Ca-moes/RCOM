@@ -1,0 +1,7 @@
+<map id="processC_RCV" name="processC_RCV">
+<area shape="rect" id="node1" title="Function to process a byte in case the state is C_RCV." alt="" coords="5,56,120,83"/>
+<area shape="rect" id="node2" href="$group___data___connection___protocol___specification.html#ga1cea7cccd9bb0fb112c3da22d13b8c81" title="Generates a error on BCC based on PROBABILITY_BCC2." alt="" coords="168,5,304,32"/>
+<area shape="rect" id="node4" href="$group___logs.html#gadb3d4a37c60967790061715635fbd85f" title="Outputs a message in yellow." alt="" coords="192,56,280,83"/>
+<area shape="rect" id="node5" href="$group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="200,107,272,133"/>
+<area shape="rect" id="node3" href="$group___logs.html#gaac4f33ec74556738382a648e4b78b3c7" title="Outputs a message in white." alt="" coords="352,5,451,32"/>
+</map>

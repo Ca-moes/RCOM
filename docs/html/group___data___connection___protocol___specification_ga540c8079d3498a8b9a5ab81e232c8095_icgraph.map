@@ -1,0 +1,10 @@
+<map id="writeCycle" name="writeCycle">
+<area shape="rect" id="node1" title="Function used to write to fd." alt="" coords="457,56,541,83"/>
+<area shape="rect" id="node2" href="$group___data___connection___protocol.html#ga131b10b059811f151e979f1d2c53b8f6" title="Writes the content of buffer to fd." alt="" coords="306,5,362,32"/>
+<area shape="rect" id="node5" href="$group___data___connection___protocol___specification.html#ga0fc711710a4b28cadd350c7d615c1f2f" title="Transmitter sequence to Disconnect." alt="" coords="259,56,409,83"/>
+<area shape="rect" id="node7" href="$group___data___connection___protocol___specification.html#ga932b8b857abc7cc9337b4c31e1588c46" title="Função que envia Trama SET e recebe trama UA." alt="" coords="275,107,393,133"/>
+<area shape="rect" id="node3" href="$group___application.html#gab716e01a43cac28a0df910355b1bc357" title="Transmitter part of the application." alt="" coords="104,5,211,32"/>
+<area shape="rect" id="node4" href="$group___application.html#ga3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="5,56,56,83"/>
+<area shape="rect" id="node6" href="$group___data___connection___protocol.html#ga343e4b5928516727236a390a25f28c77" title="Closes the connection to the serial port." alt="" coords="128,56,187,83"/>
+<area shape="rect" id="node8" href="$group___data___connection___protocol.html#gadb4ff2da522e908ce48eedc1c3c00514" title="Opens a data connection with the serial port." alt="" coords="129,107,185,133"/>
+</map>

@@ -1,0 +1,20 @@
+<map id="receiverApp" name="receiverApp">
+<area shape="rect" id="node1" title="Receiver part of the application." alt="" coords="5,436,96,463"/>
+<area shape="rect" id="node2" href="$group___logs.html#ga25be2d197e9a718025d6144f5f5d4d99" title="Clears progress bar from terminal." alt="" coords="144,5,267,32"/>
+<area shape="rect" id="node3" href="$group___data___connection___protocol.html#gae4363b4445fbc6b8a780a06e03e86068" title="Reads from fd to buffer." alt="" coords="179,309,232,336"/>
+<area shape="rect" id="node4" href="$group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="867,208,939,235"/>
+<area shape="rect" id="node6" href="$group___logs.html#gadb3d4a37c60967790061715635fbd85f" title="Outputs a message in yellow." alt="" coords="859,487,947,513"/>
+<area shape="rect" id="node17" href="$group___application.html#ga2c8ab2c9bd8d617ebc4e2e3a8bd22595" title="Parses the info of a Control Package to the Application Layer Struct." alt="" coords="157,613,254,640"/>
+<area shape="rect" id="node18" href="$group___logs.html#gaded331a96cd48066de4ca05217894411" title="Prints progress bar on terminal." alt="" coords="146,664,265,691"/>
+<area shape="rect" id="node5" href="$group___data___connection___protocol___specification.html#gab20858e52fefe1a6b20ebd64e3bc8995" title="Function to read a byte from fd." alt="" coords="334,335,433,361"/>
+<area shape="rect" id="node16" href="$group___state___machine.html#gad89d631b7674965bec03d8aac4ce5f55" title="Function to easily change the State Machine." alt="" coords="315,284,452,311"/>
+<area shape="rect" id="node7" href="$group___state___machine.html#ga86119177a1b4d5467d5d4951623155b7" title="The StateMachine function that processes a byte and updates it&#39;s state." alt="" coords="500,335,600,361"/>
+<area shape="rect" id="node8" href="$group___state___machine.html#gaa81808addf87b6173001ce2d6d573c9c" title="Function to process a byte in case the state is A_RCV." alt="" coords="661,461,774,488"/>
+<area shape="rect" id="node9" href="$group___state___machine.html#ga6ffd9bd7ba427fe92719f029e8f63441" title="Function to process a byte in case the state is BCC_OK." alt="" coords="656,107,779,133"/>
+<area shape="rect" id="node12" href="$group___state___machine.html#ga7faa93ab97e7a8d20607e5b462aadb9f" title="Function to process a byte in case the state is C_RCV." alt="" coords="660,411,775,437"/>
+<area shape="rect" id="node14" href="$group___state___machine.html#ga38a94bf0265c35a1e3549e8a02ebd004" title="Function to process a byte in case the state is FLAG_RCV." alt="" coords="648,309,787,336"/>
+<area shape="rect" id="node15" href="$group___state___machine.html#ga3a272e4e3f924cc0d79e8950b5d22f11" title="Function to process a byte in case the state is Start." alt="" coords="669,360,765,387"/>
+<area shape="rect" id="node10" href="$group___data___connection___protocol___specification.html#gabc11d1f27de5129d6fb065ea2a694b1b" title="Generates a error on BCC2 based on PROBABILITY_BCC2." alt="" coords="835,132,971,159"/>
+<area shape="rect" id="node11" href="$group___logs.html#gaac4f33ec74556738382a648e4b78b3c7" title="Outputs a message in white." alt="" coords="1019,233,1117,260"/>
+<area shape="rect" id="node13" href="$group___data___connection___protocol___specification.html#ga1cea7cccd9bb0fb112c3da22d13b8c81" title="Generates a error on BCC based on PROBABILITY_BCC2." alt="" coords="835,335,971,361"/>
+</map>

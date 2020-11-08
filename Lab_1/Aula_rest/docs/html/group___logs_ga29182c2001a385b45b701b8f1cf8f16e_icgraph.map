@@ -1,7 +1,0 @@
-<map id="log_success" name="log_success">
-<area shape="rect" id="node1" title="Outputs a message in green." alt="" coords="364,56,459,83"/>
-<area shape="rect" id="node2" href="$group___data___connection___protocol___specification.html#gaffb7174442c6298b361a2160d060d41f" title="Estabelece ligação ao cabo e cria fd." alt="" coords="211,5,316,32"/>
-<area shape="rect" id="node4" href="$group___application.html#ga3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="5,56,56,83"/>
-<area shape="rect" id="node5" href="$group___data___connection___protocol.html#ga343e4b5928516727236a390a25f28c77" title=" " alt="" coords="104,107,163,133"/>
-<area shape="rect" id="node3" href="$group___data___connection___protocol.html#gadb4ff2da522e908ce48eedc1c3c00514" title="Abre uma ligação de dados com a porta série." alt="" coords="105,5,161,32"/>
-</map>

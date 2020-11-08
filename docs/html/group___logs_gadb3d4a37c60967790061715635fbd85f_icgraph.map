@@ -1,0 +1,21 @@
+<map id="log_caution" name="log_caution">
+<area shape="rect" id="node1" title="Outputs a message in yellow." alt="" coords="915,215,1003,241"/>
+<area shape="rect" id="node2" href="$group___data___connection___protocol___specification.html#gadc4d249c47efd1729a17f2782de863c2" title="Função handler do sinal de alarme." alt="" coords="623,5,685,32"/>
+<area shape="rect" id="node5" href="$group___application.html#ga860ddb7326d94dbdd58266acdaf773b1" title="Função para dar parse dos argumentos da linah de comandos." alt="" coords="613,392,695,419"/>
+<area shape="rect" id="node6" href="$group___state___machine.html#gaa81808addf87b6173001ce2d6d573c9c" title="Function to process a byte in case the state is A_RCV." alt="" coords="753,164,866,191"/>
+<area shape="rect" id="node8" href="$group___data___connection___protocol___specification.html#gab20858e52fefe1a6b20ebd64e3bc8995" title="Function to read a byte from fd." alt="" coords="457,240,556,267"/>
+<area shape="rect" id="node10" href="$group___application.html#ga1edb9c48c38960f90f2ae1d199ef982b" title="Receiver part of the application." alt="" coords="112,291,203,317"/>
+<area shape="rect" id="node14" href="$group___data___connection___protocol___specification.html#ga540c8079d3498a8b9a5ab81e232c8095" title="Function used to write to fd." alt="" coords="465,113,549,140"/>
+<area shape="rect" id="node19" href="$group___state___machine.html#ga7faa93ab97e7a8d20607e5b462aadb9f" title="Function to process a byte in case the state is C_RCV." alt="" coords="752,215,867,241"/>
+<area shape="rect" id="node3" href="$group___data___connection___protocol.html#gadb4ff2da522e908ce48eedc1c3c00514" title="Opens a data connection with the serial port." alt="" coords="129,57,185,84"/>
+<area shape="rect" id="node4" href="$group___application.html#ga3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="5,215,56,241"/>
+<area shape="rect" id="node7" href="$group___state___machine.html#ga86119177a1b4d5467d5d4951623155b7" title="The StateMachine function that processes a byte and updates it&#39;s state." alt="" coords="604,189,704,216"/>
+<area shape="rect" id="node9" href="$group___data___connection___protocol.html#gae4363b4445fbc6b8a780a06e03e86068" title="Reads from fd to buffer." alt="" coords="307,291,361,317"/>
+<area shape="rect" id="node11" href="$group___data___connection___protocol___specification.html#gaa977e673b8488d865386035bea4d98f6" title="Receiver sequence to Disconnect." alt="" coords="267,240,401,267"/>
+<area shape="rect" id="node13" href="$group___data___connection___protocol___specification.html#gaacd3aed32628f597b528272d99bebac8" title="Função que recebe trama SET e envia trama UA." alt="" coords="287,139,381,165"/>
+<area shape="rect" id="node12" href="$group___data___connection___protocol.html#ga343e4b5928516727236a390a25f28c77" title="Closes the connection to the serial port." alt="" coords="128,215,187,241"/>
+<area shape="rect" id="node15" href="$group___data___connection___protocol.html#ga131b10b059811f151e979f1d2c53b8f6" title="Writes the content of buffer to fd." alt="" coords="306,88,362,115"/>
+<area shape="rect" id="node17" href="$group___data___connection___protocol___specification.html#ga0fc711710a4b28cadd350c7d615c1f2f" title="Transmitter sequence to Disconnect." alt="" coords="259,189,409,216"/>
+<area shape="rect" id="node18" href="$group___data___connection___protocol___specification.html#ga932b8b857abc7cc9337b4c31e1588c46" title="Função que envia Trama SET e recebe trama UA." alt="" coords="275,37,393,64"/>
+<area shape="rect" id="node16" href="$group___application.html#gab716e01a43cac28a0df910355b1bc357" title="Transmitter part of the application." alt="" coords="104,127,211,153"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="processBCC_OK" name="processBCC_OK">
+<area shape="rect" id="node1" title="Function to process a byte in case the state is BCC_OK." alt="" coords="5,31,128,57"/>
+<area shape="rect" id="node2" href="$group___data___connection___protocol___specification.html#gabc11d1f27de5129d6fb065ea2a694b1b" title="Generates a error on BCC2 based on PROBABILITY_BCC2." alt="" coords="176,5,312,32"/>
+<area shape="rect" id="node4" href="$group___logs.html#gae40672cdf79a55934b075c53e4cc6bdf" title="Outputs a message in red." alt="" coords="208,56,280,83"/>
+<area shape="rect" id="node3" href="$group___logs.html#gaac4f33ec74556738382a648e4b78b3c7" title="Outputs a message in white." alt="" coords="360,5,459,32"/>
+</map>

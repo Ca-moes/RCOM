@@ -34,8 +34,6 @@ void parseArgs(int argc, char** argv){
 int transmitterApp(int fd){
   char controlPackage[255];
   char dataPackage[MAX_SIZE];
-  //char dataPackageTest[MAX_SIZE];
-  //int counterTest = 0;
 
   struct timespec start_time_general;
 
@@ -83,10 +81,6 @@ int transmitterApp(int fd){
     dataPackage[3] = nbytes % 256;
     memcpy(&dataPackage[4],file_data,nbytes);
 
-    /*if (sequenceNumber == 2){
-      memcpy(dataPackageTest, dataPackage, MAX_SIZE);
-    }*/
-
     progress+=nbytes;
     printProgressBar(progress,fileInfo.st_size);
 
@@ -95,12 +89,6 @@ int transmitterApp(int fd){
       return -1;
     }
     sequenceNumber++;
-    //counterTest++;
-
-    /*if (counterTest == 5){
-      llwrite(fd,dataPackageTest,nbytes+4);
-    }*/
-
     clearProgressBar();
   }
 

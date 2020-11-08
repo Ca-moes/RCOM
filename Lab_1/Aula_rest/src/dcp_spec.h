@@ -87,9 +87,19 @@ int transmitter_DISC_UA(int fd);
  */
 int receiver_DISC_UA(int fd);
 
-
+/**
+ * @brief Generates a error on BCC2 based on PROBABILITY_BCC2
+ * 
+ * @param frame frame to generate error on
+ * @param frameSize size of frame 
+ */
 void generateErrorBCC2(unsigned char *frame, int frameSize);
 
+/**
+ * @brief Generates a error on BCC based on PROBABILITY_BCC2
+ * 
+ * @param checkBuffer Buffer with Address Byte and Control Byte to generate error on
+ */
 void generateErrorBCC1(unsigned int *checkBuffer);
 
 #endif // PLD_SPEC_HEADER

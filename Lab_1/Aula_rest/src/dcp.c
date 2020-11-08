@@ -134,7 +134,6 @@ int llread(int fd, unsigned char *buffer){
 
     free(dataBuf);
   }
-
   
   return retBufferSize; 
 }

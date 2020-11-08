@@ -41,38 +41,38 @@ volatile int failed; ///< used in the alarm handler
 
 
 /**
- * @brief Abre uma ligação de dados com a porta série
- * 
- * @param porta número da porta x em "/dev/ttySx"
+ * @brief Opens a data connection with the serial port
+ *  
+ * @param porta number of the port x in  "/dev/ttySx"
  * @param type TRANSMITTER|RECEIVER
- * @return int identificador da ligação de dados OU -1 em caso de erro
+ * @return int idata connection identifier or -1 in case of error
  */
 int llopen(int porta, int type);
 
 /**
- * @brief 
+ * @brief Writes the content of buffer to fd
  * 
- * @param fd identificador da ligação de dados
- * @param buffer array de caracteres a transmitir
- * @param lenght comprimento do array de caracteres
- * @return int numero de caracteres escritos ou -1 em caso de erro
+ * @param fd data connection identifier
+ * @param buffer character array of data to send
+ * @param lenght array's size
+ * @return int amount of characters read or -1 in case of error
  */
 int llwrite(int fd, char *buffer, int lenght);
 
 /**
- * @brief 
+ * @brief Reads from fd to buffer 
  * 
- * @param fd identificador da ligação de dados
- * @param buffer array de caracteres recebidos
- * @return int comprimento do array (número de caracteres lidos) ou -1 em caso de erro
+ * @param fd data connection identifier
+ * @param buffer character array of received data
+ * @return int array's size or -1 in case of error 
  */
 int llread(int fd, unsigned char *buffer);
 
 /**
- * @brief 
+ * @brief Closes the connection to the serial port
  * 
- * @param fd identificador da ligação de dados
- * @return int valor positivo em caso de sucesso ou -1 em caso de erro
+ * @param fd data connection identifier
+ * @return int positive value in case of sucess, -1 in case of error
  */
 int llclose(int fd);
 

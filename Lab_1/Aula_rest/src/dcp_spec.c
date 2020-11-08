@@ -351,5 +351,4 @@ void generateErrorBCC1(unsigned int *checkBuffer){
   }
 
 }
-
 /** @}*/

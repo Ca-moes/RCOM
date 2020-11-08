@@ -4,10 +4,10 @@ DEPS = application.h dcp.h dcp_spec.h logs.h macros.h statemachine.h
 OBJ = application.o dcp.o dcp_spec.o logs.o statemachine.o
 
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) $(CFLAGS) -c -o $@ $< 
 
 app: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ 
 
 .PHONY: clean
 

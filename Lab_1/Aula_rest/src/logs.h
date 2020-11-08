@@ -79,14 +79,6 @@ void log_message_number(char *arr, int numb);
 void log_hexa(unsigned char a);
 
 /**
- * @brief Outputs a message (String) received by llread
- * 
- * @param buf message Buffer
- * @param size Size of the message
- */
-void log_received_message(unsigned char *buf, int size);
-
-/**
  * @brief Clears progress bar from terminal
  * 
  */

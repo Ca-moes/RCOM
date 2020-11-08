@@ -64,8 +64,6 @@ int readingCycle(enum readingType type, int fd, unsigned char *c, unsigned char 
     else
       stateMachine(buf[0], NULL, NULL);
 
-    
-
     if (state_machine.state == DONE) STOP=TRUE;
   }
   return 0;
@@ -321,7 +319,6 @@ int receiver_DISC_UA(int fd){
     log_error("receiver_DISC_UA() - error on reading Cycle");
     return -1;
   }
-    
   
   alarm(0);
   return fd;
@@ -337,7 +334,6 @@ void generateErrorBCC2(unsigned char *frame, int frameSize){
     frame[i] = randomAscii;
     log_message("\nGenerate BCC2 with errors.\n");
   }
-
 }
 
 void generateErrorBCC1(unsigned int *checkBuffer){
@@ -349,7 +345,5 @@ void generateErrorBCC1(unsigned int *checkBuffer){
     checkBuffer[i] = randomAscii;
     log_message("\nGenerate BCC1 with errors.");
   }
-
 }
-
 /** @}*/

@@ -1,21 +1,16 @@
-CC = gcc
-CFLAGS = -Wall
-DEPS = macros.h
-OBJ = 
-TARGETS = writenoncanonical noncanonical
-
-all: writenoncanonical noncanonical
+CC=gcc
+CFLAGS=-Wall
+DEPS = application.h dcp.h dcp_spec.h logs.h macros.h statemachine.h
+OBJ = application.o dcp.o dcp_spec.o logs.o statemachine.o
 
 %.o: %.c $(DEPS)
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $< 
 
-writenoncanonical: $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $@.c $(OBJ)
+app: $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^ 
 
-noncanonical: $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $@.c $(OBJ)
+.PHONY: clean
 
-clean:
-	@rm $(TARGETS)
-
-# @rm *.o $(TARGETS)  em cima caso comece a criar *.o
+clean: 
+	rm -f ./*.o
+	rm -f ./app

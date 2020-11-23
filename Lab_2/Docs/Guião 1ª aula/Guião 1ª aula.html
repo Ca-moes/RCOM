@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+<head>
+    <title>Guião 1ª aula</title>
+    <meta charset="utf-8">
+</head>
+<body>
+Protocolos de Aplicação IETF
+
+Para executar os passos deste guião deverá primeiro fazer login numa máquina de FEUP e autenticar-se com as suas credenciais.  Por exemplo, faça:
+
+ssh up201806224@tom.fe.up.pt
+up201806224@tom.fe.up.pt's password:
+
+
+
+- Verifique no seu sistema Unix quais são as portas em que respondem os servidores de TELNET, SMTP, POP3 e FTP. 
+--- observe o ficheiro /etc/services no seu computador
+
+exemplo:
+ftp		21/tcp
+telnet		23/tcp
+smtp		25/tcp		mail
+http		80/tcp		www		# WorldWideWeb HTTP
+pop3		110/tcp		pop-3		# POP version 3
+
+
+EXPERIÊNCIA DE SMTP (envio de mail)
+
+- Abra uma ligação ao servidor de SMTP e envie um mail.
+  ">", linha de comando a introduzir pelo aluno, que se comporta como um cliente de SMTP (alterar os endereços de mail conforme apropriado).
+  "<", resposta do servidor (ou semelhante).
+Os caracteres ">" / "<" não são enviados/recebidos.
+
+> telnet smtp.fe.up.pt 25
+< 220 smtp.fe.up.pt ESMTP Sendmail ...
+> helo fe.up.pt
+< 250 smtp.fe.up.pt Hello quarteira.fe.up.pt
+[192.168.103.126], pleased to meet you
+> mail from: josedasilva@fe.up.pt
+< 250 2.1.0 josedasilva @fe.up.pt... Sender ok
+> rcpt to: euproprio@fe.up.pt
+< 250 2.1.5 euproprio@fe.up.pt... Recipient ok
+> data
+< 354 Enter mail, end with "." on a line by itself
+> ola.
+> .
+< 250 2.0.0 fAMKLfE18191 Message accepted for delivery
+> quit
+< 221 2.0.0 lorosae.fe.up.pt closing connection
+
+Feito em PC de estudante:
+> telnet smtp.fe.up.pt 25
+< Trying 193.136.28.30...
+< Connected to smtp.fe.up.pt.
+< Escape character is '^]'.
+< 220 smtp2 ESMTP
+> helo fe.up.pt    
+< 250 smtp.fe.up.pt
+> mail from: josedasilva@fe.up.pt
+< 250 2.1.0 Ok
+> rcpt to: up201806224@fe.up.pt
+< 250 2.1.5 Ok
+> data
+< 354 End data with <CR><LF>.<CR><LF>
+> ola.
+> .
+< 250 2.0.0 Ok: queued as 1934D801A7
+> quit
+< 221 2.0.0 Bye
+< Connection closed by foreign host.
+
+
+- Usando o seu cliente de mail, verifique se o mail foi armazenado na sua mailbox.
+
+
+
+
+EXPERIÊNCIA DE POP3 (receção de mail)
+
+- Abra uma ligação TCP ao servidor de POP3 do sistema maila.fe.up.pt. Verifique quantas mensagens tem e importe-as.
+
+> telnet maila.fe.up.pt 110
+< +OK PO3 maila.fe.up.pt  server ready
+> user euproprio
+< +OK Password required for euproprio.
+> pass _cuidado_que_fica_visível_
+< +OK euproprio has 2 visible messages (0 hidden) in 17498 octets.
+> stat
+< +OK 2 17498
+> retr 1
+< +OK 889 octets
+< ...
+< .
+> retr 2
+< ...
+< .
+> quit
+
+Feito em PC de estudante:
+
+> telnet maila.fe.up.pt 110
+< Trying 193.136.28.29...
+< Connected to mail.fe.up.pt.
+< Escape character is '^]'.
+< +OK Dovecot ready.
+> user up201806224
+< +OK
+> pass _pass_sigarra_
+< +OK Logged in.
+> stat
+< +OK 521 55336455
+> quit
+< +OK Logging out.
+< Connection closed by foreign host.
+
+
+EXPERIÊNCIA DE FTP (transferência de ficheiro)
+
+O FTP usa uma ligação TCP para controlo e, para cada ficheiro a transferir, abre uma nova ligação TCP. Serão necessárias duas janelas (janela_A e janela_B) para efectuar esta experiência.
+
+Na janela_A, fazemos
+> telnet  ftp.up.pt 21
+> user anonymous
+< 331 Password required for euproprio.
+> pass qualquer-password
+< 230 User anonymouslogged in.
+> pasv
+< 227 Entering Passive Mode (193,136,28,12,19,91)
+
+Com o comando "pasv", pede-se ao servidor de FTP para transferir dados em modo passivo. Nesta situação, o cliente ficara responsável pela abertura da ligação TCP para os dados.
+
+Na resposta, o servidor envia 6 bytes (exemplo: 193,136,28,12,19,91) com o seguinte significado:
+- 193,136,28,12 endereço IP do servidor, 
+- 19,91 porta em que o servidor se encontra à espera de ligação.
+A interpretação destes dois bytes deverá ser feita daseguinte forma:
+porta = 19*256 + 91 = 4955
+
+Na janela_B, faça então
+> telnet ftp.up.pt 4955
+< ...
+
+Na janela_A, de novo
+> retr ficheiro
+
+E observe o ficheiro recebido na janela_B. Cada janela funciona como a extremidade de uma ligação.
+
+
+Feito em PC de estudante:
+janela_A
+
+> telnet ftp.up.pt 21
+< Trying 193.137.29.15...
+< Connected to mirrors.up.pt.
+< Escape character is '^]'.
+220-Welcome to the University of Porto's mirror archive (mirrors.up.pt)
+220----------------------------------------------------------------
+220-
+220-All connections and transfers are logged. The max number of connections is 200.
+220-
+220-For more information please visit our website: http://mirrors.up.pt/
+220-Questions and comments can be sent to mirrors@uporto.pt
+220-
+220-
+220 
+> user anonymous
+< 331 Please specify the password.
+> pass 12345678
+< 230 Login successful.
+> pasv
+< 227 Entering Passive Mode (193,137,29,15,218,247).
+> retr ./pub/gnu/=README
+< 150 Opening BINARY mode data connection for ./pub/gnu/=README (1492 bytes).
+
+
+janela_B
+
+> telnet ftp.up.pt 56055
+< Trying 193.137.29.15...
+< Connected to mirrors.up.pt.
+< Escape character is '^]'.
+< This directory contains programs (or pointers thereto) that are part
+of the GNU system, as well as GNU Manuals, and general information on
+project GNU.
+
+
+
+
+EXPERIÊNCIA DE HTTP (transferência de página HTML)
+
+- Ligue-se ao servidor de www da FEUP. Nos comandos que se seguem, não se esqueça de incluir uma linha em branco a seguir ao comando "HOST: www.fe.up.pt" (2 "returns").
+
+> telnet www.fe.up.pt 80
+> GET / HTTP/1.1
+> HOST: www.fe.up.pt
+>
+< HTTP/1.1 200 OK
+< Date: Wed, 06 Nov 2019 19:16:19 GMT
+< Server: Apache/2.4.25 (Debian) OpenSSL/1.0.2t
+< Last-Modified: Sun, 27 Dec 2015 10:32:42 GMT
+< ETag: "13c-527deb55ae63a"
+< Accept-Ranges: bytes
+< Content-Length: 316
+< Vary: Accept-Encoding
+< X-Clacks-Overhead: GNU Terry Pratchett
+< Content-Type: text/html
+< 
+<     <html>
+<     <head>
+<         ...
+<     </head>
+<     <body>
+<           ...
+<     </body>
+<     </html>
+
+
+
+
+....
+</body>
+</html>
+
+
+Feito em PC de estudante:
+
+
+> telnet www.fe.up.pt 80
+< Trying 10.227.240.205...
+< Connected to www.fe.up.pt.
+< Escape character is '^]'.
+> GET / HTTP/1.1
+> HOST: www.fe.up.pt
+> 
+< HTTP/1.1 200 OK
+< Date: Mon, 23 Nov 2020 15:11:50 GMT
+< Server: Apache/2.4.25 (Debian) OpenSSL/1.0.2u
+< Last-Modified: Sun, 27 Dec 2015 10:32:42 GMT
+< ETag: "13c-527deb55ae63a"
+< Accept-Ranges: bytes
+< Content-Length: 316
+< Vary: Accept-Encoding
+< X-Clacks-Overhead: GNU Terry Pratchett
+< Content-Type: text/html
+< 
+< <html>
+< <head>
+< <meta content="0;url=http://www.fe.up.pt/si/web_page.inicial" http-equiv="refresh">
+< <meta name="norton-safeweb-site-verification" content="3vohvmokfnf8lk3v9z-541toyx5onvxbzgp96eio8bsbmcniln6nv33f6zvfmjqd6baybiix6l5b2wuwu7ob295bamrmlshb3qsllerfcgv3c1o2dyyakxcgpnmewhpq" />
+< </head>
+< <body>
+< </body></html>
+< Connection closed by foreign host.

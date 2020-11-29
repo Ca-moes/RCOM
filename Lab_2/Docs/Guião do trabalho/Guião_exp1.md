@@ -1,3 +1,16 @@
+![Exp1](./imgs/exp1.png)
+# Steps
+1. Disconnect switch from netlaband connect tux computers
+2. Configure tuxy3 and tuxy4 using ifconfigand routecommands
+3. Register the IP and MAC addresses of network interfaces
+4. Use ping  command to verify connectivity between these computers
+5. Inspect forwarding (route –n) and ARP (arp–a) tables 
+6. Delete ARP table entries in tuxy3 (arp–d ipaddress)
+7. Start Wireshark in tuxy3.eth0 and start capturing packets
+8. In tuxy3, ping tuxy4 for a few seconds
+9. Stop capturing packets
+10. Save log study it at home
+
 # Step 2 & 3
 Ligar Cabos
 ```
@@ -15,7 +28,6 @@ tux3
 | IP | MAC |
 |--------|-------|
 | 172.16.20.1  | 00:21:5a:5a:7d:12 |
-tux3
 
 
 tux4:

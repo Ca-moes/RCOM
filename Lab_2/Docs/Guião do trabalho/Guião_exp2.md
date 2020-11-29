@@ -1,5 +1,19 @@
+![Exp2](./imgs/exp2.png)
+
+# Steps
+1. Configure tuxy2 and register its IP and MAC addresses
+2. Create vlany0 in the switch and add corresponding ports
+3. Create vlany1 and add corresponding port
+4. Start capture at tuxy3.eth0
+5. In tuxy3, ping tuxy4 and then ping tuxy2
+6. Stop capture and save log
+7. Start new captures in tuxy3.eth0, tuxy4.eth0, and tuxy2.eth0
+8. In tuxy3, do ping broadcast (ping –b 172.16.y0.255) for a few seconds
+9. Observe results, stop captures and save logs
+10. Repeat steps  7, 8 and 9, but now do ping broadcast in tuxy2 (`ping –b 172.16.y1.255`)
+
 # Step 1
-Fazer as ligaçoes dos cabo
+## Fazer as ligaçoes dos cabo
 
 Ligar Cabos
 ```
@@ -7,38 +21,39 @@ TUX23E0  -> Switch Porta 1 (Verificar que luz acende no Switch para saber porta)
 TUX24E0  -> Switch Porta 2
 TUX22E0  -> Switch Porta 3
 ```
+Vista frontal das ligações no switch, lado esquerdo
+| --- | --- | --- |
+|--------|-------|----|
+| TUX23E0 (1) | TUX22E0 (3) | empty (5) |
+| TUX24E0 (2) | empty (4)| empty (6) |
 
-tux3:
+**tux23**:
 ```
 > ifconfig eth0 up
 > ifconfig eth0 172.16.20.1/24
 > ifconfig eth0 
 ```
-tux3
 | IP | MAC |
 |--------|-------|
 | 172.16.20.1  | 00:21:5a:5a:7d:12 |
 
 
-tux4:
+**tux24**:
 ```
 > ifconfig eth0 up
 > ifconfig eth0 172.16.20.254/24
 > ifconfig eth0 
 ```
-tux4
 | IP | MAC |
 |--------|-------|
 | 172.16.20.254  | 00:08:54:50:3f:2c |
 
-tux2:
+**tux22**:
 ```
 > ifconfig eth0 up
 > ifconfig eth0 172.16.21.1/24
 > ifconfig eth0 
 ```
-
-tux2
 | IP | MAC |
 |--------|-------|
 | 172.16.21.1  | ??? |
@@ -48,6 +63,10 @@ Ligar Cabo
 ```
 TUX23S0  -> Switch Porta 4
 ```
+| --- | --- | --- |
+|--------|-------|----|
+| TUX23E0 (1) | TUX22E0 (3) | empty (5) |
+| TUX24E0 (2) | TUX23S0 (4) | empty (6) |
 
 Abrir terminal de teste (gkterm) da porta série (usado no Lab anterior)
 
@@ -71,7 +90,7 @@ Adicionar ports, não sei quais são os valores das ports :/,  mas é preciso ad
 
 Ao fazeres as ligações fisicas ao switch acho que aparecem umas luzinhas com números, pergunta se as ports são isso, se for, então ligas as ports 1 e 2 á VLAN
 
- Add port 1 to vlan 20 (Slide 44)
+Add port 1 to vlan 20 (Slide 44):
 ```
 »configure terminal
 »interface fastethernet 0/1             (x/y ; se o y é a port não sei o que é o x, pergunta aí, maybe 0 de eth0?)
@@ -96,7 +115,7 @@ Adiciona a porta do tux22, porta 3 em principio.
 # Step 4
 
 > Start capture at tuxy3.eth0
-> 
+
 Deve ser para para ligar o wireshark e começar a capturar pacotes, verifica antes que os pings que se vão fazer em baixo funcionam, depois podes começar a capturar pacotes
 
 # Step 5

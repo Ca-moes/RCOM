@@ -16,7 +16,7 @@
 ## Fazer as ligaçoes dos cabo
 
 Ligar Cabos
-```
+```powershell
 TUX23E0  -> Switch Porta 1 (Verificar que luz acende no Switch para saber porta)
 TUX24E0  -> Switch Porta 2
 TUX22E0  -> Switch Porta 3
@@ -28,7 +28,7 @@ Vista frontal das ligações no switch, lado esquerdo
 | TUX24E0 (2) | empty (4)| empty (6) |
 
 **tux23**:
-```
+```powershell
 > ifconfig eth0 up
 > ifconfig eth0 172.16.20.1/24
 > ifconfig eth0 
@@ -39,7 +39,7 @@ Vista frontal das ligações no switch, lado esquerdo
 
 
 **tux24**:
-```
+```powershell
 > ifconfig eth0 up
 > ifconfig eth0 172.16.20.254/24
 > ifconfig eth0 
@@ -49,7 +49,7 @@ Vista frontal das ligações no switch, lado esquerdo
 | 172.16.20.254  | 00:08:54:50:3f:2c |
 
 **tux22**:
-```
+```powershell
 > ifconfig eth0 up
 > ifconfig eth0 172.16.21.1/24
 > ifconfig eth0 
@@ -60,7 +60,7 @@ Vista frontal das ligações no switch, lado esquerdo
 
 # Step 2
 Ligar Cabo 
-```
+```powershell
 TUX23S0  -> Switch Porta 4
 ```
 | --- | --- | --- |
@@ -73,13 +73,13 @@ Abrir terminal de teste (gkterm) da porta série (usado no Lab anterior)
 Dar Enter e verificar se entrou na consola do Switch
 
 (?) Pode ser preciso dar login no switch (slide 48)
-```
+```powershell
 »enable
 »password: ****** (deve ser 8nortel, olha para a esquerda e confirma)
 ```
 
 Criar VLAN (vlan20) (Slide 44):
-```
+```powershell
 »configure terminal
 »vlan 20
 »end
@@ -91,7 +91,7 @@ Adicionar ports, não sei quais são os valores das ports :/,  mas é preciso ad
 Ao fazeres as ligações fisicas ao switch acho que aparecem umas luzinhas com números, pergunta se as ports são isso, se for, então ligas as ports 1 e 2 á VLAN
 
 Add port 1 to vlan 20 (Slide 44):
-```
+```powershell
 »configure terminal
 »interface fastethernet 0/1             (x/y ; se o y é a port não sei o que é o x, pergunta aí, maybe 0 de eth0?)
 »switchport mode access
@@ -104,7 +104,7 @@ Add port 1 to vlan 20 (Slide 44):
 # Step 3
 
 Criar outra VLAN (vlan21):
-```
+```powershell
 »configure terminal
 »vlan 21
 »end
@@ -121,12 +121,12 @@ Deve ser para para ligar o wireshark e começar a capturar pacotes, verifica ant
 # Step 5
 
 No tux23, pingar o tux4:
-```
+```powershell
 ping 172.16.20.254
 (deixa dar 10 pings e depois dá CTRL+C)
 ```
 pingar o tux22:
-```
+```powershell
 ping 172.16.21.1
 (deixa dar 10 pings e depois dá CTRL+C)
 ```
@@ -146,7 +146,7 @@ Parar a captura e guardar o ficheiro. Renomear para `exp2_step5.pcapng`
 # Step 8
 
 No tux23, pingar em broadcast:
-```
+```powershell
 ping -b 172.16.20.255
 (deixa dar 10 pings e depois dá CTRL+C)
 ```
@@ -169,7 +169,7 @@ ping -b 172.16.20.255
 - Em tux22 começar captura em eth0
 
 No tux22, pingar em broadcast:
-```
+```powershell
 ping -b 172.16.21.255
 (deixa dar 10 pings e depois dá CTRL+C)
 ```

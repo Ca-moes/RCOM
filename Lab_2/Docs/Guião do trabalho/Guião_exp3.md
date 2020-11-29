@@ -22,7 +22,7 @@
 ## Fazer as ligaçoes dos cabos
 
 ### Ligar Cabos
-```
+```powershell
 TUX23E0  -> Switch Porta 1 
 TUX22E0  -> Switch Porta 2
 TUX24E0  -> Switch Porta 3
@@ -37,7 +37,7 @@ TUX24E1  -> Switch Porta 4
 ### Configurar IP's
 
 **tux23**:
-```
+```powershell
 > ifconfig eth0 up
 > ifconfig eth0 172.16.20.1/24
 > ifconfig eth0 
@@ -47,7 +47,7 @@ TUX24E1  -> Switch Porta 4
 | 172.16.20.1  | 00:21:5a:5a:7d:12 |
 
 **tux24**:
-```
+```powershell
 > ifconfig eth0 up
 > ifconfig eth0 172.16.20.254/24
 > ifconfig eth0 
@@ -55,7 +55,7 @@ TUX24E1  -> Switch Porta 4
 | IP | MAC |
 |--------|-------|
 | 172.16.20.254  | 00:08:54:50:3f:2c |
-```
+```powershell
 > ifconfig eth1 up
 > ifconfig eth1 172.16.21.253/24
 > ifconfig eth1 
@@ -65,7 +65,7 @@ TUX24E1  -> Switch Porta 4
 | 172.16.21.253  | ??? |
 
 **tux22**:
-```
+```powershell
 > ifconfig eth0 up
 > ifconfig eth0 172.16.21.1/24
 > ifconfig eth0 
@@ -101,10 +101,11 @@ Que conclusões se tira daqui?
 
 # Step 3
 
-¯\(°_o)/¯
+¯\ _ ( ◉ 3 ◉ ) _ /¯
+
 Maybe é para brincar com as rotas, temos isto no Slide 42:
 
-```
+```powershell
 adicionar rota para subrede
     – root# route add -net 192.168.1.0/24 gw 172.16.4.254
 adicionar rota default
@@ -118,7 +119,7 @@ Fazer `route -n` em cada 1 dos 3 tuxs. Tens [aqui](./Guião_exp1.md#step-5) o si
 
 # Step 5
 
-Ligar o WireShark e começar a capturar pacotes na eth0 do tux23
+Passar para tux23. Ligar o WireShark e começar a capturar pacotes na eth0
 
 # Step 6
 
@@ -142,7 +143,7 @@ Para a captura no tux23 e guardar logs como `exp3_step7.pcapng`
 # Step 9
 
 - No tux24, apagar a tabela ARP e verificar se estão limpas
-```
+```powershell
 > arp -d 172.16.20.254
 > arp -a [retorna nada]
 ```

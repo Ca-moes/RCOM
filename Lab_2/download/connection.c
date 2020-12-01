@@ -1,13 +1,13 @@
 #include "connection.h"
 
-int init(args args, int *socketfd){
+int init(char *ip, int port, int *socketfd){
   struct	sockaddr_in server_addr;
 
   /*server address handling*/
 	bzero((char*)&server_addr,sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = inet_addr(args.ip);	/*32 bit Internet address network byte ordered*/
-	server_addr.sin_port = htons(21);		/*server TCP port must be network byte ordered */
+	server_addr.sin_addr.s_addr = inet_addr(ip);	/*32 bit Internet address network byte ordered*/
+	server_addr.sin_port = htons(port);		/*server TCP port must be network byte ordered */
     
 	/*opens a TCP socket*/
 	if ((*socketfd = socket(AF_INET,SOCK_STREAM,0)) < 0) {
@@ -59,7 +59,7 @@ int readResponse(int socketfd){
   return 0;
 }
 
-int readResponsePassive(int socketfd, char** ip, char** port){
+int readResponsePassive(int socketfd, char** ip, int *port){
   char * buf;
 	size_t bytesRead = 0;
 
@@ -76,7 +76,7 @@ int readResponsePassive(int socketfd, char** ip, char** port){
   return 0;
 }
 
-void parsePassive(char* line, char** ip, char** port){  
+void parsePassive(char* line, char** ip, int *port){  
   strtok(line, "(");       
   char* ip1 = strtok(NULL, ",");       // 193
   char* ip2 = strtok(NULL, ",");       // 137
@@ -88,6 +88,14 @@ void parsePassive(char* line, char** ip, char** port){
   char* p1 = strtok(NULL, ",");       // 199
   char* p2 = strtok(NULL, ")");       // 78
 
-  sprintf(*port, "%d", atoi(p1)*256 + atoi(p2));
+  *port = atoi(p1)*256 + atoi(p2);
 }
   
+void saveFile(int socketfd){
+  char buf[1024];
+  while (read(socketfd, buf, 1024) > 0)
+  {
+    printf("%s", buf);
+  }
+  
+}

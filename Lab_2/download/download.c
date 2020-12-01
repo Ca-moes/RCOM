@@ -7,7 +7,7 @@ int main(int argc, char** argv){
   }
 
   args arguments;
-  int socketfd;
+  int socketfd, socketfd_rec;
   char urlcpy[256];
   char command[256];
 
@@ -21,7 +21,7 @@ int main(int argc, char** argv){
   printf("\nhost: %s\npath: %s\nuser: %s\npassword: %s\nfile name: %s\nhost name: %s\nip address: %s\n\n", 
   arguments.host, arguments.path, arguments.user, arguments.password, arguments.file_name, arguments.host_name, arguments.ip);
   
-  if (init(arguments, &socketfd) != 0){
+  if (init(arguments.ip, 21, &socketfd) != 0){
     printf("Error: init()\n");
     return -1;
   }
@@ -36,40 +36,25 @@ int main(int argc, char** argv){
 	readResponse(socketfd);
 
   char* ip; ip = malloc(16);
-  char* port; port = malloc(8);
+  int port;
 
   sprintf(command, "pasv\r\n");
   sendCommand(socketfd, command);
 	readResponsePassive(socketfd, &ip, &port);
   
   puts(ip);
-  puts(port);
+  printf("port: %d\n", port);
 
-  /* sprintf(command, "retr %s\r\n", arguments.path);
+  if (init(ip, port, &socketfd_rec) != 0){
+    printf("Error: init()\n");
+    return -1;
+  }
+
+  sprintf(command, "retr %s\r\n", arguments.path);
   sendCommand(socketfd, command);
-	readResponse(socketfd); */
+	/* readResponse(socketfd); */
 
+/*   saveFile(socketfd_rec);
+ */
   return 0;
 }
-
-/* não funfa assim
-char* command = "user anonymous";
-  int len = strlen(command);
-  int bytes_sent = send(socketfd, command, len, 0);
-
-  printf("bytes_sent: %d\n", bytes_sent);
-
-  if (bytes_sent < 0)
-  {
-    int errorInt = xn_getlasterror();
-    const char* errorString = xn_geterror_string(errorInt);
-    printf("error : %s", errorString);
-  }
-  
-
-  char buf[1024];
-  int received = recv(socketfd, buf, 1024, 0);
-
-  printf("received: %d\n", received);
-*/
-

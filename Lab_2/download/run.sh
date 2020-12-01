@@ -2,7 +2,7 @@
 
 clear
 if gcc -o download -Wall -g download.c args.c; then 
-./download ftp://abcd111111111111:12345@netlab1.fe.up.pt/pub.txt;
+./download ftp://ftp.up.pt/pub/gnu/GNUinfo/Audio/index.txt;
 else 
 echo "COMPILATION ERROR";
 fi 

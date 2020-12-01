@@ -4,7 +4,7 @@
 #include <netdb.h> 
 #include <sys/types.h>
 #include <netinet/in.h> 
-#include<arpa/inet.h>
+#include <arpa/inet.h>
 #define h_addr h_addr_list[0]	//The first address in h_addr_list. 
 
 int main(int argc, char *argv[])

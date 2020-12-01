@@ -1,8 +1,8 @@
 #include "download.h"
 
 int main(int argc, char** argv){ 
-
   args arguments;
+  int socketfd;
 
   if (parseArgs(argv[1], &arguments) != 0){
     printf("usage: %s ftp://[<user>:<password>@]<host>/<url-path>\n",argv[0]); 
@@ -12,32 +12,80 @@ int main(int argc, char** argv){
   printf("\nhost: %s\npath: %s\nuser: %s\npassword: %s\nfile name: %s\nhost name: %s\nip address: %s\n", 
   arguments.host, arguments.path, arguments.user, arguments.password, arguments.file_name, arguments.host_name, arguments.ip);
   
-  struct	sockaddr_in server_addr;
-	int	sockfd;
+  if (init(arguments, &socketfd) != 0){
+    printf("Error: init()\n");
+    return -1;
+  }
+  
 
-  /*server address handling*/
-	bzero((char*)&server_addr,sizeof(server_addr));
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = inet_addr(arguments.ip);	/*32 bit Internet address network byte ordered*/
-	server_addr.sin_port = htons(23);		/*server TCP port must be network byte ordered */
-    
-	/*open an TCP socket*/
-	if ((sockfd = socket(AF_INET,SOCK_STREAM,0)) < 0) {
-    perror("socket()");
-    return 1;
+ 	FILE * socket = fdopen(socketfd, "r");
+	char * buf;
+	size_t bytesRead = 0;
+  while (1){
+    getline(&buf, &bytesRead, socket);
+    printf("buf: %s", buf);
+    if (buf[3] == ' '){
+      break;
+    }
+  }
+  
+  int sent = write(socketfd, "user anonymous\r\n", strlen("user anonymous\r\n"));
+  printf("sent: %d\n", sent);
+  printf("len: %ld\n", strlen("user 1234"));
+
+  while (1){
+    getline(&buf, &bytesRead, socket);
+    printf("buf: %s", buf);
+    if (buf[3] == ' '){
+      break;
+    }
   }
 
-  printf("sockfd1: %d\n", sockfd);
+  sent = write(socketfd, "pass 1234\r\n", strlen("pass 1234\r\n"));
+  printf("sent: %d\n", sent);
+  printf("len: %ld\n", strlen("pass 1234"));
 
-	/*connect to the server*/
-  if(connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0){
-    perror("connect()");
-		return 1;
-	}
+  while (1){
+    getline(&buf, &bytesRead, socket);
+    printf("buf: %s", buf);
+    if (buf[3] == ' '){
+      break;
+    }
+  }
 
-  printf("sockfd2: %d\n", sockfd);
+  sent = write(socketfd, "pasv\r\n", strlen("pasv\r\n"));
+  printf("sent: %d\n", sent);
+  printf("len: %ld\n", strlen("pasv\r\n"));
 
-
+  while (1){
+    getline(&buf, &bytesRead, socket);
+    printf("buf: %s", buf);
+    if (buf[3] == ' '){
+      break;
+    }
+  }
 
   return 0;
 }
+
+/* não funfa assim
+char* command = "user anonymous";
+  int len = strlen(command);
+  int bytes_sent = send(socketfd, command, len, 0);
+
+  printf("bytes_sent: %d\n", bytes_sent);
+
+  if (bytes_sent < 0)
+  {
+    int errorInt = xn_getlasterror();
+    const char* errorString = xn_geterror_string(errorInt);
+    printf("error : %s", errorString);
+  }
+  
+
+  char buf[1024];
+  int received = recv(socketfd, buf, 1024, 0);
+
+  printf("received: %d\n", received);
+*/
+

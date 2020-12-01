@@ -17,7 +17,7 @@ int parseArgs(char *url, args *args){
   // no user:password given
   if (pass == NULL)
   {
-    user = "user";
+    user = "anonymous";
     pass = "pass";
     args->host = urlrest;
   } else

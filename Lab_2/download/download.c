@@ -1,89 +1,15 @@
 #include "download.h"
-#define SERVER_PORT 6000
-#define SERVER_ADDR "192.168.28.96"
 
+int main(int argc, char** argv){ 
 
-int connect_ftp(char * url,int port)
-{
-	int	socketfd;
-	struct	sockaddr_in server_addr;
-	
-	/*server address handling*/
-	bzero((char*)&server_addr,sizeof(server_addr));
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = inet_addr(getHostIp(url)); /* getHostIp faz ns lookup*/	
-	server_addr.sin_port = htons(port);	
-    
-	/*open an TCP socket*/
-	if ((socketfd = socket(AF_INET,SOCK_STREAM,0)) < 0) {
-		perror("socket()");
-		exit(0);
-    }
+  args arguments, arguments2;
+  char noUser[] = "ftp://netlab1.fe.up.pt/pub.txt";
+  char withUser[] = "ftp://abcd111111111111:12345@netlab1.fe.up.pt/pub.txt";
+  parseArgs(noUser, &arguments);
 
-	/*connect to the server*/
-    if(connect(socketfd, (struct sockaddr *)&server_addr,  sizeof(server_addr)) < 0){
-        perror("connect()");
-		exit(0);
-	}
-	return socketfd;
+  printf("\nhost: %s\npath: %s\nuser: %s\npassword: %s\n", arguments.host, arguments.path, arguments.user, arguments.password);
+  puts("-----------");
+  parseArgs(withUser, &arguments2);
+  printf("\nhost: %s\npath: %s\nuser: %s\npassword: %s\n", arguments2.host, arguments2.path, arguments2.user, arguments2.password);
+  return 0;
 }
-
-char* getHostIp(char * url)
-{
-	struct hostent *h;
-    if ((h=gethostbyname(url)) == NULL) {  
-        herror("gethostbyname");
-        exit(1);
-    }
-    printf("Host name  : %s\n", h->h_name);
-    printf("IP Address : %s\n",inet_ntoa(*((struct in_addr *)h->h_addr)));
-    return inet_ntoa(*((struct in_addr *)h->h_addr));
-}
-
-int main(int argc, char** argv){
-	char *user, *password, *host, *path;
-	int	socketfd;
-	int i =6;
-	if(argc!=2){
-		printf("usage: %s ftp://[<user>:<password>@]<host>/<url-path>\n",argv[0]); 
-		return -1;
-	}
-
-	char *barra = strchr(argv[1] + 6,'/');
-	if (barra == NULL){
-		printf("usage: %s ftp://[<user>:<password>@]<host>/<url-path>\n",argv[0]); 
-		return -1;
-	}
-
-	*barra = '\0';
-	path = barra + 1;
-
-	char *doispontos = strchr(argv[1] + 6, ':');
-	char *arroba = strchr(argv[1] + 6, '@');
-
-	if (doispontos == NULL || arroba == NULL){
-		user = "user";
-		password = "1234";
-		host = argv[1] + 6;
-	}
-	else{
-		*doispontos = '\0';
-		*arroba = '\0';
-
-		user = argv[1] + 6;
-		password = doispontos + 1;
-		host = arroba + 1;
-	}
-	
-	puts(user);
-	puts(password);
-	puts(host);
-	puts(path);
-
-	/*socketfd = connect_ftp(host,SERVER_PORT);*/
-
-	
-	return 1;
-}
-
-

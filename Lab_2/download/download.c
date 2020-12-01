@@ -9,6 +9,7 @@ int main(int argc, char** argv){
   args arguments;
   int socketfd;
   char urlcpy[256];
+  char command[256];
 
   strcpy(urlcpy, argv[1]);
 
@@ -24,62 +25,23 @@ int main(int argc, char** argv){
     printf("Error: init()\n");
     return -1;
   }
+	readResponse(socketfd);
   
-
- 	FILE * socket = fdopen(socketfd, "r");
-	char * buf;
-	size_t bytesRead = 0;
-
-  while (1){
-    getline(&buf, &bytesRead, socket);
-    printf("buf: %s", buf);
-    if (buf[3] == ' '){
-      break;
-    }
-  }
-  
-  char command[256];
   sprintf(command, "user %s\r\n", arguments.user);
-  printf("command: %s", command);
-  int sent = send(socketfd, command, strlen(command), 0);
-  printf("sent: %d\n", sent);
-  printf("len: %ld\n", strlen(command));
-
-  while (1){
-    getline(&buf, &bytesRead, socket);
-    printf("buf: %s", buf);
-    if (buf[3] == ' '){
-      break;
-    }
-  }
+  sendCommand(socketfd, command);
+  readResponse(socketfd);
 
   sprintf(command, "pass %s\r\n", arguments.password);
-  printf("command: %s", command);
-  sent = send(socketfd, command, strlen(command), 0);
-  printf("sent: %d\n", sent);
-  printf("len: %ld\n", strlen(command));
-
-  while (1){
-    getline(&buf, &bytesRead, socket);
-    printf("buf: %s", buf);
-    if (buf[3] == ' '){
-      break;
-    }
-  }
+  sendCommand(socketfd, command);
+	readResponse(socketfd);
 
   sprintf(command, "pasv\r\n");
-  printf("command: %s", command);
-  sent = send(socketfd, command, strlen(command), 0);
-  printf("sent: %d\n", sent);
-  printf("len: %ld\n", strlen(command));
+  sendCommand(socketfd, command);
+	readResponsePassive(socketfd);
 
-  while (1){
-    getline(&buf, &bytesRead, socket);
-    printf("buf: %s", buf);
-    if (buf[3] == ' '){
-      break;
-    }
-  }
+  /* sprintf(command, "retr %s\r\n", arguments.path);
+  sendCommand(socketfd, command);
+	readResponse(socketfd); */
 
   return 0;
 }

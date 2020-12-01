@@ -35,9 +35,15 @@ int main(int argc, char** argv){
   sendCommand(socketfd, command);
 	readResponse(socketfd);
 
+  char* ip; ip = malloc(16);
+  char* port; port = malloc(8);
+
   sprintf(command, "pasv\r\n");
   sendCommand(socketfd, command);
-	readResponsePassive(socketfd);
+	readResponsePassive(socketfd, &ip, &port);
+  
+  puts(ip);
+  puts(port);
 
   /* sprintf(command, "retr %s\r\n", arguments.path);
   sendCommand(socketfd, command);

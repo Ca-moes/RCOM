@@ -14,7 +14,7 @@ int sendCommand(int socketfd, char * command);
 
 int readResponse(int socketfd);
 
-int readResponsePassive(int socketfd);
+int readResponsePassive(int socketfd, char** ip, char** port);
 
 void parsePassive(char* line, char** ip, char** port);
 

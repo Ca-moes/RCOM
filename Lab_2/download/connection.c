@@ -59,7 +59,7 @@ int readResponse(int socketfd){
   return 0;
 }
 
-int readResponsePassive(int socketfd){
+int readResponsePassive(int socketfd, char** ip, char** port){
   char * buf;
 	size_t bytesRead = 0;
 
@@ -71,41 +71,23 @@ int readResponsePassive(int socketfd){
     }
   }
 
-  char ip[16];
-  char port[8];
   parsePassive(buf, ip, port);
   
-  puts(ip);
-  puts(port);
-
-
   return 0;
 }
 
-void parsePassive(char* line, char** ip, char** port){
-  printf("parse ip and port\n");
-  char tempip[16];
-  char tempport[8];
+void parsePassive(char* line, char** ip, char** port){  
+  strtok(line, "(");       
+  char* ip1 = strtok(NULL, ",");       // 193
+  char* ip2 = strtok(NULL, ",");       // 137
+  char* ip3 = strtok(NULL, ",");       // 29
+  char* ip4 = strtok(NULL, ",");       // 15
+
+  sprintf(*ip, "%s.%s.%s.%s", ip1, ip2, ip3, ip4);
   
-  strtok(line, "(");       // ftp:
-  char* ip1 = strtok(NULL, ",");       // ftp:
-  puts(ip1);
-  char* ip2 = strtok(NULL, ",");       // ftp:
-  puts(ip2);
-  char* ip3 = strtok(NULL, ",");       // ftp:
-  puts(ip3);
-  char* ip4 = strtok(NULL, ",");       // ftp:
-  puts(ip4);
+  char* p1 = strtok(NULL, ",");       // 199
+  char* p2 = strtok(NULL, ")");       // 78
 
-  sprintf(ip, "%s.%s.%s.%s", ip1, ip2, ip3, ip4);
-  puts(ip);
-
-  char* p1 = strtok(NULL, ",");       // ftp:
-  puts(p1);
-  char* p2 = strtok(NULL, ")");       // ftp:
-  puts(p2);
-
-
-  sprintf(port, "%d", atoi(p1)*256 + atoi(p2));
-  puts(port);
+  sprintf(*port, "%d", atoi(p1)*256 + atoi(p2));
 }
+  

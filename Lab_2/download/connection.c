@@ -20,7 +20,5 @@ int init(args args, int *socketfd){
     perror("connect()");
 		return 1;
 	}
-
-  printf("socketfd: %d\n", *socketfd);
   return 0;
 }

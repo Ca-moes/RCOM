@@ -1,15 +1,23 @@
 #include "download.h"
 
 int main(int argc, char** argv){ 
+  if (argc != 2) {
+    fprintf(stderr, "usage: download ftp://[<user>:<password>@]<host>/<url-path>\n");
+    exit(1);
+  }
+
   args arguments;
   int socketfd;
+  char urlcpy[256];
 
-  if (parseArgs(argv[1], &arguments) != 0){
+  strcpy(urlcpy, argv[1]);
+
+  if (parseArgs(urlcpy, &arguments) != 0){
     printf("usage: %s ftp://[<user>:<password>@]<host>/<url-path>\n",argv[0]); 
 		return -1;
   }
 
-  printf("\nhost: %s\npath: %s\nuser: %s\npassword: %s\nfile name: %s\nhost name: %s\nip address: %s\n", 
+  printf("\nhost: %s\npath: %s\nuser: %s\npassword: %s\nfile name: %s\nhost name: %s\nip address: %s\n\n", 
   arguments.host, arguments.path, arguments.user, arguments.password, arguments.file_name, arguments.host_name, arguments.ip);
   
   if (init(arguments, &socketfd) != 0){
@@ -21,6 +29,7 @@ int main(int argc, char** argv){
  	FILE * socket = fdopen(socketfd, "r");
 	char * buf;
 	size_t bytesRead = 0;
+
   while (1){
     getline(&buf, &bytesRead, socket);
     printf("buf: %s", buf);
@@ -29,9 +38,12 @@ int main(int argc, char** argv){
     }
   }
   
-  int sent = write(socketfd, "user anonymous\r\n", strlen("user anonymous\r\n"));
+  char command[256];
+  sprintf(command, "user %s\r\n", arguments.user);
+  printf("command: %s", command);
+  int sent = send(socketfd, command, strlen(command), 0);
   printf("sent: %d\n", sent);
-  printf("len: %ld\n", strlen("user 1234"));
+  printf("len: %ld\n", strlen(command));
 
   while (1){
     getline(&buf, &bytesRead, socket);
@@ -41,9 +53,11 @@ int main(int argc, char** argv){
     }
   }
 
-  sent = write(socketfd, "pass 1234\r\n", strlen("pass 1234\r\n"));
+  sprintf(command, "pass %s\r\n", arguments.password);
+  printf("command: %s", command);
+  sent = send(socketfd, command, strlen(command), 0);
   printf("sent: %d\n", sent);
-  printf("len: %ld\n", strlen("pass 1234"));
+  printf("len: %ld\n", strlen(command));
 
   while (1){
     getline(&buf, &bytesRead, socket);
@@ -53,9 +67,11 @@ int main(int argc, char** argv){
     }
   }
 
-  sent = write(socketfd, "pasv\r\n", strlen("pasv\r\n"));
+  sprintf(command, "pasv\r\n");
+  printf("command: %s", command);
+  sent = send(socketfd, command, strlen(command), 0);
   printf("sent: %d\n", sent);
-  printf("len: %ld\n", strlen("pasv\r\n"));
+  printf("len: %ld\n", strlen(command));
 
   while (1){
     getline(&buf, &bytesRead, socket);

@@ -8,6 +8,7 @@
 
 #include "args.h"
 FILE * socketFile;
+FILE * socket_recFile;
 
 int init(char *ip, int port, int *socketfd);
 

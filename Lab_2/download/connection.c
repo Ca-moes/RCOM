@@ -21,8 +21,6 @@ int init(char *ip, int port, int *socketfd){
 		return 1;
 	}
 
-  socketFile = fdopen(*socketfd, "r");
-
   return 0;
 }
 

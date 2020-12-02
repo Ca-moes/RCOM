@@ -25,26 +25,25 @@ int main(int argc, char** argv){
     printf("Error: init()\n");
     return -1;
   }
-	readResponse(socketfd);
+	readResponse();
   
+  // login
   sprintf(command, "user %s\r\n", arguments.user);
   sendCommand(socketfd, command);
-  readResponse(socketfd);
-
+  readResponse();
   sprintf(command, "pass %s\r\n", arguments.password);
   sendCommand(socketfd, command);
-	readResponse(socketfd);
+	readResponse();
 
+  // get ip and port
   char* ip; ip = malloc(16);
   int port;
-
   sprintf(command, "pasv\r\n");
   sendCommand(socketfd, command);
-	readResponsePassive(socketfd, &ip, &port);
-  
-  puts(ip);
-  printf("port: %d\n", port);
+	readResponsePassive(&ip, &port);
+  printf("ip: %s\nport: %d\n", ip, port);
 
+  // init new socket to read file
   if (init(ip, port, &socketfd_rec) != 0){
     printf("Error: init()\n");
     return -1;
@@ -52,9 +51,26 @@ int main(int argc, char** argv){
 
   sprintf(command, "retr %s\r\n", arguments.path);
   sendCommand(socketfd, command);
-	/* readResponse(socketfd); */
 
-/*   saveFile(socketfd_rec);
- */
+  char * buf;
+	size_t bytesRead = 0;
+  for (int i = 0; i < 5; i++)
+  {
+    getline(&buf, &bytesRead, socketFile);
+    printf("buf: %s", buf);
+  }
+  
+  printf("------------\n");
+
+  FILE * socket_recFile = fdopen(socketfd_rec, "r");
+  for (int i = 0; i < 5; i++)
+  {
+    getline(&buf, &bytesRead, socket_recFile);
+    printf("buf: %s", buf);
+  }
+
+	/* readResponse(socketfd);
+  saveFile(socketfd_rec);  */
+
   return 0;
 }

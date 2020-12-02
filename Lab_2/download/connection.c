@@ -44,7 +44,7 @@ int sendCommand(int socketfd, char * command){
   return 0;
 }
 
-int readResponse(int socketfd){
+int readResponse(){
   char * buf;
 	size_t bytesRead = 0;
 
@@ -59,7 +59,7 @@ int readResponse(int socketfd){
   return 0;
 }
 
-int readResponsePassive(int socketfd, char** ip, int *port){
+int readResponsePassive(char** ip, int *port){
   char * buf;
 	size_t bytesRead = 0;
 

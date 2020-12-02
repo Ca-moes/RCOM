@@ -5,10 +5,13 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 
 #include "args.h"
 FILE * socketFile;
-FILE * socket_recFile;
 
 int init(char *ip, int port, int *socketfd);
 
@@ -20,5 +23,5 @@ int readResponsePassive(char** ip, int *port);
 
 void parsePassive(char* line, char** ip, int *port);
 
-void saveFile(int socketfd);
+int saveFile(char* filename, int socketfd);
 #endif // CONNECT_HEADER

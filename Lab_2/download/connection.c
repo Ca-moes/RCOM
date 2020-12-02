@@ -89,11 +89,26 @@ void parsePassive(char* line, char** ip, int *port){
   *port = atoi(p1)*256 + atoi(p2);
 }
   
-void saveFile(int socketfd){
-  char buf[1024];
-  while (read(socketfd, buf, 1024) > 0)
-  {
-    printf("%s", buf);
+int saveFile(char* filename, int socketfd){
+  printf("filename: %s\n", filename);
+  int filefd = open(filename, O_WRONLY | O_CREAT, 0777);
+  if (filefd < 0){
+    printf("borrada\n");
+    return 1;
   }
   
+
+  int bytes_read;
+  char buf[1];
+  do {
+    bytes_read = read(socketfd, buf, 1);
+    //printf("\ncontent:\n%s\nbytes_read : %d\n", buf, bytes_read);
+    if (bytes_read > 0)
+      write(filefd, buf, bytes_read);
+    
+    
+  } while (bytes_read != 0);
+  
+  close(filefd);
+  return 0;
 }

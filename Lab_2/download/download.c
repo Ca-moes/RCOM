@@ -21,13 +21,21 @@ int main(int argc, char** argv){
   printf("\nhost: %s\npath: %s\nuser: %s\npassword: %s\nfile name: %s\nhost name: %s\nip address: %s\n\n", 
   arguments.host, arguments.path, arguments.user, arguments.password, arguments.file_name, arguments.host_name, arguments.ip);
   
-  if (init(arguments.ip, 21, &socketfd) != 0){
+  // Ao fazer init o valor do file_name fica lixo, vá-se lá saber porque
+  // Então guarda-se o valor do file name na main
+  char fileName[64];
+  strcpy(fileName, arguments.file_name);
+
+  char* tempip; tempip = malloc(16);
+  strcpy(tempip, arguments.ip);
+
+  if (init(tempip, 21, &socketfd) != 0){
     printf("Error: init()\n");
     return -1;
   }
   socketFile = fdopen(socketfd, "r");
 	readResponse();
-  
+
   // login
   sprintf(command, "user %s\r\n", arguments.user);
   sendCommand(socketfd, command);
@@ -44,26 +52,18 @@ int main(int argc, char** argv){
 	readResponsePassive(&ip, &port);
   printf("ip: %s\nport: %d\n", ip, port);
 
-  // init new socket to read file, just need to open the connection, won't be reading anything
+
+
   if (init(ip, port, &socketfd_rec) != 0){
     printf("Error: init()\n");
     return -1;
   }
-  socket_recFile = fdopen(socketfd_rec, "r");
 
   sprintf(command, "retr %s\r\n", arguments.path);
   sendCommand(socketfd, command);
   readResponse();
 
-
-  int bytes_read;
-  char buf[1024];
-  do {
-    bytes_read = read(socketfd_rec, buf, 1024);
-    printf("\ncontent:\n%s\nbytes_read : %d\n", buf, bytes_read);
-  } while (bytes_read != 0);
-    
-  // agora é pôr o conteudo de cima num ficheiro, temos o nome do file e está feito
-  
+  saveFile(fileName, socketfd_rec);
+      
   return 0;
 }

@@ -15,3 +15,4 @@ rm download
 
 #./download ftp://ftp.up.pt/pub/gnu/GNUinfo/Audio/index.txt;
 #./download ftp://rcom:rcom@netlab1.fe.up.pt/pub.txt;
+# não encontra file pub com login

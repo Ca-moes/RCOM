@@ -1,0 +1,5 @@
+<map id="getFileName" name="getFileName">
+<area shape="rect" id="node1" title="Gets the last element of the path string, corresponding to the file name." alt="" coords="233,5,329,32"/>
+<area shape="rect" id="node2" href="$args_8h.html#accbea9e42e594bd5e01e3f43c8847ca8" title="Parses the URL received via arguments to the struct args." alt="" coords="104,5,185,32"/>
+<area shape="rect" id="node3" href="$download_8c.html#a3c04138a5bfe5d72780bb7e82a18e627" title="Main function called to execute the download." alt="" coords="5,5,56,32"/>
+</map>

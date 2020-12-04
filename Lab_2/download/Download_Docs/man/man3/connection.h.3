@@ -1,0 +1,150 @@
+.TH "connection.h" 3 "Fri Dec 4 2020" "Version 1.00" "Download" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+connection.h
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <sys/socket\&.h>\fP
+.br
+\fC#include <netinet/in\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include 'args\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBinit\fP (char *ip, int port, int *socketfd)"
+.br
+.RI "Opens a socket and connects to the server\&. "
+.ti -1c
+.RI "int \fBsendCommand\fP (int socketfd, char *command)"
+.br
+.RI "Sends a message to the server via socket\&. "
+.ti -1c
+.RI "int \fBreadResponse\fP ()"
+.br
+.RI "Prints to the standart output the reply received after sending a command to empty the reply buffer\&. "
+.ti -1c
+.RI "int \fBreadResponsePassive\fP (char **ip, int *port)"
+.br
+.RI "Reads the reply to the 'pasv' command ans parses the IP Adress and Port Values\&. "
+.ti -1c
+.RI "int \fBsaveFile\fP (char *filename, int socketfd)"
+.br
+.RI "While reading the reply from the served, dumps the information received into a file\&. "
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "FILE * \fBsocketFile\fP"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int init (char * ip, int port, int * socketfd)"
+
+.PP
+Opens a socket and connects to the server\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIip\fP Server IP Adress 
+.br
+\fIport\fP Server Port 
+.br
+\fIsocketfd\fP File Descriptor returned by socket() 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+int Returns 0 if there are no errors or a positive number otherwise 
+.RE
+.PP
+
+.SS "int readResponse ()"
+
+.PP
+Prints to the standart output the reply received after sending a command to empty the reply buffer\&. 
+.PP
+\fBReturns\fP
+.RS 4
+int Returns 0 
+.RE
+.PP
+
+.SS "int readResponsePassive (char ** ip, int * port)"
+
+.PP
+Reads the reply to the 'pasv' command ans parses the IP Adress and Port Values\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIip\fP IP Adress 
+.br
+\fIport\fP Server Port 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+int Returns 0 
+.RE
+.PP
+
+.SS "int saveFile (char * filename, int socketfd)"
+
+.PP
+While reading the reply from the served, dumps the information received into a file\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfilename\fP Name of the File to be created 
+.br
+\fIsocketfd\fP Socket File Descriptor from where to read the content 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+int Returns 0 if there are no errors or a positive number otherwise 
+.RE
+.PP
+
+.SS "int sendCommand (int socketfd, char * command)"
+
+.PP
+Sends a message to the server via socket\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIsocketfd\fP File Descriptor of the socket 
+.br
+\fIcommand\fP String with the command to send 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+int Returns 0 if there are no errors or a positive number otherwise 
+.RE
+.PP
+
+.SH "Variable Documentation"
+.PP 
+.SS "FILE* socketFile"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Download from the source code\&.

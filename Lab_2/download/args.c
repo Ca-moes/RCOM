@@ -45,9 +45,9 @@ int getIp(char *host, args *args){
   struct hostent *h;
 
   if ((h=gethostbyname(host)) == NULL) {  
-            herror("gethostbyname");
-            return 1;
-        }
+    herror("gethostbyname");
+    return 1;
+  }
 
   args->host_name = h->h_name;
   args->ip = inet_ntoa( *( (struct in_addr *)h->h_addr ) );

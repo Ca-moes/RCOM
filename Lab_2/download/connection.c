@@ -25,7 +25,7 @@ int init(char *ip, int port, int *socketfd){
 }
 
 /*
-todo falta verificar se, caso não mande tudo de uma vez, mande o resto
+FIXME: falta verificar se, caso não mande tudo de uma vez, mande o resto
 */
 int sendCommand(int socketfd, char * command){
   printf(" about to send command: \n> %s", command);
@@ -53,7 +53,6 @@ int readResponse(){
       break;
     }
   }
-
   return 0;
 }
 
@@ -69,13 +68,7 @@ int readResponsePassive(char** ip, int *port){
     }
   }
 
-  parsePassive(buf, ip, port);
-  
-  return 0;
-}
-
-void parsePassive(char* line, char** ip, int *port){  
-  strtok(line, "(");       
+  strtok(buf, "(");       
   char* ip1 = strtok(NULL, ",");       // 193
   char* ip2 = strtok(NULL, ",");       // 137
   char* ip3 = strtok(NULL, ",");       // 29
@@ -87,7 +80,10 @@ void parsePassive(char* line, char** ip, int *port){
   char* p2 = strtok(NULL, ")");       // 78
 
   *port = atoi(p1)*256 + atoi(p2);
+  
+  return 0;
 }
+
   
 int saveFile(char* filename, int socketfd){
   printf("> filename: %s\n", filename);
@@ -97,16 +93,11 @@ int saveFile(char* filename, int socketfd){
     return 1;
   }
   
-
   int bytes_read;
   char buf[1];
   do {
     bytes_read = read(socketfd, buf, 1);
-    //printf("\ncontent:\n%s\nbytes_read : %d\n", buf, bytes_read);
-    if (bytes_read > 0)
-      write(filefd, buf, bytes_read);
-    
-    
+    if (bytes_read > 0) write(filefd, buf, bytes_read);
   } while (bytes_read != 0);
   
   close(filefd);

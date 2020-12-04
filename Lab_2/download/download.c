@@ -1,5 +1,12 @@
 #include "download.h"
 
+/**
+ * @brief Main function called to execute the download
+ * 
+ * @param argc number of arguments
+ * @param argv value of the arguments
+ * @return int return value
+ */
 int main(int argc, char** argv){ 
   if (argc != 2) {
     fprintf(stderr, "usage: download ftp://[<user>:<password>@]<host>/<url-path>\n");

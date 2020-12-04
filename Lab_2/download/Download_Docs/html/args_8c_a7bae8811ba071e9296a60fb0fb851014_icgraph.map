@@ -1,0 +1,5 @@
+<map id="getIp" name="getIp">
+<area shape="rect" id="node1" title="Given a host name returns the ip address using gethostbyname()" alt="" coords="233,5,284,32"/>
+<area shape="rect" id="node2" href="$args_8h.html#accbea9e42e594bd5e01e3f43c8847ca8" title="Parses the URL received via arguments to the struct args." alt="" coords="104,5,185,32"/>
+<area shape="rect" id="node3" href="$download_8c.html#a3c04138a5bfe5d72780bb7e82a18e627" title="Main function called to execute the download." alt="" coords="5,5,56,32"/>
+</map>

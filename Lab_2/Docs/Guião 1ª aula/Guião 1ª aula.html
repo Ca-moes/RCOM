@@ -115,9 +115,12 @@ Feito em PC de estudante:
 < Connection closed by foreign host.
 
 
+-----------------------
+
 EXPERIÊNCIA DE FTP (transferência de ficheiro)
 
-O FTP usa uma ligação TCP para controlo e, para cada ficheiro a transferir, abre uma nova ligação TCP. Serão necessárias duas janelas (janela_A e janela_B) para efectuar esta experiência.
+O FTP usa uma ligação TCP para controlo e, para cada ficheiro a transferir, abre uma nova ligação TCP. 
+Serão necessárias duas janelas (janela_A e janela_B) para efectuar esta experiência.
 
 Na janela_A, fazemos
 > telnet  ftp.up.pt 21
@@ -128,7 +131,8 @@ Na janela_A, fazemos
 > pasv
 < 227 Entering Passive Mode (193,136,28,12,19,91)
 
-Com o comando "pasv", pede-se ao servidor de FTP para transferir dados em modo passivo. Nesta situação, o cliente ficara responsável pela abertura da ligação TCP para os dados.
+Com o comando "pasv", pede-se ao servidor de FTP para transferir dados em modo passivo. 
+Nesta situação, o cliente ficara responsável pela abertura da ligação TCP para os dados.
 
 Na resposta, o servidor envia 6 bytes (exemplo: 193,136,28,12,19,91) com o seguinte significado:
 - 193,136,28,12 endereço IP do servidor, 
@@ -184,6 +188,7 @@ of the GNU system, as well as GNU Manuals, and general information on
 project GNU.
 
 
+---------------------
 
 
 EXPERIÊNCIA DE HTTP (transferência de página HTML)

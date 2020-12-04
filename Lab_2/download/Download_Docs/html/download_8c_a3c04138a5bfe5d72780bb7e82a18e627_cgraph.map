@@ -1,0 +1,11 @@
+<map id="main" name="main">
+<area shape="rect" id="node1" title="Main function called to execute the download." alt="" coords="5,132,56,159"/>
+<area shape="rect" id="node2" href="$connection_8c.html#ae6be0cac1aa96feefc3ec497a120e111" title="Opens a socket and connects to the server." alt="" coords="161,5,200,32"/>
+<area shape="rect" id="node3" href="$args_8c.html#accbea9e42e594bd5e01e3f43c8847ca8" title="Parses the URL received via arguments to the struct args." alt="" coords="140,56,221,83"/>
+<area shape="rect" id="node6" href="$connection_8c.html#a7245c743ef02ffb9485fc755f0bd28a4" title="Prints to the standart output the reply received after sending a command to empty the reply buffer." alt="" coords="127,107,234,133"/>
+<area shape="rect" id="node7" href="$connection_8c.html#a7ff146ff0135566c81d8f026d869f063" title="Reads the reply to the &quot;pasv&quot; command ans parses the IP Adress and Port Values." alt="" coords="104,157,257,184"/>
+<area shape="rect" id="node8" href="$connection_8c.html#a1d5fe7b9782d49eb259e1a04456f8d7b" title="While reading the reply from the served, dumps the information received into a file." alt="" coords="145,208,216,235"/>
+<area shape="rect" id="node9" href="$connection_8c.html#ae2865f95f7ac7e23fea8ca19b4839df7" title="Sends a message to the server via socket." alt="" coords="125,259,236,285"/>
+<area shape="rect" id="node4" href="$args_8c.html#a2e7e96ed1de15dc8a978256d06cefcdb" title="Gets the last element of the path string, corresponding to the file name." alt="" coords="305,31,401,57"/>
+<area shape="rect" id="node5" href="$args_8c.html#a7bae8811ba071e9296a60fb0fb851014" title="Given a host name returns the ip address using gethostbyname()" alt="" coords="328,81,379,108"/>
+</map>

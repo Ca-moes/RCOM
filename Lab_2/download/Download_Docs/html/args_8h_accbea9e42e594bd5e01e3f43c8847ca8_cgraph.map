@@ -1,0 +1,5 @@
+<map id="parseArgs" name="parseArgs">
+<area shape="rect" id="node1" title="Parses the URL received via arguments to the struct args." alt="" coords="5,31,87,57"/>
+<area shape="rect" id="node2" href="$args_8c.html#a2e7e96ed1de15dc8a978256d06cefcdb" title="Gets the last element of the path string, corresponding to the file name." alt="" coords="135,5,231,32"/>
+<area shape="rect" id="node3" href="$args_8c.html#a7bae8811ba071e9296a60fb0fb851014" title="Given a host name returns the ip address using gethostbyname()" alt="" coords="157,56,208,83"/>
+</map>

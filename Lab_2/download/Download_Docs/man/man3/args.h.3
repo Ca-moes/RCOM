@@ -1,0 +1,127 @@
+.TH "args.h" 3 "Fri Dec 4 2020" "Version 1.00" "Download" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+args.h
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <netdb\&.h>\fP
+.br
+\fC#include <sys/socket\&.h>\fP
+.br
+\fC#include <netinet/in\&.h>\fP
+.br
+\fC#include <arpa/inet\&.h>\fP
+.br
+
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBargs\fP"
+.br
+.RI "Struct that keeps the data from the URL argument\&. "
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBh_addr\fP   h_addr_list[0]"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBargs\fP \fBargs\fP"
+.br
+.RI "Struct that keeps the data from the URL argument\&. "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBparseArgs\fP (char *url, \fBargs\fP *\fBargs\fP)"
+.br
+.RI "Parses the URL received via arguments to the struct args\&. "
+.ti -1c
+.RI "int \fBgetIp\fP (char *host, \fBargs\fP *\fBargs\fP)"
+.br
+.RI "Given a host name returns the ip address using gethostbyname() "
+.ti -1c
+.RI "int \fBgetFileName\fP (\fBargs\fP *\fBargs\fP)"
+.br
+.RI "Gets the last element of the path string, corresponding to the file name\&. "
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define h_addr   h_addr_list[0]"
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBargs\fP \fBargs\fP"
+
+.PP
+Struct that keeps the data from the URL argument\&. 
+.SH "Function Documentation"
+.PP 
+.SS "int getFileName (\fBargs\fP * args)"
+
+.PP
+Gets the last element of the path string, corresponding to the file name\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIargs\fP arguments struct to get path and fill filename 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+int Returns 0 if there are no errors or 1 otherwise 
+.RE
+.PP
+
+.SS "int getIp (char * host, \fBargs\fP * args)"
+
+.PP
+Given a host name returns the ip address using gethostbyname() 
+.PP
+\fBParameters\fP
+.RS 4
+\fIhost\fP String with the host's name 
+.br
+\fIargs\fP struct args to put the IP Adress in 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+int Returns 0 if there are no errors or 1 otherwise 
+.RE
+.PP
+
+.SS "int parseArgs (char * url, \fBargs\fP * args)"
+
+.PP
+Parses the URL received via arguments to the struct args\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIurl\fP string received through the arguments of download 
+.br
+\fIargs\fP struct args where the information will be saved 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+int Returns 0 if there are no errors or a positive number otherwise 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Download from the source code\&.

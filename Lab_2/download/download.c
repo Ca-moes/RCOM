@@ -51,14 +51,12 @@ int main(int argc, char** argv){
 	readResponse();
 
   // get ip and port
-  char* ip; ip = malloc(16);
+  char* ip; ip = malloc(17);
   int port;
   sprintf(command, "pasv\r\n");
   sendCommand(socketfd, command);
 	readResponsePassive(&ip, &port);
   printf("ip: %s\nport: %d\n", ip, port);
-
-
 
   if (init(ip, port, &socketfd_rec) != 0){
     printf("Error: init()\n");
@@ -70,6 +68,5 @@ int main(int argc, char** argv){
   readResponse();
 
   saveFile(fileName, socketfd_rec);
-      
   return 0;
 }

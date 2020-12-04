@@ -62,7 +62,7 @@ TUX24E1  -> Switch Porta 4
 ```
 | IP | MAC |
 |--------|-------|
-| 172.16.21.253  | ??? |
+| 172.16.21.253  | 00:22:64:a6:a4:f1 |
 
 **tux22**:
 ```powershell
@@ -74,7 +74,7 @@ TUX24E1  -> Switch Porta 4
 tux2
 | IP | MAC |
 |--------|-------|
-| 172.16.21.1  | ??? |
+| 172.16.21.1  | 00:21:5a:61:2b:72 |
 
 ### Configurar VLAN's
 
@@ -89,10 +89,10 @@ VLAN 1:
  - tux24 eth1 -> port 4
  - 
 ### Enable IP forwarding
-No slide 44 temos `echo 1 > /proc/sys/net/ipv4/ip_forward`, é tentar isto no tux24
+No slide 44 temos `echo 1 > /proc/sys/net/ipv4/ip_forward`, fazer isto no tux24
 
 ### Disable ICMP echo-ignore-broadcast
-No slide 44 temos `echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts`, é tentar isto no tux24
+No slide 44 temos `echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts`, fazer isto no tux24
 
 # Step 2
 Preencher em cima o [tux24](#configurar-ips) 
@@ -101,18 +101,22 @@ Que conclusões se tira daqui?
 
 # Step 3
 
-¯\ _ ( ◉ 3 ◉ ) _ /¯
-
 Maybe é para brincar com as rotas, temos isto no Slide 42:
 
 ```powershell
-adicionar rota para subrede
-    – root# route add -net 192.168.1.0/24 gw 172.16.4.254
-adicionar rota default
-    – root# route add default gw 192.168.1.1
+adicionar rota para subrede no tux23:
+    – root# route add -net 172.16.21.0/24 gw 172.16.20.254
 ```
 
 Testa pingar o tux22 a partir do tux23 e o oposto para ver se chegam um ao outro
+
+Se conseguir pingar tux23, repetir step 3 para tux22.
+
+```powershell
+adicionar rota para subrede no tux22:
+    – root# route add -net 172.16.20.0/24 gw 172.16.21.253
+```
+
 # Step 4
 
 Fazer `route -n` em cada 1 dos 3 tuxs. Tens [aqui](./Guião_exp1.md#step-5) o significado do que vai resultar

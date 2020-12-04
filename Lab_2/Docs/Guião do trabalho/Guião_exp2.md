@@ -56,7 +56,7 @@ Vista frontal das ligações no switch, lado esquerdo
 ```
 | IP | MAC |
 |--------|-------|
-| 172.16.21.1  | ??? |
+| 172.16.21.1  | 00:21:5a:61:2b:72 |
 
 # Step 2
 Ligar Cabo 

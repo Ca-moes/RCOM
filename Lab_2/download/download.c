@@ -12,7 +12,6 @@ int main(int argc, char** argv){
   char command[256];
 
   strcpy(urlcpy, argv[1]);
-
   if (parseArgs(urlcpy, &arguments) != 0){
     printf("usage: %s ftp://[<user>:<password>@]<host>/<url-path>\n",argv[0]); 
 		return -1;

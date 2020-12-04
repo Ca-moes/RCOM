@@ -38,7 +38,7 @@ int sendCommand(int socketfd, char * command){
     printf("sendCommand: error");
     return 2;
   }
-  printf(" command sent\n");
+  printf("> command sent\n");
   return 0;
 }
 
@@ -48,7 +48,7 @@ int readResponse(){
 
   while (1){
     getline(&buf, &bytesRead, socketFile);
-    printf("buf: %s", buf);
+    printf("< %s", buf);
     if (buf[3] == ' '){
       break;
     }
@@ -63,7 +63,7 @@ int readResponsePassive(char** ip, int *port){
 
   while (1){
     getline(&buf, &bytesRead, socketFile);
-    printf("buf: %s", buf);
+    printf("< %s", buf);
     if (buf[3] == ' '){
       break;
     }
@@ -90,10 +90,10 @@ void parsePassive(char* line, char** ip, int *port){
 }
   
 int saveFile(char* filename, int socketfd){
-  printf("filename: %s\n", filename);
+  printf("> filename: %s\n", filename);
   int filefd = open(filename, O_WRONLY | O_CREAT, 0777);
   if (filefd < 0){
-    printf("borrada\n");
+    printf("Error: saveFile\n");
     return 1;
   }
   

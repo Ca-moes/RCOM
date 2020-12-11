@@ -46,6 +46,7 @@ Add port 1 to vlan 20 (Slide 44):
 ## How many broadcast domains are there? How can you conclude it from the logs?
 
 what's a broadcast domain?
+
 ---
 
 Tantos logs para só haver 2 perguntas <_>

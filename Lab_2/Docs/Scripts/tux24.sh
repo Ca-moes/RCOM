@@ -16,6 +16,7 @@ echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
 
 # route para aceder a internet a partir de eth0 de router
 route add -net 172.16.1.0/24 gw 172.16.21.254
-
+# definir RC como default router
+route add default gw 172.16.21.254
 # ver routes
 routes -n

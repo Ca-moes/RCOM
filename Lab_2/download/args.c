@@ -19,14 +19,14 @@ int parseArgs(char *url, args *args){
   {
     user = "anonymous";
     pass = "pass";
-    args->host = urlrest;
+    strcpy(args->host, urlrest);
   } else
-    args->host = strtok(NULL, "");
+    strcpy(args->host, strtok(NULL, ""));
   
 
-  args->path = path;
-  args->user = user;
-  args->password = pass;
+  strcpy(args->path, path);
+  strcpy(args->user, user);
+  strcpy(args->password, pass);
   
 
   if (getIp(args->host, args) != 0){
@@ -52,8 +52,8 @@ int getIp(char *host, args *args){
   }
   printf("Returning from gethostbyname\n");
 
-  args->host_name = h->h_name;
-  args->ip = inet_ntoa( *( (struct in_addr *)h->h_addr ) );
+  strcpy(args->host_name,h->h_name);
+  strcpy(args->ip, inet_ntoa( *( (struct in_addr *)h->h_addr ) ));
   return 0;
 }
 
@@ -62,7 +62,7 @@ int getFileName(args * args){
   strcpy(fullpath, args->path);
   char* token = strtok(fullpath, "/");
   while( token != NULL ) {
-    args->file_name = token;
+    strcpy(args->file_name, token);
     token = strtok(NULL, "/");
   }
   return 0;

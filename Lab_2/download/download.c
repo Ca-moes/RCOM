@@ -27,16 +27,8 @@ int main(int argc, char** argv){
 
   printf("\nhost: %s\npath: %s\nuser: %s\npassword: %s\nfile name: %s\nhost name: %s\nip address: %s\n\n", 
   arguments.host, arguments.path, arguments.user, arguments.password, arguments.file_name, arguments.host_name, arguments.ip);
-  
-  // Ao fazer init o valor do file_name fica lixo, vá-se lá saber porque
-  // Então guarda-se o valor do file name na main
-  char fileName[64];
-  strcpy(fileName, arguments.file_name);
 
-  char* tempip; tempip = malloc(16);
-  strcpy(tempip, arguments.ip);
-
-  if (init(tempip, 21, &socketfd) != 0){
+  if (init(arguments.ip, 21, &socketfd) != 0){
     printf("Error: init()\n");
     return -1;
   }
@@ -69,6 +61,6 @@ int main(int argc, char** argv){
   sendCommand(socketfd, command);
   if (readResponse() != 0) return 1;
 
-  saveFile(fileName, socketfd_rec);
+  saveFile(arguments.file_name, socketfd_rec);
   return 0;
 }

@@ -24,9 +24,7 @@ int init(char *ip, int port, int *socketfd){
   return 0;
 }
 
-/*
-FIXME: falta verificar se, caso não mande tudo de uma vez, mande o resto
-*/
+
 int sendCommand(int socketfd, char * command){
   printf(" about to send command: \n> %s", command);
   int sent = send(socketfd, command, strlen(command), 0);
@@ -50,6 +48,12 @@ int readResponse(){
     getline(&buf, &bytesRead, socketFile);
     printf("< %s", buf);
     if (buf[3] == ' '){
+      long code = strtol(buf, &buf, 10);
+      if (code == 550 || code == 530)
+      {
+        printf("Command error\n");
+        return 1;
+      }
       break;
     }
   }

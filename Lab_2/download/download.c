@@ -19,6 +19,7 @@ int main(int argc, char** argv){
   char command[256];
 
   strcpy(urlcpy, argv[1]);
+
   if (parseArgs(urlcpy, &arguments) != 0){
     printf("usage: %s ftp://[<user>:<password>@]<host>/<url-path>\n",argv[0]); 
 		return -1;
@@ -39,16 +40,17 @@ int main(int argc, char** argv){
     printf("Error: init()\n");
     return -1;
   }
+
   socketFile = fdopen(socketfd, "r");
 	readResponse();
 
   // login
   sprintf(command, "user %s\r\n", arguments.user);
   sendCommand(socketfd, command);
-  readResponse();
+  if (readResponse() != 0) return 1;
   sprintf(command, "pass %s\r\n", arguments.password);
   sendCommand(socketfd, command);
-	readResponse();
+	if (readResponse() != 0) return 1;
 
   // get ip and port
   char* ip; ip = malloc(17);
@@ -65,7 +67,7 @@ int main(int argc, char** argv){
 
   sprintf(command, "retr %s\r\n", arguments.path);
   sendCommand(socketfd, command);
-  readResponse();
+  if (readResponse() != 0) return 1;
 
   saveFile(fileName, socketfd_rec);
   return 0;

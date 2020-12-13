@@ -45,8 +45,7 @@ int main(int argc, char** argv){
 	if (readResponse() != 0) return 1;
 
   // get ip and port
-  char* ip; ip = malloc(17);
-  int port;
+  char ip[32]; int port;
   sprintf(command, "pasv\r\n");
   sendCommand(socketfd, command);
 	readResponsePassive(&ip, &port);

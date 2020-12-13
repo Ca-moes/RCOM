@@ -60,7 +60,7 @@ int readResponse(){
   return 0;
 }
 
-int readResponsePassive(char** ip, int *port){
+int readResponsePassive(char (*ip)[], int *port){
   char * buf;
 	size_t bytesRead = 0;
 

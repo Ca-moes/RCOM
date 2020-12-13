@@ -46,7 +46,7 @@ int readResponse();
  * @param port Server Port
  * @return int Returns 0
  */
-int readResponsePassive(char** ip, int *port);
+int readResponsePassive(char (*ip)[], int *port);
 
 /**
  * @brief While reading the reply from the served, dumps the information received into a file

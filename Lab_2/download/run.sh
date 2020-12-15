@@ -1,6 +1,5 @@
 #!/bin/sh
 
-clear
 if gcc -o download -Wall -g download.c args.c connection.c; then 
 ./download ftp://rcom:rcom@netlab1.fe.up.pt/files/pic1.jpg;
 else 

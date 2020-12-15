@@ -14,13 +14,13 @@
  */
 typedef struct args
 {
-  char* user;       ///< User used for Login
-  char* password;   ///< Password used for Login
-  char* host;       ///< Host name in URL
-  char* path;       ///< Path to the file
-  char* file_name;  ///< Name of the File
-  char* host_name;  ///< Host Name from gethostbyname()
-  char* ip;         ///< IP Adress from gethostbyname()
+  char user[128];       ///< User used for Login
+  char password[128];   ///< Password used for Login
+  char host[256];       ///< Host name in URL
+  char path[240];       ///< Path to the file
+  char file_name[128];  ///< Name of the File
+  char host_name[128];  ///< Host Name from gethostbyname()
+  char ip[128];         ///< IP Adress from gethostbyname()
 
 } args;
 

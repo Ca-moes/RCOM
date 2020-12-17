@@ -1,4 +1,4 @@
-.TH "args" 3 "Fri Dec 4 2020" "Version 1.00" "Download" \" -*- nroff -*-
+.TH "args" 3 "Thu Dec 17 2020" "Version 1.00" "Download" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,31 +13,31 @@ args \- Struct that keeps the data from the URL argument\&.
 
 .in +1c
 .ti -1c
-.RI "char * \fBuser\fP"
+.RI "char \fBuser\fP [128]"
 .br
 .RI "User used for Login\&. "
 .ti -1c
-.RI "char * \fBpassword\fP"
+.RI "char \fBpassword\fP [128]"
 .br
 .RI "Password used for Login\&. "
 .ti -1c
-.RI "char * \fBhost\fP"
+.RI "char \fBhost\fP [256]"
 .br
 .RI "Host name in URL\&. "
 .ti -1c
-.RI "char * \fBpath\fP"
+.RI "char \fBpath\fP [240]"
 .br
 .RI "Path to the file\&. "
 .ti -1c
-.RI "char * \fBfile_name\fP"
+.RI "char \fBfile_name\fP [128]"
 .br
 .RI "Name of the File\&. "
 .ti -1c
-.RI "char * \fBhost_name\fP"
+.RI "char \fBhost_name\fP [128]"
 .br
 .RI "Host Name from gethostbyname() "
 .ti -1c
-.RI "char * \fBip\fP"
+.RI "char \fBip\fP [128]"
 .br
 .RI "IP Adress from gethostbyname() "
 .in -1c
@@ -46,31 +46,31 @@ args \- Struct that keeps the data from the URL argument\&.
 Struct that keeps the data from the URL argument\&. 
 .SH "Field Documentation"
 .PP 
-.SS "char* file_name"
+.SS "char file_name[128]"
 
 .PP
 Name of the File\&. 
-.SS "char* host"
+.SS "char host[256]"
 
 .PP
 Host name in URL\&. 
-.SS "char* host_name"
+.SS "char host_name[128]"
 
 .PP
 Host Name from gethostbyname() 
-.SS "char* ip"
+.SS "char ip[128]"
 
 .PP
 IP Adress from gethostbyname() 
-.SS "char* password"
+.SS "char password[128]"
 
 .PP
 Password used for Login\&. 
-.SS "char* path"
+.SS "char path[240]"
 
 .PP
 Path to the file\&. 
-.SS "char* user"
+.SS "char user[128]"
 
 .PP
 User used for Login\&. 

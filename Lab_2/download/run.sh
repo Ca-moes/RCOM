@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if gcc -o download -Wall -g download.c args.c connection.c; then 
-./download ftp://rcom:rcom@netlab1.fe.up.pt/files/pic1.jpg;
+./download ftp://netlab1.fe.up.pt/pub.txt;
 else 
 echo "COMPILATION ERROR";
 fi 

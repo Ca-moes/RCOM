@@ -1,10 +1,10 @@
 var structargs =
 [
-    [ "file_name", "structargs.html#a8505c513bc640d1f69e5f76fb32b24a8", null ],
-    [ "host", "structargs.html#a1c2046dcb30a629d6d9f45ff8f403f12", null ],
-    [ "host_name", "structargs.html#a02aa7a3fdc25e6809e64d0ac48ad68dc", null ],
-    [ "ip", "structargs.html#afbc356cd0e25d1dbbece7c10fd025fa6", null ],
-    [ "password", "structargs.html#a59460a3ff2c12443d1022e5cc0fba85c", null ],
-    [ "path", "structargs.html#a44196e6a5696d10442c29e639437196e", null ],
-    [ "user", "structargs.html#a14871705f45ccdc5bb9f4549efd8e119", null ]
+    [ "file_name", "structargs.html#aacbd0acb610ea0f4c68e4d994abd92ca", null ],
+    [ "host", "structargs.html#a41c3a180b50c6b2ddcc1b6843a48f205", null ],
+    [ "host_name", "structargs.html#a738cdcabc13fa13e8263986fe5d0fc28", null ],
+    [ "ip", "structargs.html#a16a12de870e4a9f1aa79289cac00e6ca", null ],
+    [ "password", "structargs.html#abdf937722bb6786adff228a18cb56433", null ],
+    [ "path", "structargs.html#a0b97239f2809421623366b1d32eb065e", null ],
+    [ "user", "structargs.html#aa12c2aa9ab5db7f53cd8d995442c4b1b", null ]
 ];

@@ -1,4 +1,4 @@
-.TH "connection.c" 3 "Fri Dec 4 2020" "Version 1.00" "Download" \" -*- nroff -*-
+.TH "connection.c" 3 "Thu Dec 17 2020" "Version 1.00" "Download" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,7 +25,7 @@ connection.c
 .br
 .RI "Prints to the standart output the reply received after sending a command to empty the reply buffer\&. "
 .ti -1c
-.RI "int \fBreadResponsePassive\fP (char **ip, int *port)"
+.RI "int \fBreadResponsePassive\fP (char(*ip)[], int *port)"
 .br
 .RI "Reads the reply to the 'pasv' command ans parses the IP Adress and Port Values\&. "
 .ti -1c
@@ -66,7 +66,7 @@ int Returns 0
 .RE
 .PP
 
-.SS "int readResponsePassive (char ** ip, int * port)"
+.SS "int readResponsePassive (char(*) ip[], int * port)"
 
 .PP
 Reads the reply to the 'pasv' command ans parses the IP Adress and Port Values\&. 

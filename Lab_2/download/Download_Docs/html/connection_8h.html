@@ -143,9 +143,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a7245c743ef02ffb9485fc755f0bd28a4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8h.html#a7245c743ef02ffb9485fc755f0bd28a4">readResponse</a> ()</td></tr>
 <tr class="memdesc:a7245c743ef02ffb9485fc755f0bd28a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints to the standart output the reply received after sending a command to empty the reply buffer.  <a href="connection_8h.html#a7245c743ef02ffb9485fc755f0bd28a4">More...</a><br /></td></tr>
 <tr class="separator:a7245c743ef02ffb9485fc755f0bd28a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ff146ff0135566c81d8f026d869f063"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8h.html#a7ff146ff0135566c81d8f026d869f063">readResponsePassive</a> (char **ip, int *port)</td></tr>
-<tr class="memdesc:a7ff146ff0135566c81d8f026d869f063"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the reply to the "pasv" command ans parses the IP Adress and Port Values.  <a href="connection_8h.html#a7ff146ff0135566c81d8f026d869f063">More...</a><br /></td></tr>
-<tr class="separator:a7ff146ff0135566c81d8f026d869f063"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e7ec433fd4e9c7c5222989ac9f08eed"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8h.html#a6e7ec433fd4e9c7c5222989ac9f08eed">readResponsePassive</a> (char(*ip)[], int *port)</td></tr>
+<tr class="memdesc:a6e7ec433fd4e9c7c5222989ac9f08eed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the reply to the "pasv" command ans parses the IP Adress and Port Values.  <a href="connection_8h.html#a6e7ec433fd4e9c7c5222989ac9f08eed">More...</a><br /></td></tr>
+<tr class="separator:a6e7ec433fd4e9c7c5222989ac9f08eed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d5fe7b9782d49eb259e1a04456f8d7b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8h.html#a1d5fe7b9782d49eb259e1a04456f8d7b">saveFile</a> (char *filename, int socketfd)</td></tr>
 <tr class="memdesc:a1d5fe7b9782d49eb259e1a04456f8d7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">While reading the reply from the served, dumps the information received into a file.  <a href="connection_8h.html#a1d5fe7b9782d49eb259e1a04456f8d7b">More...</a><br /></td></tr>
 <tr class="separator:a1d5fe7b9782d49eb259e1a04456f8d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -239,8 +239,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a7ff146ff0135566c81d8f026d869f063"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ff146ff0135566c81d8f026d869f063">&#9670;&nbsp;</a></span>readResponsePassive()</h2>
+<a id="a6e7ec433fd4e9c7c5222989ac9f08eed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e7ec433fd4e9c7c5222989ac9f08eed">&#9670;&nbsp;</a></span>readResponsePassive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -248,8 +248,8 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">int readResponsePassive </td>
           <td>(</td>
-          <td class="paramtype">char **&#160;</td>
-          <td class="paramname"><em>ip</em>, </td>
+          <td class="paramtype">char(*)&#160;</td>
+          <td class="paramname"><em>ip</em>[], </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -277,8 +277,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="connection_8h_a7ff146ff0135566c81d8f026d869f063_icgraph.png" border="0" usemap="#connection_8h_a7ff146ff0135566c81d8f026d869f063_icgraph" alt=""/></div>
-<map name="connection_8h_a7ff146ff0135566c81d8f026d869f063_icgraph" id="connection_8h_a7ff146ff0135566c81d8f026d869f063_icgraph">
+<div class="center"><img src="connection_8h_a6e7ec433fd4e9c7c5222989ac9f08eed_icgraph.png" border="0" usemap="#connection_8h_a6e7ec433fd4e9c7c5222989ac9f08eed_icgraph" alt=""/></div>
+<map name="connection_8h_a6e7ec433fd4e9c7c5222989ac9f08eed_icgraph" id="connection_8h_a6e7ec433fd4e9c7c5222989ac9f08eed_icgraph">
 <area shape="rect" title="Reads the reply to the &quot;pasv&quot; command ans parses the IP Adress and Port Values." alt="" coords="104,5,257,32"/>
 <area shape="rect" href="download_8c.html#a3c04138a5bfe5d72780bb7e82a18e627" title="Main function called to execute the download." alt="" coords="5,5,56,32"/>
 </map>

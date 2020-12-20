@@ -45,8 +45,9 @@ Add port 1 to vlan 20 (Slide 44):
 
 ## How many broadcast domains are there? How can you conclude it from the logs?
 
-what's a broadcast domain?
+There are two broadcast domains, one for VLAN0 -> 172.16.20.0/24 and one for VLAN1 -> 172.16.21.0/24
 
+By default the broadcast ping does not get a response. But we can see from the logs that it is possible to ping both ip's
 ---
 
 Tantos logs para só haver 2 perguntas <_>

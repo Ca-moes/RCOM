@@ -1,0 +1,273 @@
+\subsection{Experiência 3} \label{exp3_steps}
+
+\textbf{Passo 1}
+
+Começar por fazer as ligações dos cabos:
+
+\begin{lstlisting}[language=bash]
+TUX23E0  -> Switch Porta 1 
+TUX22E0  -> Switch Porta 2
+TUX24E0  -> Switch Porta 3
+TUX24E1  -> Switch Porta 4
+\end{lstlisting}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+        TUX23E0 (1) & TUX24E0 (3) & empty (5) \\ \hline
+        TUX22E0 (2) & TUX24E1 (4) & empty (6) \\ \hline
+    \end{tabular}
+    \caption{\label{tab:table-name}Vista frontal das ligações no switch, lado esquerdo.}
+\end{table}
+
+Configurar IP's:
+
+tux23:
+\begin{lstlisting}[language=bash]
+> ifconfig eth0 up
+> ifconfig eth0 172.16.20.1/24
+> ifconfig eth0 
+\end{lstlisting}
+tux24:
+\begin{lstlisting}[language=bash]
+> ifconfig eth0 up
+> ifconfig eth0 172.16.20.254/24
+> ifconfig eth0 
+
+> ifconfig eth1 up
+> ifconfig eth1 172.16.21.253/24
+> ifconfig eth1 
+\end{lstlisting}
+tux22:
+\begin{lstlisting}[language=bash]
+> ifconfig eth0 up
+> ifconfig eth0 172.16.21.1/24
+> ifconfig eth0 
+\end{lstlisting}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+        IP & MAC & tux/ether \\ \hline
+        172.16.21.1 & 00:21:5a:61:2b:72 & tux22 eth0 \\ \hline
+        172.16.20.1 & 00:21:5a:5a:7d:12 & tux23 eth0 \\ \hline
+        172.16.20.254 & 00:08:54:50:3f:2c & tux24 eth0 \\ \hline
+        172.16.21.253 & 00:22:64:a6:a4:f1 & tux24 eth1 \\ \hline
+    \end{tabular}
+    \caption{\label{tab:table-name}Endreços IP, Endereços MAC e interfaces correspondentes.}
+\end{table}
+
+Configurar VLAN's:
+
+\begin{lstlisting}[language=bash]
+TUX23S0  -> T3
+T4 -> Switch Console
+\end{lstlisting}
+Liga-se um Cabo `S0`, TUX23S0 por exemplo, á porta 23 da prateleira de cima (`T3`) e um cabo da porta `T4` a `switch console`.
+
+Esta secção é para ser feita apenas uma vez, num tux á escolha, a partir do terminal GtkTerm, sem necessidade de alterar cabos.
+
+VLAN 0:
+\begin{lstlisting}[language=bash]
+ - tux23 eth0 -> port 1
+ - tux24 eth0 -> port 3
+\end{lstlisting}
+
+VLAN 1:
+\begin{lstlisting}[language=bash]
+ - tux22 eth0 -> port 2
+ - tux24 eth1 -> port 4
+\end{lstlisting}
+
+Intruções Detalhadas:
+
+Dar login no switch:
+\begin{lstlisting}[language=bash]
+>enable
+>password: ******
+\end{lstlisting}
+
+Criar VLAN (vlan20):
+\begin{lstlisting}[language=bash]
+>configure terminal
+>vlan 20
+>end
+>show vlan id 20
+\end{lstlisting}
+
+Adicionar porta 1 a vlan 20:
+\begin{lstlisting}[language=bash]
+>configure terminal
+>interface fastethernet 0/1
+>switchport mode access
+>switchport access vlan 20
+>end
+\end{lstlisting}
+
+Adicionar porta 3 a vlan 20:
+\begin{lstlisting}[language=bash]
+>configure terminal
+>interface fastethernet 0/3             
+>switchport mode access
+>switchport access vlan 20
+>end
+\end{lstlisting}
+
+Criar VLAN (vlan21):
+\begin{lstlisting}[language=bash]
+>configure terminal
+>vlan 21
+>end
+>show vlan id 21
+\end{lstlisting}
+
+Adicionar porta 2 a vlan 21:
+\begin{lstlisting}[language=bash]
+>configure terminal
+>interface fastethernet 0/2             
+>switchport mode access
+>switchport access vlan 21
+>end
+\end{lstlisting}
+
+Adicionar porta 4 a vlan 21:
+\begin{lstlisting}[language=bash]
+>configure terminal
+>interface fastethernet 0/4             
+>switchport mode access
+>switchport access vlan 21
+>end
+\end{lstlisting}
+
+No final verificar se está tudo correto com:
+\begin{lstlisting}[language=bash]
+>show vlan
+\end{lstlisting}
+
+Também se pode verificar com:
+\begin{lstlisting}[language=bash]
+>show running-config interface fastethernet 0/1
+>show interfaces fastethernet 0/1 switchport
+\end{lstlisting}
+testando com números de portas diferentes.
+
+\textbf{Enable IP forwarding and Disable ICMP echo-ignore-broadcast}:
+
+Troca-se para o tux24 e faz-se os seguintes comando no terminal:
+\begin{lstlisting}[language=bash]
+echo 1 > /proc/sys/net/ipv4/ip_forward
+echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+\end{lstlisting}
+
+
+\textbf{Passo 2}
+
+Valores de IP e MAC da tabela acima
+
+\textbf{Passo 3}
+
+No tux23 adiciona-se uma rota para dizer que para aceder á vlan com endereços 172.16.21.0/24 usa-se como \textbf{gateway} o IP 172.16.20.254. Este comando é para ser feito na consola:
+\begin{lstlisting}[language=bash]
+route add -net 172.16.21.0/24 gw 172.16.20.254
+\end{lstlisting}
+Da mesma forma, no tux22 faz-se:
+\begin{lstlisting}[language=bash]
+route add -net 172.16.20.0/24 gw 172.16.21.253
+\end{lstlisting}
+
+Testa-se pingar o tux22 a partir do tux23 e o oposto para ver se existe conectividade.
+\begin{lstlisting}[language=bash]
+Em tux23:
+ping 172.16.21.1
+
+Em tux22:
+ping 172.16.20.1
+\end{lstlisting}
+
+
+\textbf{Passo 4}
+
+Fazer `route -n` em cada 1 dos 3 tuxs para observar as routes.
+
+tux22:
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+    \hline
+        Destination & Gateway & Genmask & Flags & Metric & Ref & Use & Iface \\ \hline
+        172.16.20.0 & 172.16.21.253 & 255.255.255.0 & UG & 0 & 0 & 0 & eth0 \\ \hline
+        172.16.21.0 & 0.0.0.0 & 255.255.255.0 & U & 0 & 0 & 0 & eth0 \\ \hline
+    \end{tabular}
+    \caption{\label{tab:table-name}Tabela de encaminhamento para o tux22.}
+\end{table}
+
+tux23:
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+    \hline
+        Destination & Gateway & Genmask & Flags & Metric & Ref & Use & Iface \\ \hline
+        172.16.20.0 & 0.0.0.0 & 255.255.255.0 & U & 0 & 0 & 0 & eth0 \\ \hline
+        172.16.21.0 & 172.16.21.254 & 255.255.255.0 & UG & 0 & 0 & 0 & eth0 \\ \hline
+    \end{tabular}
+    \caption{\label{tab:table-name}Tabela de encaminhamento para o tux23.}
+\end{table}
+
+tux24:
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+    \hline
+        Destination & Gateway & Genmask & Flags & Metric & Ref & Use & Iface \\ \hline
+        172.16.20.0 & 0.0.0.0 & 255.255.255.0 & U & 0 & 0 & 0 & eth0 \\ \hline
+        172.16.21.0 & 0.0.0.0 & 255.255.255.0 & U & 0 & 0 & 0 & eth1 \\ \hline
+    \end{tabular}
+    \caption{\label{tab:table-name}Tabela de encaminhamento para o tux24.}
+\end{table}
+
+\textbf{Passo 5}
+
+Trocar para o tux23. Ligar o WireShark e começar a capturar pacotes na interface eth0
+
+\textbf{Passo 6}
+
+A partir do tux23:
+\begin{enumerate}
+  \item pingar a eth0 do tux24 - ping 172.16.20.254
+  \item pingar a eth1 do tux24 - ping 172.16.21.253
+  \item pingar a eth0 do tux22 - ping 172.16.21.1
+\end{enumerate}
+
+Para cada um verificar a conectividade
+
+\textbf{Passo 7}
+
+Parar a captura no tux23 e guardar logs.
+
+\textbf{Passo 8}
+
+\begin{enumerate}
+  \item Trocar para o tux24.
+  \item Ligar duas instâncias de WireShark. Uma para o eth0 e outra para o eth1. 
+  \item Começar a capturar na eth0 e começar a capturar na eth1.
+\end{enumerate}
+
+\textbf{Passo 9}
+
+No tux24, apagar a tabela ARP e verificar que está vazia
+\begin{lstlisting}[language=bash]
+> arp -a (verificar quais os IPs que se podem apagar)
+> arp -d 172.16.20.254 (um dos IPs, tem de ser feito com todos os IPs de cima)
+> arp -a (tem de retornar nada)
+\end{lstlisting}
+Fazer o mesmo no tux22 e tux23
+
+\textbf{Passo 10}
+
+No tux23 começar a pingar o tux22 (ping 172.16.21.1).
+
+\textbf{Passo 11}
+
+Trocar para tux24, parar as capturas e guardar os ficheiros.

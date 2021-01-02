@@ -1,0 +1,38 @@
+\subsection{Experiência 6} \label{exp6_steps}
+
+\textbf{Passo 1}
+
+Compilar a aplicação de download e configurar a rede até à experiência anterior.
+
+\textbf{Passo 2}
+
+Começar a capturar pacotes no tux23 e fazer 
+\begin{lstlisting}[language=bash]
+download ftp://netlab1.fe.up.pt/pub.txt;
+\end{lstlisting}
+
+
+\textbf{Passo 3}
+
+Parar a captura e guardar os logs.
+
+\textbf{Passo 4}
+
+Analisar os Logs.
+
+\textbf{Passo 5}
+
+No tux23 o download terá de descarregar um ficheiro maior, podemos fazer:
+\begin{lstlisting}[language=bash]
+download ftp://rcom:rcom@netlab1.fe.up.pt/files/crab.mp4;
+\end{lstlisting}
+já que este ficheiro tem 86.0 MB. 
+
+Inicia-se então a captura no WireShark, inicia-se o download no tux23, troca-se para o tux22 e faz-se
+\begin{lstlisting}[language=bash]
+download ftp://rcom:rcom@netlab1.fe.up.pt/pipe.txt
+\end{lstlisting}
+
+Não esquecer de compilar o download no tux22 antes de fazer este passo.
+
+No final guardar os logs.

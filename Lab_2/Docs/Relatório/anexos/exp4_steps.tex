@@ -1,0 +1,465 @@
+\subsection{Experiência 4} \label{exp4_steps}
+\textbf{Passo 1}
+
+Ligar Cabos:
+
+Mesma configuração da experiência 3, com a adição do router a ligar ao switch e a ligar á lab network.
+
+\begin{lstlisting}[language=bash]
+TUX23E0    -> Switch Porta 1 
+TUX22E0    -> Switch Porta 2
+TUX24E0    -> Switch Porta 3
+TUX24E1    -> Switch Porta 4
+ROUTERGE0  -> Switch Porta 5      (router-switch)
+ROUTERGE1  -> Prateleira Porta 1  (router-lab network)
+\end{lstlisting}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+        Ligações & no & switch \\ \hline
+        TUX23E0 (1) & TUX24E0 (3) & GE0 (5) \\ \hline
+        TUX22E0 (2) & TUX24E1 (4) & empty (6) \\ \hline
+    \end{tabular}
+    \caption{\label{tab:table-name}Vista frontal das ligações no switch, lado esquerdo.}
+\end{table}
+
+Configurar IP's: Os IP's do router têm de ser feitos a partir do GtkTerm.
+
+> Configure commercial router RC and connect it (no NAT) to the lab network (172.16.1.0/24)
+
+\begin{lstlisting}[language=bash]
+>interface gigabitethernet 0/0                 
+>ip address 172.16.21.254    255.255.255.0   
+>no shutdown 
+>exit 
+>show interface gigabitethernet 0/0     
+
+>interface gigabitethernet 0/1                
+>ip address 172.16.1.29    255.255.255.0       
+>no shutdown 
+>exit 
+>show interface gigabitethernet 0/1     
+\end{lstlisting}
+
+Estas routes são necessárias para o passo 2, mas podem ser adicionadas aqui.
+\begin{lstlisting}[language=bash]
+>ip route 0.0.0.0 0.0.0.0 172.16.1.254 
+>ip route 172.16.20.0 255.255.255.0 172.16.21.253
+\end{lstlisting}
+
+Após ter o router configurado é necessário configurar tudo para trás como na experiência 3.
+
+Configurar IP's:
+
+tux23:
+\begin{lstlisting}[language=bash]
+> ifconfig eth0 up
+> ifconfig eth0 172.16.20.1/24
+> ifconfig eth0 
+\end{lstlisting}
+
+tux24:
+\begin{lstlisting}[language=bash]
+> ifconfig eth0 up
+> ifconfig eth0 172.16.20.254/24
+> ifconfig eth0 
+
+> ifconfig eth1 up
+> ifconfig eth1 172.16.21.253/24
+> ifconfig eth1 
+\end{lstlisting}
+
+tux22:
+\begin{lstlisting}[language=bash]
+> ifconfig eth0 up
+> ifconfig eth0 172.16.21.1/24
+> ifconfig eth0 
+\end{lstlisting}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+        IP & MAC & tux/ether \\ \hline
+        172.16.20.1 & 00:21:5a:5a:7d:12 & tux23 eth0 \\ \hline
+        172.16.20.254 & 00:08:54:50:3f:2c & tux24 eth0 \\ \hline
+        172.16.21.253 & 00:22:64:a6:a4:f1 & tux24 eth1 \\ \hline
+        172.16.21.1 & 00:21:5a:61:2b:72 & tux22 eth0 \\ \hline
+        172.16.21.254 & 68:ef:bd:e3:d7:78 & RC eth0 \\ \hline
+    \end{tabular}
+    \caption{\label{tab:table-name}Endreços IP, Endereços MAC e interfaces correspondentes.}
+\end{table}
+
+Configurar VLAN's
+
+\begin{lstlisting}[language=bash]
+TUX23S0  -> T3
+T4 -> Switch Console
+\end{lstlisting}
+
+Liga-se um Cabo `S0`, pode ser o TUX23S0, á porta 23 da prateleira de cima (`T3`) e um cabo da porta `T4` a `switch console`.
+
+Esta secção é para ser feita apenas uma vez, num tux á escolha, a partir do terminal GtkTerm, sem necessidade de alterar cabos.
+
+VLAN 0:
+\begin{itemize}
+  \item tux23 eth0 -> port 1
+  \item tux24 eth0 -> port 3
+\end{itemize}
+
+VLAN 1:
+\begin{itemize}
+  \item tux22 eth0 -> port 2
+  \item tux24 eth1 -> port 4
+  \item router eth0 -> port 5
+\end{itemize}
+  
+Instruções Detalhadas:
+
+Dar login no switch:
+\begin{lstlisting}[language=bash]
+>enable
+>password: ******
+\end{lstlisting}
+
+Criar VLAN (vlan20):
+\begin{lstlisting}[language=bash]
+>configure terminal
+>vlan 20
+>end
+>show vlan id 20
+\end{lstlisting}
+
+Adicionar porta 1 à vlan 20:
+\begin{lstlisting}[language=bash]
+>configure terminal
+>interface fastethernet 0/1
+>switchport mode access
+>switchport access vlan 20
+>end
+\end{lstlisting}
+
+Adicionar porta 3 à vlan 20:
+\begin{lstlisting}[language=bash]
+>configure terminal
+>interface fastethernet 0/3             
+>switchport mode access
+>switchport access vlan 20
+>end
+\end{lstlisting}
+
+Criar VLAN (vlan21):
+\begin{lstlisting}[language=bash]
+>configure terminal
+>vlan 21
+>end
+>show vlan id 21
+\end{lstlisting}
+
+Adicionar porta 2 à vlan 21:
+\begin{lstlisting}[language=bash]
+>configure terminal
+>interface fastethernet 0/2             
+>switchport mode access
+>switchport access vlan 21
+>end
+\end{lstlisting}
+
+Adicionar porta 4 à vlan 21:
+\begin{lstlisting}[language=bash]
+>configure terminal
+>interface fastethernet 0/4             
+>switchport mode access
+>switchport access vlan 21
+>end
+\end{lstlisting}
+
+Adicionar porta 5 à vlan 21:
+\begin{lstlisting}[language=bash]
+>configure terminal
+>interface fastethernet 0/5             
+>switchport mode access
+>switchport access vlan 21
+>end
+\end{lstlisting}
+
+No final verificar se está tudo correto com:
+\begin{lstlisting}[language=bash]
+>show vlan
+\end{lstlisting}
+
+Também se pode verificar com:
+\begin{lstlisting}[language=bash]
+>show running-config interface fastethernet 0/1
+>show interfaces fastethernet 0/1 switchport
+\end{lstlisting}
+ao testar com números de portas diferentes
+
+\textbf{Enable IP forwarding and Disable ICMP echo-ignore-broadcast}
+
+Troca-se para o tux24 e faz-se os seguintes comando no terminal
+\begin{lstlisting}[language=bash]
+echo 1 > /proc/sys/net/ipv4/ip_forward
+echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+\end{lstlisting}
+
+\textbf{Adicionar Routes}
+
+No tux23 adiciona-se uma rota para dizer que para aceder á vlan com endereços 172.16.21.0/24 usa-se como gateway o IP 172.16.20.254. Este comando é para ser feito na consola:
+\begin{lstlisting}[language=bash]
+route add -net 172.16.21.0/24 gw 172.16.20.254
+\end{lstlisting}
+
+Da mesma forma, no tux22 faz-se:
+\begin{lstlisting}[language=bash]
+route add -net 172.16.20.0/24 gw 172.16.21.253
+\end{lstlisting}
+
+Testa-se pingar o tux22 a partir do tux23 e o oposto para ver se existe conectividade.
+\begin{lstlisting}[language=bash]
+Em tux23:
+ping 172.16.21.1
+
+Em tux22:
+ping 172.16.20.1
+\end{lstlisting}
+
+Se as rotas de cima estiverem corretas, é necessário adicionar mais umas routes para o passo 2:
+
+tux22:
+\begin{lstlisting}[language=bash]
+# do tux2 aceder a internet a partir do router
+route add -net 172.16.1.0/24 gw 172.16.21.254
+# definir RC como default router
+route add default gw 172.16.21.254
+\end{lstlisting}
+
+tux23:
+\begin{lstlisting}[language=bash]
+# definir tux24 como default router
+route add default gw 172.16.20.254
+\end{lstlisting}
+
+tux24:
+\begin{lstlisting}[language=bash]
+# do tux4 aceder a internet a partir do router
+route add -net 172.16.1.0/24 gw 172.16.21.254
+# definir RC como default router
+route add default gw 172.16.21.254
+\end{lstlisting}
+
+
+\textbf{Passo 2}
+
+Usar nos tuxs para verificar as tabelas resultantes:
+\begin{lstlisting}[language=bash]
+> route -n
+\end{lstlisting}
+
+\clearpage
+As tabelas devem ficar na seguinte forma:
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+    \hline
+        Destination & Gateway & Genmask & Flags & Metric & Ref & Use & Iface \\ \hline
+        172.16.20.0 & 172.16.21.253 & 255.255.255.0 & UG & 0 & 0 & 0 & eth0 \\ \hline
+        172.16.21.0 & 0.0.0.0 & 255.255.255.0 & U & 0 & 0 & 0 & eth0 \\ \hline
+        172.16.1.0 & 172.16.21.254 & 255.255.255.0 & UG & 0 & 0 & 0 & eth0 \\ \hline
+    \end{tabular}
+    \caption{\label{tab:table-name}Tabela de encaminhamento para o tux22.}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+    \hline
+        Destination & Gateway & Genmask & Flags & Metric & Ref & Use & Iface \\ \hline
+        172.16.20.0 & 0.0.0.0 & 255.255.255.0 & U & 0 & 0 & 0 & eth0 \\ \hline
+        172.16.21.0 & 172.16.21.254 & 255.255.255.0 & UG & 0 & 0 & 0 & eth0 \\ \hline
+    \end{tabular}
+    \caption{\label{tab:table-name}Tabela de encaminhamento para o tux23.}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+    \hline
+        Destination & Gateway & Genmask & Flags & Metric & Ref & Use & Iface \\ \hline
+        172.16.20.0 & 0.0.0.0 & 255.255.255.0 & U & 0 & 0 & 0 & eth0 \\ \hline
+        172.16.21.0 & 0.0.0.0 & 255.255.255.0 & U & 0 & 0 & 0 & eth1 \\ \hline
+        172.16.1.0 & 172.16.21.254 & 255.255.255.0 & UG & 0 & 0 & 0 & eth1 \\ \hline
+    \end{tabular}
+    \caption{\label{tab:table-name}Tabela de encaminhamento para o tux24.}
+\end{table}
+
+Router:
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+    \hline
+        Destination & Gateway & Genmask & Flags & Metric & Ref & Use & Iface \\ \hline
+        172.16.20.0 & 172.16.21.253 & 255.255.255.0 & U & 0 & 0 & 0 & eth0 \\ \hline
+        0.0.0.0 & 172.16.1.254 & 0.0.0.0 & U & 0 & 0 & 0 & eth1 \\ \hline
+    \end{tabular}
+    \caption{\label{tab:table-name}Tabela de encaminhamento para o router.}
+\end{table}
+
+
+\textbf{Passo 3}
+
+No tux23, começar o wireshark e a capturar pacotes, pingar tux22, eth0 de tux24, eth1 de tux24 e Rc:
+\begin{lstlisting}[language=bash]
+ping 172.16.20.254  #eth0 tux24
+ping 172.16.21.253  #eth1 tux24
+ping 172.16.21.1    #eth0 tux22
+ping 172.16.21.254  #eth0 Router
+ping 172.16.1.29    #eth1 Router
+\end{lstlisting}
+
+No final guarda-se o ficheiro.
+
+\textbf{Passo 4}
+
+Trocar para tux22 e seguir os próximos pontos:
+
+> - Do:  echo 0 > /proc/sys/net/ipv4/conf/eth0/acceptredirects and  echo 0 > /proc/sys/net/ipv4/conf/all/acceptredirects
+
+No terminal do tux22:
+\begin{lstlisting}[language=bash]
+echo 0 > /proc/sys/net/ipv4/conf/eth0/accept_redirects
+echo 0 > /proc/sys/net/ipv4/conf/all/accept_redirects
+\end{lstlisting}
+
+> - remove the route to 172.16.y0.0/24 via tuxy4
+
+No tux22 usar comandos de baixo para apagar a entrada que usa como gateway o IP 172.16.21.253
+
+\begin{lstlisting}[language=bash]
+# Para ver tabela
+> route -n
+# deve resultar em tabela de baixo
+\end{lstlisting}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+    \hline
+        Destination & Gateway & Genmask & Flags & Metric & Ref & Use & Iface \\ \hline
+        172.16.20.0 & 172.16.21.253 & 255.255.255.0 & UG & 0 & 0 & 0 & eth0 \\ \hline
+        172.16.21.0 & 0.0.0.0 & 255.255.255.0 & U & 0 & 0 & 0 & eth0 \\ \hline
+        172.16.1.0 & 172.16.21.254 & 255.255.255.0 & UG & 0 & 0 & 0 & eth0 \\ \hline
+    \end{tabular}
+    \caption{\label{tab:table-name}Tabela de encaminhamento atualizada para o tux22.}
+\end{table}
+
+Aqui é preciso apagar a primeira entrada:
+\begin{lstlisting}[language=bash]
+# Para apagar entrada
+> route del -net 172.16.20.0/24 gw 172.16.21.253
+\end{lstlisting}
+
+> - In tuxy2, ping  tuxy3
+
+No tux22 fazer um ping:
+\begin{lstlisting}[language=bash]
+ping 172.16.20.1    #eth0 tux23
+\end{lstlisting}
+
+> - Using capture at tuxy2, try to understand the path followed by ICMP ECHO and  ECHO-REPLY packets  (look at MAC addresses)
+
+No tux22, liga-se o wireshark e começa-se a capturar no eth0:
+\begin{lstlisting}[language=bash]
+ping 172.16.20.1    #eth0 tux23
+\end{lstlisting}
+
+deixar uns segundos e guardar os logs.
+
+> - In tuxy2, do traceroute tuxy3
+
+\begin{lstlisting}[language=bash]
+traceroute 172.16.20.1    #eth0 tux23
+\end{lstlisting}
+
+> - In tuxy2, add again the route to 172.16.y0.0/24 via tuxy4 and  do  traceroute tuxy3
+
+\begin{lstlisting}[language=bash]
+route add -net 172.16.20.0/24 gw 172.16.21.253
+# seguido de
+traceroute 172.16.20.1    #eth0 tux23
+\end{lstlisting}
+
+> - Activate the acceptance of ICMP redirect at tuxy2 when there is no route to 172.16.y0.0/24 via tuxy4 and try to understand what happens
+
+
+\begin{lstlisting}[language=bash]
+# Apagar a entrada 172.16.20.0/24 outra vez no tux22
+route -n
+route del -net 172.16.20.0/24 gw 172.16.21.253
+
+# ativar isto de novo
+echo 1 > /proc/sys/net/ipv4/conf/eth0/accept_redirects 
+echo 1 > /proc/sys/net/ipv4/conf/all/accept_redirects
+\end{lstlisting}
+
+Começa-se uma captura e faz-se os mesmos comandos que se fez na outra captura:
+\begin{lstlisting}[language=bash]
+ping 172.16.20.1            #eth0 
+traceroute 172.16.20.1      #eth0 tux23
+traceroute -l 172.16.20.1   #eth0 tux23
+\end{lstlisting}
+Termina-se a captura e guarda-se os logs.
+
+\textbf{Passo 5}
+
+Trocar para tux23 e fazer:
+\begin{lstlisting}[language=bash]
+ping 172.16.1.254
+\end{lstlisting}
+É suposto não funcionar porque é necessário implementar NAT.
+
+\textbf{Passo 6}
+
+\begin{lstlisting}[language=bash]
+# Defines Ethernet 0 with an IP address and as a NAT inside interface.
+conf t               
+interface gigabitethernet 0/0 *     
+ip address 172.16.21.254 255.255.255.0 
+no shutdown 
+ip nat inside        
+exit 
+
+# Defines Ethernet 1 with an IP address and as a NAT outside interface.
+# 172.16.2.29 para i320
+interface gigabitethernet 0/1 * 
+ip address 172.16.1.29 255.255.255.0 
+no shutdown 
+ip nat outside       
+exit 
+
+# Defines a NAT pool named ovrld with a range of a single IP  address, 172.16.1.29.
+ip nat pool ovrld 172.16.1.29 172.16.1.29 prefix 24 
+# Indicates that any packets received on the inside interface that are permitted by access-list 1 has the source address translated to an address out of the NAT pool named ovrld. Translations are overloaded, which allows multiple inside devices to be translated to the same valid IP address.
+ip nat inside source list 1 pool ovrld overload 
+
+# Access-list 1 permits packets with source addresses ranging from 172.16.20.0 through 172.16.20.7 and 172.16.21.0 through 172.16.21.7.
+access-list 1 permit 172.16.20.0 0.0.0.7 
+access-list 1 permit 172.16.21.0 0.0.0.7 
+
+ip route 0.0.0.0 0.0.0.0 172.16.1.254 
+ip route 172.16.20.0 255.255.255.0 172.16.21.253 
+end
+
+# In room I320 use interface fastethernet
+\end{lstlisting}
+
+\textbf{Passo 7}
+
+Trocar para tux23 e fazer:
+\begin{lstlisting}[language=bash]
+ping 172.16.1.254
+\end{lstlisting}

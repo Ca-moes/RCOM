@@ -1,0 +1,108 @@
+\documentclass[11pt, a4paper]{article}
+%encoding
+%--------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+%--------------------------------------
+
+%Portuguese-specific commands
+%--------------------------------------
+\usepackage[portuguese]{babel}
+%--------------------------------------
+
+%Hyphenation rules
+%--------------------------------------
+\usepackage{hyphenat}
+\hyphenation{mate-mática recu-perar}
+%--------------------------------------
+\usepackage{biblatex}   % para referências
+\usepackage{graphicx}   % para imagens
+\usepackage{appendix}   % para usar appendices
+\usepackage{listings}   % para código dentro de latex
+\usepackage{xcolor}     % para cores
+
+\addbibresource{references.bib}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\graphicspath{{imagens/}}
+
+
+\title{2º Trabalho Laboratorial - Redes de Computadores - Turma 6 Grupo 1}
+\author{André Gomes\\up201806224@fe.up.pt \and Filipe Recharte\\up201806224@fe.up.pt}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Neste relatório são especificados os passos tomados para formar uma rede de computadores que possibilite, usando 3 computadores, 1 switch, 1 router e ligação á internet, fazer download de um ficheiro, com recurso a um programa criado por este grupo com uso de tecnologia FTP e TCP/IP, em qualquer um dos computadores. 
+
+Este relatório começa por especificar a aplicação de download criada, passando pelos seguintes módulos: args, na qual é feito o parse dos argumentos do programa, connection, que contém as funções de ligação a sockets e de troca de informação e por fim download, que contém o procedimento para fazer o download de um ficheiro, com recurso aos módulos anteriores.
+
+Após isto é feita uma descrição e análise de cada uma das experiências: Experiência 1 consiste em criar uma rede com 2 computadores usando um switch, com o objetivo de conhecer endereços IP e MAC, pacotes ARP e comandos ping. Na experiência 2 é acrescentado um computador e são criadas 2 VLAN's dento do switch para mostrar que apenas computadores dentro da mesma VLAN é que conseguem comunicar entre si. Retira-se desta experiência conhecimento de como configurar uma VLAN e informação relativa a broadcast domains. Na terceira experiência um dos computadores é configurado como um router para estabelecer a comunicação entre as 2 VLAN's, com o objetivo de saber o que são e como se configuram routes nestes computadores. Na quarta experiência é configurado um router e é realizada a implementação da funcionalidade NAT, com o objetivo de preparar o acesso á internet nas próximas experiências. Na experiência 5 configura-se um servidor DNS em cada tux para ser feita a tradução de endereços normais para endereços IP e por fim, na experiência 6 é testado o programa de download desenvolvido anteriormente na rede de computadores feita até este momento para verificar que tanto o programa foi corretamente desenvolvido como a rede está corretamente implementada.
+\end{abstract}
+
+\tableofcontents
+
+% possível usar \input ou \include em baixo
+\include{conteudo/introducao}
+
+\section{Aplicação de Download}
+\input{conteudo/download}
+
+\section{Configuração e Análise da Rede}
+\input{conteudo/rede}
+
+\section{Conclusão}
+\input{conteudo/conclusao}
+
+\printbibliography
+
+
+\cleardoublepage
+
+\begin{appendices}
+\include{anexos/figuras}
+
+\cleardoublepage
+
+\include{anexos/steps}
+
+\cleardoublepage
+
+\section{Código Fonte - Download}
+\lstinputlisting[language=C, caption={download.h}]{download_code/download.h}
+\lstinputlisting[language=C, caption={download.c}]{download_code/download.c}
+\lstinputlisting[language=C, caption={connection.h}]{download_code/connection.h}
+\lstinputlisting[language=C, caption={connection.c}]{download_code/connection.c}
+\lstinputlisting[language=C, caption={args.h}]{download_code/args.h}
+\lstinputlisting[language=C, caption={args.c}]{download_code/args.c}
+\end{appendices}
+
+\end{document}

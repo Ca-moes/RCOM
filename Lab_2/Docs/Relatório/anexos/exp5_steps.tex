@@ -1,0 +1,28 @@
+\subsection{Experiência 5} \label{exp5_steps}
+
+\textbf{Passo 0}
+
+Primeiro é necessário configurar tudo como na experiência 4 para ser possivel testar esta experiência
+
+\textbf{Passo 1}
+Começando no tux22:
+
+\begin{lstlisting}[language=bash]
+echo $'search netlab.fe.up.pt\nnameserver 172.16.1.1' > /etc/resolv.conf
+\end{lstlisting}
+e fazer o mesmo no tux3 e tux4.
+
+\textbf{Passo 2}
+
+Verificar se a configuração ficou bem feita usando ping com nomes em vez de IP's
+\begin{lstlisting}[language=bash]
+ping ftp.up.pt
+\end{lstlisting}
+
+\textbf{Passo 3}
+
+Ligar wireshark e fazer:
+\begin{lstlisting}[language=bash]
+ping ftp.up.pt
+ping google.com
+\end{lstlisting}

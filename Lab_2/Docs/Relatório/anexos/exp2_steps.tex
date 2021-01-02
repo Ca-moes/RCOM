@@ -1,0 +1,198 @@
+\subsection{Experiência 2} \label{exp2_steps}
+
+\textbf{Passo 1}
+
+Começar por fazer as ligações dos cabo
+
+\begin{lstlisting}[language=bash]
+TUX23E0  -> Switch Porta 1 (Verificar que luz acende no Switch para saber porta)
+TUX24E0  -> Switch Porta 2
+TUX22E0  -> Switch Porta 3
+\end{lstlisting}
+
+Vista frontal das ligações no switch, lado esquerdo
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+TUX23E0 (1) & TUX22E0 (3) & empty (5) \\ \hline
+TUX24E0 (2) & empty (4)   & empty (6) \\ \hline
+\end{tabular}
+\caption{\label{tab:table-name}Vista frontal das ligações no switch, lado esquerdo.}
+\end{table}
+
+\begin{lstlisting}[language=bash]
+tux23:
+> ifconfig eth0 up
+> ifconfig eth0 172.16.20.1/24
+> ifconfig eth0 
+
+tux24:
+> ifconfig eth0 up
+> ifconfig eth0 172.16.20.254/24
+> ifconfig eth0 
+
+tux22:
+> ifconfig eth0 up
+> ifconfig eth0 172.16.21.1/24
+> ifconfig eth0 
+\end{lstlisting}
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+IP            & MAC               & tux/ether  \\ \hline
+172.16.21.1   & 00:21:5a:61:2b:72 & tux22 eth0 \\ \hline
+172.16.20.1   & 00:21:5a:5a:7d:12 & tux23 eth0 \\ \hline
+172.16.20.254 & 00:08:54:50:3f:2c & tux24 eth0 \\ \hline
+\end{tabular}
+\caption{\label{tab:table-name}Endreços IP, Endereços MAC e interfaces correspondentes.}
+\end{table}
+
+\textbf{Passo 2}
+
+Ligar Cabo 
+
+\begin{lstlisting}[language=bash]
+TUX23S0  -> T3
+T4 -> Switch Console
+\end{lstlisting}
+
+Para criar as vlans é necessário modificar o switch, para isso escolhe-se um tux e liga-se a porta série desse tux á porta série da consola do switch. Abre-se o terminal GtKterm, prime-se Enter para verificar que há ligação, depois pode-se seguir os passos abaixo.
+
+Estes passos só precisam de ser realizados uma vez, não é necessário fazer em todos os tux's e não é preciso alterar cabos.
+
+Dar login no switch:
+\begin{lstlisting}[language=bash]
+>enable
+>password: ****** 
+\end{lstlisting}
+
+Criar VLAN (vlan20):
+\begin{lstlisting}[language=bash]
+>configure terminal
+>vlan 20
+>end
+>show vlan id 20
+\end{lstlisting}
+
+Adicionar ports: Os valores das ports são os números que acendem ao ligar os cabos ao switch
+
+Liga-se as ports 1 e 2 á VLAN20
+
+Adicionar porta 1 à vlan 20:
+\begin{lstlisting}[language=bash]
+>configure terminal
+>interface fastethernet 0/1 
+>switchport mode access
+>switchport access vlan 20
+>end
+>show running-config interface fastethernet 0/1
+>show interfaces fastethernet 0/1 switchport
+\end{lstlisting}
+Adicionar porta 2 à vlan 20:
+\begin{lstlisting}[language=bash]
+>configure terminal
+>interface fastethernet 0/2            
+>switchport mode access
+>switchport access vlan 20
+>end
+\end{lstlisting}
+
+
+\textbf{Passo 3}
+
+Criar outra VLAN (vlan21):
+\begin{lstlisting}[language=bash]
+>configure terminal
+>vlan 21
+>end
+>show vlan id 21
+\end{lstlisting}
+Adicionar a porta do tux22, porta 3:
+\begin{lstlisting}[language=bash]
+>configure terminal
+>interface fastethernet 0/3            
+>switchport mode access
+>switchport access vlan 21
+>end
+\end{lstlisting}
+
+\textbf{Passo 4}
+
+Antes de fazer a captura no wireshark, verifica-se que os pings que se vão fazer abaixo funcionam. assim que estiver tudo bem, prepara-se os comandos nas consolas e pode-se começar a captura no WireShark.
+
+\textbf{Passo 5}
+
+No tux23, pingar o tux4:
+\begin{lstlisting}[language=bash]
+ping 172.16.20.254
+\end{lstlisting}
+Pingar o tux22:
+\begin{lstlisting}[language=bash]
+ping 172.16.21.1
+\end{lstlisting}
+
+\textbf{Passo 6}
+
+Parar a captura e guardar o ficheiro.
+
+\textbf{Passo 7}
+
+Antes de fazer estas capturas prepara-se o ping de baixo, depois segue-se estes passos:
+
+\begin{enumerate}
+  \item Em tux23 começar captura em eth0
+  \item Trocar para tux24
+  \item Em tux24 começar captura em eth0
+  \item Trocar para tux22
+  \item Em tux22 começar captura em eth0
+\end{enumerate}
+  
+\textbf{Passo 8}
+
+No tux23, pingar em broadcast:
+\begin{lstlisting}[language=bash]
+ping -b 172.16.20.255
+\end{lstlisting}
+
+\textbf{Passo 9}
+
+\begin{enumerate}
+  \item Parar a captura em tux23
+  \item Parar a captura em tux24
+  \item Parar a captura em tux22
+  \item Guardar o ficheiro de tux23
+  \item Guardar o ficheiro de tux24
+  \item Guardar o ficheiro de tux22
+\end{enumerate}
+
+
+\textbf{Passo 10}
+
+Antes de fazer estas capturas prepara-se o ping de baixo, depois segue-se estes passos:
+
+\begin{enumerate}
+  \item Em tux23 começar captura em eth0
+  \item Trocar para tux24
+  \item Em tux24 começar captura em eth0
+  \item Trocar para tux22
+  \item Em tux22 começar captura em eth0
+\end{enumerate}
+
+No tux22, pingar em broadcast:
+\begin{lstlisting}[language=bash]
+ping -b 172.16.21.255
+\end{lstlisting}
+
+\begin{enumerate}
+  \item Parar a captura em tux23
+  \item Parar a captura em tux24
+  \item Parar a captura em tux22
+  \item Guardar o ficheiro de tux23
+  \item Guardar o ficheiro de tux24
+  \item Guardar o ficheiro de tux22
+\end{enumerate}

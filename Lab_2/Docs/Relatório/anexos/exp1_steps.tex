@@ -1,0 +1,57 @@
+\subsection{Experiência 1} \label{exp1_steps}
+\textbf{Passos 2 e 3} 
+
+Ligar Cabos
+
+\begin{lstlisting}[language=bash]
+TUX23E0  -> Switch
+TUX24E0  -> Switch
+
+tux3:
+> ifconfig eth0 up
+> ifconfig eth0 172.16.20.1/24
+> ifconfig eth0 
+
+tux4:
+> ifconfig eth0 up
+> ifconfig eth0 172.16.20.254/24
+> ifconfig eth0 
+
+\end{lstlisting}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+IP            & MAC               & tux/ether  \\ \hline
+172.16.20.1   & 00:21:5a:5a:7d:12 & tux23 eth0 \\ \hline
+172.16.20.254 & 00:08:54:50:3f:2c & tux24 eth0 \\ \hline
+\end{tabular}
+\caption{\label{tab:table-name}Endreços IP, Endereços MAC e interfaces correspondentes}
+\end{table}
+
+\textbf{Passo 4}
+
+\begin{lstlisting}[language=bash]
+tux3:
+> ping 172.16.20.254
+
+tux4:
+> ping 172.16.20.1
+\end{lstlisting}
+
+\textbf{Passo 5}
+
+\begin{lstlisting}[language=bash]
+tux3:
+> route -n
+> arp -a
+\end{lstlisting}
+
+\textbf{Passo 6}
+
+\begin{lstlisting}[language=bash]
+tux3:
+> arp -d 172.16.20.254
+> arp -a [retorna nada]
+\end{lstlisting}

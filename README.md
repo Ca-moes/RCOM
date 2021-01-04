@@ -1,1 +1,16 @@
-Se tens a indecência de vir copiar pelo menos deixa joínha
+# FEUP - RCOM
+
+## Redes de Computadores
+
+
+[***Course Page***](https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=459483)
+
+Este repositório contém:
+- Projetos - made with [Filipe](https://github.com/filiperecharte) 
+- Slides
+
+## Grades
+
+| Média TPC | Lab1 | Lab2 | Frequência | Exame | Final |
+|---|---|---|---|---|---|
+| 16.0 | 19.0 | 18.0 | 18.0 | ? |  ?  | 

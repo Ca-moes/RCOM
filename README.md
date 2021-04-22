@@ -7,6 +7,7 @@
 
 Este repositório contém:
 - Projetos - made with [Filipe](https://github.com/filiperecharte) 
+  - Documentação - https://ca-moes.github.io/RCOM/html/ 
 - Slides
 
 ## Grades

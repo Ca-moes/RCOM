@@ -14,4 +14,4 @@ Este repositório contém:
 
 | Média TPC | Lab1 | Lab2 | Frequência | Exame | Final |
 |---|---|---|---|---|---|
-| 16.0 | 19.0 | 18.0 | 18.0 | ? |  ?  | 
+| 16.0 | 19.0 | 18.0 | 18.0 | ? | 15 | 

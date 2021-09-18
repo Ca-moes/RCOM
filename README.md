@@ -1,3 +1,5 @@
+🐧 Check Wiki For Lab Guides 🐧
+
 # FEUP - RCOM
 
 ## Redes de Computadores
